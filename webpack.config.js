@@ -22,6 +22,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      title: 'Sheets',
       template: 'app/index.ejs'
     })
   ],

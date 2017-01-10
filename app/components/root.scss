@@ -1,0 +1,12 @@
+.containerOuter {
+  position: absolute;
+  width: 100%;
+  top: 64px; // height of material-ui header
+  min-height: calc(100% - 64px);
+  background-color: #f3f3f3;
+}
+
+.containerInner {
+  width: 1024px;
+  margin: 1rem auto;
+}

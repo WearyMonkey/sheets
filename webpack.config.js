@@ -1,5 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const extractCSS = new ExtractTextPlugin('[name].css');
 
 module.exports = {
   resolve: {
@@ -8,6 +11,10 @@ module.exports = {
   entry: ['index'],
   module: {
     loaders: [
+      {
+        test: /\.(css|scss)$/,
+        loader: extractCSS.extract(['css?modules', 'sass'])
+      },
       {
         test: /\.jsx?$/,
         loader: 'babel',
@@ -21,6 +28,7 @@ module.exports = {
     filename: "bundle.js"
   },
   plugins: [
+    extractCSS,
     new HtmlWebpackPlugin({
       title: 'Sheets',
       template: 'app/index.ejs'
@@ -28,5 +36,6 @@ module.exports = {
   ],
   devServer: {
     port: 9999
-  }
+  },
+  devtool: 'eval'
 };

@@ -1,0 +1,17 @@
+.root {
+
+}
+
+.moduleContainer {
+  background-color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.moduleContainer,
+.gridSizer {
+  width: calc(50% - 1rem);
+}
+
+.gutterSizer {
+  width: 1rem;
+}

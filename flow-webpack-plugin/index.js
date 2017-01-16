@@ -46,7 +46,7 @@ module.exports = class FlowWebpackPlugin {
   apply(compiler) {
     const projectFiles = ['.flowconfig', 'node_modules', 'package.json'];
     compiler.plugin("emit", (compilation, callback) => {
-      rimraf(`${this.stagePath}/**/!(${projectFiles.join('|')})`, { glob: { dot: true } }, () => {
+      rimraf(`${this.stagePath}/!(${projectFiles.join('|')})`, { glob: { dot: true } }, () => {
         mkdirp.sync(this.stagePath);
 
         projectFiles.forEach(pathToLn => {

@@ -1,9 +1,10 @@
+//@flow
+
 import * as React from 'react';
-import styles from './sheet.scss';
+import styles from './styles';
 import PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
 import { List } from 'immutable';
-import { connect } from 'react-redux';
 
 const Packery = PackeryFactory(React);
 
@@ -21,19 +22,27 @@ function SheetPresentation({ modules }) {
       <div className={styles.gridSizer}></div>
       {modules.map((m, id) => {
         return <div className={styles.moduleContainer} key={id}>
-          {m.component}
+          {m}
         </div>
       })}
     </Packery>
   </div>
 }
 
-export const Sheet = connect(state => ({
-  modules: state.sheet.modules.map(m => ({component: MODULES[m.id].component}))
-}))(SheetPresentation);
-
-export function reduce(state = { modules: List() }, action) {
+export function reduce(state = {modules: List()}, action) {
   return {
-    modules: state.modules.map(m => ({id: m.id, state: MODULES[m.id].reduce(m.state, action)}))
+    modules: state.modules.map(m => action.moduleId == m.id
+        ? {...m, state: MODULES[m.type].reduce(m.state, action) }
+        : m)
   };
+}
+
+export class Sheets extends React.Component {
+  render() {
+    const { modules } = this.props.state;
+    return <SheetPresentation modules={modules.map(m => {
+      const Module = MODULES[m.type].component;
+      return <Module moduleId={m.id} state={m.state} sheet={this.props.sheet} />
+    })}/>
+  }
 }

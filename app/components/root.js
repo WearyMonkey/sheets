@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
-import styles from './root.scss';
-import { Sheet, reduce as sheet } from './sheet/sheet';
-import { Provider } from 'react-redux';
+import styles from './styles';
+import { Sheets, reduce as sheet } from './sheet/sheet';
 import { createStore, combineReducers } from 'redux';
 import { reduce as stats } from 'data/stats';
+import { PropTypes } from 'react'
 
 export class Root extends Component {
 
@@ -13,7 +13,7 @@ export class Root extends Component {
     this.store = createStore(combineReducers({ sheet, stats }), {
       sheet: {
         modules: [
-          {id: 'ATTRIBUTES', state: [
+          {id: 1, type: 'ATTRIBUTES_MODULE', state: [
             {
               statId: 'strength',
               displayName: 'Strength',
@@ -24,16 +24,29 @@ export class Root extends Component {
     }, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
   }
 
+  componentWillMount() {
+    this.setState({ state: this.store.getState() });
+    this.store.subscribe(() => {
+      this.setState({ state: this.store.getState() });
+    });
+  }
+
+  getChildContext() {
+    return { dispatch: this.store.dispatch };
+  }
+
   render() {
-    return <Provider store={this.store}>
-      <div>
-        <AppBar/>
-        <div className={styles.containerOuter}>
-          <div className={styles.containerInner}>
-            <Sheet/>
-          </div>
+    return <div>
+      <AppBar/>
+      <div className={styles.containerOuter}>
+        <div className={styles.containerInner}>
+          <Sheets state={this.state.state.sheet} sheet={this.state.state.stats} />
         </div>
       </div>
-    </Provider>
+    </div>
   }
 }
+
+Root.childContextTypes = {
+  dispatch: PropTypes.func.isRequired
+};

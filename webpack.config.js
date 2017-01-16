@@ -1,24 +1,33 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FlowWebpackPlugin = require('./flow-webpack-plugin');
 
-const extractCSS = new ExtractTextPlugin('[name].css');
+const flowWebpackPlugin = new FlowWebpackPlugin({
+  srcPath: __dirname,
+  cachePath: path.join(__dirname, '.flowcache')
+});
+const extractCSS = new ExtractTextPlugin('[name].css', { allChunks: true });
 
 module.exports = {
   resolve: {
-    root: path.join(__dirname, 'app')
+    root: path.join(__dirname, 'app'),
+    extensions: ['.scss', '.jsx', '.js', '']
   },
   entry: ['index'],
   module: {
     loaders: [
       {
-        test: /\.(css|scss)$/,
-        loader: extractCSS.extract(['css?modules', 'sass'])
+        test: /\.jsx?$/,
+        loaders: ['babel', flowWebpackPlugin.loader()],
+        exclude: /node_modules/
       },
       {
-        test: /\.jsx?$/,
-        loader: 'babel',
-        exclude: /node_modules/
+        test: /\.(css|scss)$/,
+        loaders: [
+          flowWebpackPlugin.loader(),
+          ...extractCSS.extract(['css?modules', 'sass']).split('!')
+        ]
       }
     ]
   },
@@ -29,13 +38,12 @@ module.exports = {
   },
   plugins: [
     extractCSS,
-    new HtmlWebpackPlugin({
-      title: 'Sheets',
-      template: 'app/index.ejs'
-    })
+    flowWebpackPlugin
   ],
   devServer: {
     port: 9999
   },
   devtool: 'eval'
 };
+
+console.log(module.exports.module.loaders[1].loaders);

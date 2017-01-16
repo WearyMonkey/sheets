@@ -1,15 +1,10 @@
-//@flow
-
 import React, { Component } from 'react';
 import styles from './attributes.scss';
 import NumberInput from 'material-ui-number-input';
 import { List } from 'immutable';
-import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';;
 import { SET_STAT_MODIFIER, REMOVE_STAT_MODIFIER, Modifier } from 'data/stats';
-
-export const MODULE_ID = 'ATTRIBUTES';
-const ADD_ATTRIBUTE = `${MODULE_ID}/ADD_ATTRIBUTE`;
-const REMOVE_ATTRIBUTE = `${MODULE_ID}/REMOVE_ATTRIBUTE`;
+import { PropTypes } from 'react'
 
 type Attribute = {
   statId: string,
@@ -28,46 +23,65 @@ function AttributesPresentation({ onAddAttribute, onRemoveAttribute, onAttribute
   </div>
 }
 
-export const Attributes = connect((state: Map) => {
-  const attributes = state.sheet.modules.find(m => m.id == MODULE_ID).state;
-  const attributeValues = attributes.map(attr => state.stats
-      .get(attr.statId, List())
-      .reduce((sum, modifier) => sum + modifier.value, 0));
-  return { attributes, attributeValues };
-}, {
-  onAddAttribute(attribute: Attribute) {
-    return {
-      type: ADD_ATTRIBUTE,
-      attribute: attribute
-    }
-  },
-  onRemoveAttribute(attribute: Attribute) {
-    return {
-      type: REMOVE_ATTRIBUTE,
-      attribute: attribute
-    }
-  },
-  onAttributeChange(attribute: Attribute, value) {
-    return {
-      type: SET_STAT_MODIFIER,
-      modifier: {
-        id: `${MODULE_ID}/${attribute.statId}`,
-        statId: attribute.statId,
-        source: MODULE_ID,
-        value: value,
-        description: `Base ${attribute.displayName}`
-      }
-    }
-  }
-})(AttributesPresentation);
+export const MODULE_TYPE = 'ATTRIBUTES_MODULE';
+const ADD_ATTRIBUTE_ACTION = `ADD_ATTRIBUTE`;
+const REMOVE_ATTRIBUTE_ACTION = `REMOVE_ATTRIBUTE`;
 
 export function reduce(state: List<Attribute> = List(), action) {
   switch (action.type) {
-    case ADD_ATTRIBUTE:
+    case ADD_ATTRIBUTE_ACTION:
       return state.push(action.attribute);
-    case REMOVE_ATTRIBUTE:
+    case REMOVE_ATTRIBUTE_ACTION:
       return state.delete(state.indexOf(action.attribute));
     default:
       return state;
   }
 }
+
+export class Attributes extends Component {
+  render() {
+    const { state, sheet, moduleId } = this.props;
+    const attributes = state;
+    const attributeValues = attributes.map(attr => sheet
+        .get(attr.statId, List())
+        .reduce((sum, modifier) => sum + modifier.value, 0));
+
+    const actionCreators = bindActionCreators({
+      onAddAttribute(attribute: Attribute) {
+        return {
+          type: ADD_ATTRIBUTE_ACTION,
+          moduleId,
+          attribute: attribute
+        }
+      },
+      onRemoveAttribute(attribute: Attribute) {
+        return {
+          type: REMOVE_ATTRIBUTE_ACTION,
+          moduleId,
+          attribute: attribute
+        }
+      },
+      onAttributeChange(attribute: Attribute, value) {
+        return {
+          type: SET_STAT_MODIFIER,
+          moduleId,
+          modifier: {
+            id: `${moduleId}/${attribute.statId}`,
+            statId: attribute.statId,
+            source: moduleId,
+            value: value,
+            description: `Base ${attribute.displayName}`
+          }
+        }
+      }
+    }, this.context.dispatch );
+
+    const props = { ...actionCreators, attributes, attributeValues };
+
+    return <AttributesPresentation {...props} />
+  }
+}
+
+Attributes.contextTypes = {
+  dispatch: PropTypes.func.isRequired
+};

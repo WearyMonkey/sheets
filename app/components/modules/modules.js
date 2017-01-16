@@ -1,6 +1,6 @@
 import React from 'react';
-import { MODULE_ID, Attributes, reduce} from './attributes/attributes';
+import { Attributes, reduce as attributesReduce, MODULE_TYPE as ATTRIBUTES_MODULE } from './attributes/attributes';
 
 export const MODULES = {
-    [MODULE_ID]: { component: <Attributes/>, reduce }
+    [ATTRIBUTES_MODULE]: { component: Attributes, reduce: attributesReduce }
 };

@@ -1,9 +1,7 @@
-//@flow
-
 import * as React from 'react';
-import styles from './styles';
+import styles from './sheet.scss';
 import PackeryFactory from 'react-packery-component';
-import { MODULES } from 'components/modules/modules';
+import { MODULES } from '../modules/modules';
 import { List } from 'immutable';
 
 const Packery = PackeryFactory(React);

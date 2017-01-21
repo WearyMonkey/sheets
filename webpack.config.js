@@ -7,26 +7,29 @@ const flowWebpackPlugin = new FlowWebpackPlugin({
   srcPath: __dirname,
   cachePath: path.join(__dirname, '.flowcache')
 });
-const extractCSS = new ExtractTextPlugin('[name].css', { allChunks: true });
+const extractCSS = new ExtractTextPlugin('[name].css');
 
 module.exports = {
   resolve: {
-    root: path.join(__dirname, 'app'),
-    extensions: ['.scss', '.jsx', '.js', '']
+    modules: [path.join(__dirname, 'app'), 'node_modules'],
+    extensions: ['.jsx', '.js']
   },
-  entry: ['index'],
+  entry: ['index.js'],
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loaders: ['babel', flowWebpackPlugin.loader()],
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        use: [
+          'babel-loader',
+          flowWebpackPlugin.loader()
+        ],
       },
       {
         test: /\.(css|scss)$/,
-        loaders: [
+        use: [
           flowWebpackPlugin.loader(),
-          ...extractCSS.extract(['css?modules', 'sass']).split('!')
+          ...extractCSS.extract(['css-loader?modules', 'sass-loader']).split('!')
         ]
       }
     ]
@@ -37,13 +40,15 @@ module.exports = {
     filename: "bundle.js"
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: 'app/index.ejs'
+    }),
     extractCSS,
     flowWebpackPlugin
   ],
   devServer: {
-    port: 9999
+    port: 9999,
+    inline: false
   },
   devtool: 'eval'
 };
-
-console.log(module.exports.module.loaders[1].loaders);

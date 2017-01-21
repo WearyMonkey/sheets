@@ -1,5 +1,3 @@
-// @flow
-
 import { Map } from 'immutable';
 
 export type Modifier = {

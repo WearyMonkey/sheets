@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
-import styles from './styles';
+import styles from './root.scss';
 import { Sheets, reduce as sheet } from './sheet/sheet';
 import { createStore, combineReducers } from 'redux';
 import { reduce as stats } from 'data/stats';

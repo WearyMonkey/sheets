@@ -55,18 +55,10 @@ export class Attributes extends Component {
 
     const actionCreators = bindActionCreators({
       onAddAttribute(attribute: Attribute) : AttributeAction {
-        return {
-          type: "ADD_ATTRIBUTE",
-          moduleId,
-          attribute: attribute
-        }
+        return { type: "ADD_ATTRIBUTE", moduleId, attribute };
       },
       onRemoveAttribute(attribute: Attribute) : AttributeAction {
-        return {
-          type: "REMOVE_ATTRIBUTE",
-          moduleId,
-          attribute: attribute
-        }
+        return { type: "REMOVE_ATTRIBUTE", moduleId, attribute };
       },
       onAttributeChange(attribute: Attribute, value) : CharacterAction {
         return addStatModifier({

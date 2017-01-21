@@ -37,14 +37,26 @@ module.exports = class FlowWebpackPlugin {
      * @type {string}
      */
     this.srcPath = opts.srcPath;
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    this.first = true;
   }
 
-  loader() {
-    return `${require.resolve('./loader')}?store=${encodeURIComponent(this.storePath)}&src=${encodeURIComponent(this.srcPath)}`;
+  /**
+   * @param {{
+   *  prependFlow: boolean|null|undefined
+   * }|undefined} opts
+   * @returns {string}
+   */
+  loader(opts = {}) {
+    return `${require.resolve('./loader')}?store=${encodeURIComponent(this.storePath)}&src=${encodeURIComponent(this.srcPath)}&prependFlow=${!!opts.prependFlow}`;
   }
 
   apply(compiler) {
-    const projectFiles = ['.flowconfig', 'node_modules', 'package.json'];
+    const projectFiles = ['.flowconfig', 'node_modules', 'flow-typed', 'package.json'];
     compiler.plugin("emit", (compilation, callback) => {
       rimraf(`${this.stagePath}/!(${projectFiles.join('|')})`, { glob: { dot: true } }, () => {
         mkdirp.sync(this.stagePath);
@@ -75,9 +87,22 @@ module.exports = class FlowWebpackPlugin {
           }
         });
 
-        spawnSync(flowBin, {cwd: this.stagePath, stdio: 'inherit'});
+        this.exec(['status']);
+        this.maybePrepareCleanup();
         callback();
       });
     });
+  }
+
+  maybePrepareCleanup() {
+    if (this.first == true) {
+      this.first = false;
+      process.on('exit', () => this.exec(['stop']));
+      process.on('SIGINT', () => this.exec(['stop']));
+    }
+  }
+
+  exec(args) {
+    spawnSync(flowBin, args, {cwd: this.stagePath, stdio: 'inherit'});
   }
 };

@@ -5,8 +5,11 @@ const mkdirp = require('mkdirp');
 
 module.exports = function(source) {
   this.cacheable();
-  const { store, src } = loaderUtils.parseQuery(this.query);
+  const { store, src, prependFlow } = loaderUtils.parseQuery(this.query);
   let resourcePath = path.join(store, path.relative(src, this.resourcePath));
+  if (prependFlow) {
+    source = '// @flow\n' + source;
+  }
   if (!fs.existsSync(resourcePath) || checkModifiedTime(this.resourcePath, resourcePath)) {
     mkdirp.sync(path.dirname(resourcePath));
     fs.writeFileSync(resourcePath, source, 'UTF8');

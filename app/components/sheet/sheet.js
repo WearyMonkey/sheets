@@ -1,8 +1,36 @@
 import * as React from 'react';
 import styles from './sheet.scss';
 import PackeryFactory from 'react-packery-component';
-import { MODULES } from '../modules/modules';
+import { MODULES } from '/components/modules/modules';
+import type { ModuleAction, Module } from '/components/modules/modules';
 import { List } from 'immutable';
+import type { Character } from '/data/character';
+
+export type SheetAction =
+    | ModuleAction;
+
+export type ModuleConfig = {
+  id: string,
+  type: string,
+  state: *
+}
+
+export type Sheet = {
+  modules: List<ModuleConfig>
+}
+
+export function reduce(state : Sheet = {modules: List()}, action : SheetAction) : Sheet {
+  return {
+    modules: state.modules.map(moduleConfig => {
+      const module = MODULES.get(moduleConfig.type);
+      if (action.moduleId === moduleConfig.id && module != null) {
+        return {...moduleConfig, state: module.reduce(moduleConfig.state, action)}
+      } else {
+        return moduleConfig
+      }
+    })
+  };
+}
 
 const Packery = PackeryFactory(React);
 
@@ -27,20 +55,20 @@ function SheetPresentation({ modules }) {
   </div>
 }
 
-export function reduce(state = {modules: List()}, action) {
-  return {
-    modules: state.modules.map(m => action.moduleId == m.id
-        ? {...m, state: MODULES[m.type].reduce(m.state, action) }
-        : m)
-  };
-}
-
 export class Sheets extends React.Component {
+
+  props: { character: Character, state: Sheet };
+
   render() {
     const { modules } = this.props.state;
-    return <SheetPresentation modules={modules.map(m => {
-      const Module = MODULES[m.type].component;
-      return <Module moduleId={m.id} state={m.state} sheet={this.props.sheet} />
+    return <SheetPresentation modules={modules.map(moduleConfig => {
+      const module = MODULES.get(moduleConfig.type);
+      if (module) {
+        const Module = module.component;
+        return <Module moduleId={moduleConfig.id} state={moduleConfig.state} character={this.props.character} />
+      } else {
+        return <div>Unknown module type {moduleConfig.type}</div>;
+      }
     })}/>
   }
 }

@@ -1,7 +1,6 @@
 [ignore]
 
 [include]
-./app/
 
 [libs]
 ./flow-typed

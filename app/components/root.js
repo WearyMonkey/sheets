@@ -8,6 +8,7 @@ import type { Store } from 'redux';
 import { reduce as character } from '/data/character';
 import type { CharacterAction, Character } from '/data/character';
 import { PropTypes } from 'react'
+import { Map, List } from 'immutable';
 
 type Action =
     | SheetAction
@@ -22,18 +23,22 @@ export class Root extends React.Component {
 
   constructor() {
     super();
-    this.store = createStore(combineReducers({ sheet, character }), {
+    const defaultState: State = {
       sheet: {
-        modules: [
+        modules: List([
           {id: 1, type: 'ATTRIBUTES_MODULE', state: [
             {
               statId: 'strength',
               displayName: 'Strength',
             }
           ]}
-        ]
+        ])
+      },
+      character: {
+        stats: Map()
       }
-    }, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    };
+    this.store = createStore(combineReducers({ sheet, character }), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
   }
 
   componentWillMount() {

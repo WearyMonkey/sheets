@@ -9,7 +9,7 @@ export type ModuleAction =
 
 
 export type Module = {
-  component: Class<React.Component<*, { moduleId: string, character: Character, state: * }, *>>,
+  component: Class<React.Component<*, { moduleId: number, character: Character, state: any }, *>>,
   reduce: (s: *, a: ModuleAction) => *
 }
 

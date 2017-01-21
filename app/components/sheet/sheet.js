@@ -10,9 +10,9 @@ export type SheetAction =
     | ModuleAction;
 
 export type ModuleConfig = {
-  id: string,
+  id: number,
   type: string,
-  state: *
+  state: any
 }
 
 export type Sheet = {
@@ -56,9 +56,7 @@ function SheetPresentation({ modules }) {
 }
 
 export class Sheets extends React.Component {
-
   props: { character: Character, state: Sheet };
-
   render() {
     const { modules } = this.props.state;
     return <SheetPresentation modules={modules.map(moduleConfig => {

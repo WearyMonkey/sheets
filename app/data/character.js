@@ -3,7 +3,7 @@ import { Map } from 'immutable';
 export type Modifier = {
   id: string,
   statId: string,
-  sourceId: string,
+  sourceId: number,
   description: string,
   value: number
 }

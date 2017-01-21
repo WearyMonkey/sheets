@@ -38,13 +38,13 @@ export function reduce(state: List<Attribute> = List(), action : AttributeAction
 }
 
 export type AttributeAction =
-    | { type: "ADD_ATTRIBUTE", moduleId: string, attribute: Attribute }
-    | { type: "REMOVE_ATTRIBUTE", moduleId: string, attribute: Attribute };
+    | { type: "ADD_ATTRIBUTE", moduleId: number, attribute: Attribute }
+    | { type: "REMOVE_ATTRIBUTE", moduleId: number, attribute: Attribute };
 
 
 export class Attributes extends Component {
 
-  props: { moduleId: string, character: Character, state: List<Attribute> };
+  props: { moduleId: number, character: Character, state: List<Attribute> };
 
   render() {
     const { state, character, moduleId } = this.props;

@@ -3,7 +3,7 @@ import styles from './attributes.scss';
 import NumberInput from 'material-ui-number-input';
 import { List } from 'immutable';
 import { bindActionCreators } from 'redux';
-import { SET_STAT_MODIFIER, REMOVE_STAT_MODIFIER, Modifier } from 'data/stats';
+import { SET_STAT_MODIFIER, REMOVE_STAT_MODIFIER, Modifier } from '/data/stats';
 import { PropTypes } from 'react'
 
 type Attribute = {

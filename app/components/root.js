@@ -3,7 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import styles from './root.scss';
 import { Sheets, reduce as sheet } from './sheet/sheet';
 import { createStore, combineReducers } from 'redux';
-import { reduce as stats } from 'data/stats';
+import { reduce as stats } from '/data/stats';
 import { PropTypes } from 'react'
 
 export class Root extends Component {

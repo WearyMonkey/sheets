@@ -1,8 +1,10 @@
 [ignore]
 
 [include]
+./app/
 
 [libs]
 ./flow-typed
 
 [options]
+module.name_mapper='^\/\(.*\)$' -> '<PROJECT_ROOT>/app/\1'

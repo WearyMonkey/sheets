@@ -47,12 +47,17 @@ module.exports = class FlowWebpackPlugin {
 
   /**
    * @param {{
-   *  prependFlow: boolean|null|undefined
+   *  prependFlow: boolean|null|undefined,
+   *  stripAbsoluteImports: boolean|null|undefined
    * }|undefined} opts
    * @returns {string}
    */
   loader(opts = {}) {
-    return `${require.resolve('./loader')}?store=${encodeURIComponent(this.storePath)}&src=${encodeURIComponent(this.srcPath)}&prependFlow=${!!opts.prependFlow}`;
+    return `${require.resolve('./loader')}`
+        + `?store=${encodeURIComponent(this.storePath)}`
+        + `&src=${encodeURIComponent(this.srcPath)}`
+        + `&prependFlow=${!!opts.prependFlow}`
+        + `&stripAbsoluteImports=${!!opts.stripAbsoluteImports}`;
   }
 
   apply(compiler) {
@@ -97,8 +102,14 @@ module.exports = class FlowWebpackPlugin {
   maybePrepareCleanup() {
     if (this.first == true) {
       this.first = false;
-      process.on('exit', () => this.exec(['stop']));
-      process.on('SIGINT', () => this.exec(['stop']));
+      process.on('exit', exit.bind(this));
+      process.on('SIGINT', exit.bind(this));
+      process.on('uncaughtException', exit.bind(this));
+    }
+
+    function exit(code) {
+      this.exec(['stop']);
+      process.exit(code);
     }
   }
 

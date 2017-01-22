@@ -53,10 +53,6 @@ export class Attributes extends React.Component {
   props: { moduleId: number, character: Character, state: List<Attribute> };
   context: { dispatch:  (a: BatchAction | CharacterAction | AttributeAction ) => BatchAction | CharacterAction | AttributeAction };
 
-  componentWillMount() {
-
-  }
-
   render() {
     const { state, character, moduleId } = this.props;
     const attributeValues = state.map(attr => {
@@ -83,7 +79,7 @@ export class Attributes extends React.Component {
         return makeBatch([
             ...modifier ? [
               removeStatModifier(attr.statId, `${moduleId}/${attr.statId}`),
-              removeStatModifier(attr.statId, `${moduleId}/${attr.statId}-mod`),
+              removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`),
             ] : [],
           setAttributeModifier(moduleId, newStatId, attr, modifier ? modifier.value : 0),
           { type: 'CHANGE_ATTRIBUTE_STAT_ID', moduleId, index, newStatId }
@@ -108,7 +104,7 @@ function setAttributeModifier(moduleId: number, statId: string, attr: Attribute,
         id: `${moduleId}/${statId}-mod`,
         statId: `${statId}-mod`,
         moduleId,
-        value: { statId: attr.statId, factor: 0.5, round: 'DOWN' },
+        value: { statId, factor: 0.5, round: 'DOWN' },
         description: `Base ${attr.displayName} mod`
       })
   ]);

@@ -61,7 +61,15 @@ export function reduce(state: Character = { stats: Map() }, action : CharacterAc
     case 'SET_STAT_MODIFIER':
       return { ...state, stats: state.stats.setIn([action.modifier.statId, action.modifier.id], action.modifier) };
     case 'REMOVE_STAT_MODIFIER':
-      return { ...state, stats: state.stats.deleteIn([action.statId, action.modifierId]) };
+      let stats = state.stats;
+      let stat = stats.get(action.statId);
+      if (stat) {
+        stat = stat.delete(action.modifierId);
+      }
+      if (stat && stat.size == 0) {
+        stats = stats.delete(action.statId);
+      }
+      return { ...state, stats };
     default:
       return state;
   }

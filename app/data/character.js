@@ -5,7 +5,7 @@ export type Modifier = {
   statId: string,
   sourceId: number,
   description: string,
-  value: number
+  value: number | { statId: string, factor: number, round: 'DOWN' | 'UP' | number }
 }
 
 export type Character = {
@@ -17,7 +17,23 @@ export type CharacterAction =
     | { type: 'REMOVE_STAT_MODIFIER', statId: string, modifierId: string }
 
 
-export function addStatModifier(modifier: Modifier) : CharacterAction {
+export function getStatValue(character: Character, statId: string) : number {
+  const modifiers = character.stats.get(statId) || Map();
+  return modifiers.reduce((total, modifier) => {
+    let value = modifier.value;
+    if (typeof value == 'number') {
+      return total + value;
+    } else {
+      return total + round(getStatValue(character, value.statId) * value.factor, value.round);
+    }
+  }, 0);
+}
+
+function round(value: number, round: 'DOWN' | 'UP' | number) : number {
+  return value;
+}
+
+export function setStatModifier(modifier: Modifier) : CharacterAction {
   return {
     type: 'SET_STAT_MODIFIER',
     modifier

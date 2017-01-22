@@ -19,7 +19,7 @@ module.exports = function(source) {
   }
 
   if (stripAbsoluteImports) {
-    source = source.replace(/(import(\s+.*?from)?\s+['"])\//, '$1');
+    source = source.replace(/(import(\s+.*?from)?\s+['"])\//g, '$1');
   }
 
   return source;

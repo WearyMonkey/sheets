@@ -7,12 +7,15 @@ import { createStore, combineReducers } from 'redux';
 import type { Store } from 'redux';
 import { reduce as character } from '/data/character';
 import type { CharacterAction, Character } from '/data/character';
+import { batchReducer } from '/data/batch';
+import type { BatchAction } from '/data/batch';
 import { PropTypes } from 'react'
 import { Map, List } from 'immutable';
 
-type Action =
+export type Action =
     | SheetAction
-    | CharacterAction;
+    | CharacterAction
+    | BatchAction;
 
 type State = { sheet: Sheet, character: Character };
 
@@ -38,7 +41,7 @@ export class Root extends React.Component {
         stats: Map()
       }
     };
-    this.store = createStore(combineReducers({ sheet, character }), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    this.store = createStore(batchReducer(combineReducers({ sheet, character })), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
   }
 
   componentWillMount() {

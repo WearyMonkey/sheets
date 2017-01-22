@@ -3,10 +3,13 @@ import styles from './attributes.scss';
 import NumberInput from 'material-ui-number-input';
 import { List } from 'immutable';
 import { bindActionCreators } from 'redux';
-import { addStatModifier, removeStatModifier } from '/data/character';
+import { setStatModifier, removeStatModifier } from '/data/character';
 import type { Modifier, CharacterAction } from '/data/character';
 import { PropTypes } from 'react'
 import type { Character } from '/data/character';
+import { getStatValue } from '/data/character';
+import { makeBatch } from '/data/batch';
+import type { BatchAction } from '/data/batch';
 
 type Attribute = {
   statId: string,
@@ -45,13 +48,25 @@ export type AttributeAction =
 export class Attributes extends Component {
 
   props: { moduleId: number, character: Character, state: List<Attribute> };
+  context: { dispatch:  (a: BatchAction | CharacterAction | AttributeAction ) => BatchAction | CharacterAction | AttributeAction };
+
+  componentWillMount() {
+    const moduleId = this.props.moduleId;
+    this.props.state.forEach(attr => {
+      this.context.dispatch(setStatModifier({
+        id: `${moduleId}/${attr.statId}`,
+        statId: `${attr.statId}-mod`,
+        sourceId: moduleId,
+        value: { statId: attr.statId, factor: 1, round: 'DOWN' },
+        description: `${attr.displayName} Mod`
+      }));
+    });
+  }
 
   render() {
     const { state, character, moduleId } = this.props;
     const attributes = state;
-    const attributeValues = attributes.map(attr => character.stats
-        .get(attr.statId, List())
-        .reduce((sum, modifier) => sum + modifier.value, 0));
+    const attributeValues = attributes.map(attr => getStatValue(character, attr.statId));
 
     const actionCreators = bindActionCreators({
       onAddAttribute(attribute: Attribute) : AttributeAction {
@@ -61,13 +76,13 @@ export class Attributes extends Component {
         return { type: "REMOVE_ATTRIBUTE", moduleId, attribute };
       },
       onAttributeChange(attribute: Attribute, value) : CharacterAction {
-        return addStatModifier({
+        return setStatModifier({
           id: `${moduleId}/${attribute.statId}`,
           statId: attribute.statId,
           sourceId: moduleId,
           value: value,
           description: `Base ${attribute.displayName}`
-        });
+        })
       }
     }, this.context.dispatch );
 

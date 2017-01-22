@@ -10,22 +10,31 @@ import type { Character } from '/data/character';
 import { getStatValue } from '/data/character';
 import { makeBatch } from '/data/batch';
 import type { BatchAction } from '/data/batch';
+import { VerticalTable } from '/components/common/vertical-table';
 
 type Attribute = {
   statId: string,
   displayName: string
 }
 
-function AttributesPresentation({ onAddAttribute, onRemoveAttribute, onAttributeChange, attributes, attributeValues }) {
-  return <div>
-    {attributes.map((attribute, i)=> {
-      return <div key={i}>
-        <span>{attribute.displayName}</span>
-        <NumberInput name="{attribute.statId}" onValid={value => onAttributeChange(attribute, value)}/>
-        <span>{attributeValues[i]}</span>
-      </div>
-    })}
-  </div>
+function AttributesPresentation({ onAddAttribute, onRemoveAttribute, onAttributeChange, attributeValues }) {
+  return <VerticalTable
+      editMode={true}
+      cols={[
+          {displayName: 'Attribute'},
+          {displayName: 'Base'},
+          {displayName: 'Value'},
+          {displayName: 'Mod'},
+      ]}
+      rows={attributeValues.map(({attr, value, mod}, i) => ({
+        elements: [
+            <span>{attr.displayName}</span>,
+            <NumberInput name="{attr.statId}" onValid={newValue => onAttributeChange(attr, newValue)}/>,
+            <span>{value}</span>,
+            <span>{mod}</span>
+        ]
+      }))}
+    />
 }
 
 export const MODULE_TYPE = 'ATTRIBUTES_MODULE';
@@ -57,7 +66,7 @@ export class Attributes extends Component {
         id: `${moduleId}/${attr.statId}`,
         statId: `${attr.statId}-mod`,
         sourceId: moduleId,
-        value: { statId: attr.statId, factor: 1, round: 'DOWN' },
+        value: { statId: attr.statId, factor: 0.5, round: 'DOWN' },
         description: `${attr.displayName} Mod`
       }));
     });
@@ -65,8 +74,12 @@ export class Attributes extends Component {
 
   render() {
     const { state, character, moduleId } = this.props;
-    const attributes = state;
-    const attributeValues = attributes.map(attr => getStatValue(character, attr.statId));
+
+    const attributeValues = state.map(attr => ({
+      attr,
+      value: getStatValue(character, attr.statId),
+      mod: getStatValue(character, `${attr.statId}-mod`)
+    }));
 
     const actionCreators = bindActionCreators({
       onAddAttribute(attribute: Attribute) : AttributeAction {
@@ -86,7 +99,7 @@ export class Attributes extends Component {
       }
     }, this.context.dispatch );
 
-    const props = { ...actionCreators, attributes, attributeValues };
+    const props = { ...actionCreators, attributeValues };
 
     return <AttributesPresentation {...props} />
   }

@@ -30,7 +30,18 @@ export function getStatValue(character: Character, statId: string) : number {
 }
 
 function round(value: number, round: 'DOWN' | 'UP' | number) : number {
-  return value;
+  if (typeof round === 'string') {
+      const softRound = Math.round(value);
+      if (Math.abs(softRound - value) < 0.0005) {
+        return softRound;
+      } else if (round == 'DOWN') {
+        return Math.floor(value);
+      } else {
+        return Math.ceil(value);
+      }
+  } else {
+    return Number(value.toFixed(value));
+  }
 }
 
 export function setStatModifier(modifier: Modifier) : CharacterAction {

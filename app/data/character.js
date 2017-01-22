@@ -3,7 +3,7 @@ import { Map } from 'immutable';
 export type Modifier = {
   id: string,
   statId: string,
-  sourceId: number,
+  moduleId: number,
   description: string,
   value: number | { statId: string, factor: number, round: 'DOWN' | 'UP' | number }
 }
@@ -14,7 +14,7 @@ export type Character = {
 
 export type CharacterAction =
     | { type: 'SET_STAT_MODIFIER', modifier: Modifier }
-    | { type: 'REMOVE_STAT_MODIFIER', statId: string, modifierId: string }
+    | { type: 'REMOVE_STAT_MODIFIER', statId: string, modifierId: string };
 
 
 export function getStatValue(character: Character, statId: string) : number {
@@ -27,6 +27,10 @@ export function getStatValue(character: Character, statId: string) : number {
       return total + round(getStatValue(character, value.statId) * value.factor, value.round);
     }
   }, 0);
+}
+
+export function getModifier(character: Character, statId: string, id: string) : ?Modifier {
+  return character.stats.getIn([statId, id]);
 }
 
 function round(value: number, round: 'DOWN' | 'UP' | number) : number {
@@ -45,18 +49,11 @@ function round(value: number, round: 'DOWN' | 'UP' | number) : number {
 }
 
 export function setStatModifier(modifier: Modifier) : CharacterAction {
-  return {
-    type: 'SET_STAT_MODIFIER',
-    modifier
-  }
+  return { type: 'SET_STAT_MODIFIER', modifier }
 }
 
 export function removeStatModifier(statId: string, modifierId: string) : CharacterAction {
-  return {
-    type: 'REMOVE_STAT_MODIFIER',
-    statId,
-    modifierId,
-  }
+  return { type: 'REMOVE_STAT_MODIFIER', statId, modifierId }
 }
 
 export function reduce(state: Character = { stats: Map() }, action : CharacterAction) : Character {

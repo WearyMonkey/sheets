@@ -1,32 +1,54 @@
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 type Column = {
   displayName: string
 }
 
 type Row = {
-  elements: Array<React.Element<any>>
+  elements: Array<{view: React.Element<any>, edit: React.Element<any>|null}>,
+  onDelete: () => void
 }
 
 export class VerticalTable extends React.Component {
 
-  props: { editMode: boolean, rows: Array<Row>, cols: Array<Column> };
+  props: {
+    editMode: boolean,
+    rows: Array<Row>,
+    cols: Array<Column>,
+    onAdd: () => void,
+  };
 
   render() {
-    const { editMode, cols, rows } = this.props;
-    return <table>
-      <tr>
-        {cols.map(col =>
-          <th>{col.displayName}</th>
-        )}
-      </tr>
-      {rows.map(row =>
-        <tr>
-          {row.elements.map(e =>
-              <td>{e}</td>
+    const { editMode, cols, rows, onAdd } = this.props;
+    return <div>
+      <table>
+        <thead>
+          <tr>
+            {cols.map((col, i) =>
+              <th key={i}>{col.displayName}</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) =>
+            <tr key={i}>
+              {row.elements.map((e, i) =>
+                  <td key={i}>{editMode ? e.edit || e.view : e.view}</td>
+              )}
+              {editMode &&
+                <td>
+                  <RaisedButton onClick={() => row.onDelete(i)}>Delete</RaisedButton>
+                </td>
+              }
+            </tr>
           )}
-        </tr>
-      )}
-    </table>;
+
+        </tbody>
+      </table>
+      {editMode &&
+        <RaisedButton onClick={onAdd}>Add</RaisedButton>
+      }
+    </div>;
   }
 }

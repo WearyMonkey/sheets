@@ -11,6 +11,8 @@ import { batchReducer } from '/data/batch';
 import type { BatchAction } from '/data/batch';
 import { PropTypes } from 'react'
 import { Map, List } from 'immutable';
+import { MODULES } from './modules/modules';
+import { makeBatch } from '/data/batch';
 
 export type Action =
     | SheetAction
@@ -29,12 +31,12 @@ export class Root extends React.Component {
     const defaultState: State = {
       sheet: {
         modules: List([
-          {id: 1, type: 'ATTRIBUTES_MODULE', state: [
+          {id: 1, type: 'ATTRIBUTES_MODULE', state: List([
             {
               statId: 'strength',
               displayName: 'Strength',
             }
-          ]}
+          ])}
         ])
       },
       character: {
@@ -42,6 +44,11 @@ export class Root extends React.Component {
       }
     };
     this.store = createStore(batchReducer(combineReducers({ sheet, character })), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    const state = this.store.getState();
+    const initActions = state.sheet.modules.flatMap(moduleConfig =>
+      MODULES.get(moduleConfig.type).addToSheet(state.character, moduleConfig.id, moduleConfig.state)
+    );
+    this.store.dispatch(makeBatch(initActions));
   }
 
   componentWillMount() {

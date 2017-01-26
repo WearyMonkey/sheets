@@ -1,5 +1,6 @@
 import React from 'react';
-import { Attributes, reduce, MODULE_TYPE, addToSheet } from './attributes/attributes';
+import * as Attributes from './attributes/attributes';
+import * as Abilities from './abilities/abilities';
 import type { AttributeAction } from './attributes/attributes';
 import type { Character } from '/data/character';
 import type { Action } from '/components/root';
@@ -15,5 +16,6 @@ export type Module = {
 }
 
 export const MODULES : Map<string, Module> = new Map([
-    [MODULE_TYPE, { component: Attributes, reduce, addToSheet }]
+    [Attributes.MODULE_TYPE, { component: Attributes.Attributes, reduce: Attributes.reduce, addToSheet: Attributes.addToSheet }],
+    [Abilities.MODULE_TYPE, { component: Abilities.Abilities, reduce: Abilities.reduce, addToSheet: Abilities.addToSheet }],
 ]);

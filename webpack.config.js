@@ -50,5 +50,5 @@ module.exports = {
     port: 9999,
     inline: false
   },
-  devtool: 'eval'
+  devtool: 'inline-source-map'
 };

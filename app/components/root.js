@@ -36,11 +36,13 @@ export class Root extends React.Component {
               statId: 'strength',
               displayName: 'Strength',
             }
-          ])}
+          ])},
+          {id: 2, type: 'ABILITIES_MODULE', state: {}}
         ])
       },
       character: {
-        stats: Map()
+        stats: Map(),
+        abilities: List()
       }
     };
     this.store = createStore(batchReducer(combineReducers({ sheet, character })), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());

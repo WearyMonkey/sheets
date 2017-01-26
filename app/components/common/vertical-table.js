@@ -1,5 +1,6 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import styles from './verticale-table.scss';
 
 type Column = {
   displayName: string
@@ -22,7 +23,7 @@ export class VerticalTable extends React.Component {
   render() {
     const { editMode, cols, rows, onAdd } = this.props;
     return <div>
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
             {cols.map((col, i) =>

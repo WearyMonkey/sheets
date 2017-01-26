@@ -45,19 +45,11 @@ module.exports = class FlowWebpackPlugin {
     this.first = true;
   }
 
-  /**
-   * @param {{
-   *  prependFlow: boolean|null|undefined,
-   *  stripAbsoluteImports: boolean|null|undefined
-   * }|undefined} opts
-   * @returns {string}
-   */
-  loader(opts = {}) {
+  /** @returns {string} */
+  loader() {
     return `${require.resolve('./loader')}`
         + `?store=${encodeURIComponent(this.storePath)}`
-        + `&src=${encodeURIComponent(this.srcPath)}`
-        + `&prependFlow=${!!opts.prependFlow}`
-        + `&stripAbsoluteImports=${!!opts.stripAbsoluteImports}`;
+        + `&src=${encodeURIComponent(this.srcPath)}`;
   }
 
   apply(compiler) {

@@ -22,7 +22,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           'babel-loader',
-          flowWebpackPlugin.loader({ prependFlow: true, stripAbsoluteImports: true })
+          flowWebpackPlugin.loader()
         ],
       },
       {

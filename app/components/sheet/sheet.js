@@ -1,10 +1,11 @@
+// @flow
 import * as React from 'react';
 import styles from './sheet.scss';
 import PackeryFactory from 'react-packery-component';
-import { MODULES } from '/components/modules/modules';
-import type { ModuleAction, Module } from '/components/modules/modules';
+import { MODULES } from 'components/modules/modules';
+import type { ModuleAction, Module } from 'components/modules/modules';
 import { List } from 'immutable';
-import type { Character } from '/data/character';
+import type { Character } from 'data/character';
 
 export type SheetAction =
     | ModuleAction;

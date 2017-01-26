@@ -1,4 +1,5 @@
-import type { Action } from '/components/root';
+// @flow
+import type { Action } from 'components/root';
 
 export type BatchAction = { type: 'BATCH', actions: Array<Action> };
 

@@ -1,4 +1,5 @@
-import type { Description } from '/data/character';
+// @flow
+import type { Description } from 'data/character';
 import TextField from 'material-ui/TextField';
 
 export function ViewDescription({ description } : { description: Description }) {

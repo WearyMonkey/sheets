@@ -7,3 +7,5 @@
 
 [options]
 module.name_mapper='^\/\(.*\)$' -> '<PROJECT_ROOT>/app/\1'
+module.system.node.resolve_dirname=node_modules
+module.system.node.resolve_dirname=app

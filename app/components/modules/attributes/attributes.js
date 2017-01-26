@@ -1,18 +1,19 @@
+// @flow
 import React from 'react';
 import styles from './attributes.scss';
 import NumberInput from 'material-ui-number-input';
 import TextField from 'material-ui/TextField';
 import { List } from 'immutable';
 import { bindActionCreators } from 'redux';
-import { setStatModifier, removeStatModifier } from '/data/character';
-import type { Modifier, CharacterAction } from '/data/character';
+import { setStatModifier, removeStatModifier } from 'data/character';
+import type { Modifier, CharacterAction } from 'data/character';
 import { PropTypes } from 'react'
-import type { Character } from '/data/character';
-import { getStatValue, getModifier } from '/data/character';
-import { makeBatch } from '/data/batch';
-import type { BatchAction } from '/data/batch';
-import { VerticalTable } from '/components/common/vertical-table';
-import type { Action } from '/components/root';
+import type { Character } from 'data/character';
+import { getStatValue, getModifier } from 'data/character';
+import { makeBatch } from 'data/batch';
+import type { BatchAction } from 'data/batch';
+import { VerticalTable } from 'components/common/vertical-table';
+import type { Action } from 'components/root';
 
 type Attribute = {
   statId: string,

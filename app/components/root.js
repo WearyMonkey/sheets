@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import styles from './root.scss';
@@ -5,14 +6,14 @@ import { Sheets, reduce as sheet } from './sheet/sheet';
 import type { SheetAction, Sheet } from './sheet/sheet';
 import { createStore, combineReducers } from 'redux';
 import type { Store } from 'redux';
-import { reduce as character } from '/data/character';
-import type { CharacterAction, Character } from '/data/character';
-import { batchReducer } from '/data/batch';
-import type { BatchAction } from '/data/batch';
+import { reduce as character } from 'data/character';
+import type { CharacterAction, Character } from 'data/character';
+import { batchReducer } from 'data/batch';
+import type { BatchAction } from 'data/batch';
 import { PropTypes } from 'react'
 import { Map, List } from 'immutable';
 import { MODULES } from './modules/modules';
-import { makeBatch } from '/data/batch';
+import { makeBatch } from 'data/batch';
 
 export type Action =
     | SheetAction

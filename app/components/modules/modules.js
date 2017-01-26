@@ -1,9 +1,10 @@
+// @flow
 import React from 'react';
 import * as Attributes from './attributes/attributes';
 import * as Abilities from './abilities/abilities';
 import type { AttributeAction } from './attributes/attributes';
-import type { Character } from '/data/character';
-import type { Action } from '/components/root';
+import type { Character } from 'data/character';
+import type { Action } from 'components/root';
 import { Map } from 'immutable';
 
 export type ModuleAction =

@@ -1,7 +1,8 @@
+// @flow
 import React from 'react';
 import { List } from 'immutable';
-import { EditDescription, ViewDescription } from '/components/common/description';
-import type { Ability, Character, CharacterAction } from '/data/character';
+import { EditDescription, ViewDescription } from 'components/common/description';
+import type { Ability, Character, CharacterAction } from 'data/character';
 import RaisedButton from 'material-ui/RaisedButton';
 
 type AbilitiesState = {

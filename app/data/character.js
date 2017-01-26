@@ -1,3 +1,4 @@
+// @flow
 import { Map, List } from 'immutable';
 
 export type Description =

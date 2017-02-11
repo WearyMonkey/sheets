@@ -19,7 +19,6 @@
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-webpack-plugin": "^2.26.0",
-    "loader-utils": "^0.2.16",
     "node-sass": "^4.2.0",
     "sass-loader": "^4.1.1",
     "ts-loader": "^2.0.0",

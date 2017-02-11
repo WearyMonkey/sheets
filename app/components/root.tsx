@@ -1,31 +1,30 @@
-// @flow
-import React from 'react';
+import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
-import styles from './root.scss';
+import * as styles from './root.css';
 import { Sheets, reduce as sheet } from './sheet/sheet';
-import type { SheetAction, Sheet } from './sheet/sheet';
+import { SheetAction, Sheet } from './sheet/sheet';
 import { createStore, combineReducers } from 'redux';
-import type { Store } from 'redux';
-import { reduce as character } from 'data/character';
-import type { CharacterAction, Character } from 'data/character';
+import { Store } from 'redux';
+import { reduce as character, Modifier, Ability } from 'data/character';
+import { CharacterAction, Character } from 'data/character';
 import { batchReducer } from 'data/batch';
-import type { BatchAction } from 'data/batch';
+import { BatchAction } from 'data/batch';
 import { PropTypes } from 'react'
 import { Map, List } from 'immutable';
 import { MODULES } from './modules/modules';
 import { makeBatch } from 'data/batch';
 
 export type Action =
-    | SheetAction
+      SheetAction
     | CharacterAction
     | BatchAction;
 
 type State = { sheet: Sheet, character: Character };
 
-export class Root extends React.Component {
+export class Root extends React.Component<{}, {}> {
 
   state: { state: State };
-  store : Store<State, Action>;
+  store : Store<State>;
 
   constructor() {
     super();
@@ -42,15 +41,16 @@ export class Root extends React.Component {
         ])
       },
       character: {
-        stats: Map(),
-        abilities: List()
+        stats: Map<string, Map<string, Modifier>>(),
+        abilities: List<Ability>()
       }
     };
-    this.store = createStore(batchReducer(combineReducers({ sheet, character })), defaultState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+    this.store = createStore(batchReducer<State>(combineReducers<State>({ sheet, character })), defaultState, reduxDevTools && reduxDevTools());
     const state = this.store.getState();
-    const initActions = state.sheet.modules.flatMap(moduleConfig =>
-      MODULES.get(moduleConfig.type).addToSheet(state.character, moduleConfig.id, moduleConfig.state)
-    );
+    const initActions : Array<Action> = state.sheet.modules.map(moduleConfig =>
+      MODULES.get(moduleConfig.type).addToSheet(state.character, moduleConfig.id, moduleConfig.state
+    )).flatten().toArray();
     this.store.dispatch(makeBatch(initActions));
   }
 
@@ -75,8 +75,8 @@ export class Root extends React.Component {
       </div>
     </div>
   }
-}
 
-Root.childContextTypes = {
-  dispatch: PropTypes.func.isRequired
-};
+  static childContextTypes = {
+    dispatch: PropTypes.func.isRequired
+  };
+}

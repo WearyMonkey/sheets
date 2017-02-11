@@ -1,14 +1,12 @@
-// @flow
 import * as React from 'react';
-import styles from './sheet.scss';
-import PackeryFactory from 'react-packery-component';
+import * as styles from './sheet.css';
+import * as PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
-import type { ModuleAction, Module } from 'components/modules/modules';
-import { List } from 'immutable';
-import type { Character } from 'data/character';
+import { ModuleAction, Module } from 'components/modules/modules';
+import {List, Iterable} from 'immutable';
+import { Character } from 'data/character';
 
-export type SheetAction =
-    | ModuleAction;
+export type SheetAction = ModuleAction;
 
 export type ModuleConfig = {
   id: number,
@@ -20,7 +18,7 @@ export type Sheet = {
   modules: List<ModuleConfig>
 }
 
-export function reduce(state : Sheet = {modules: List()}, action : SheetAction) : Sheet {
+export function reduce(state : Sheet = {modules: List<ModuleConfig>()}, action : SheetAction) : Sheet {
   return {
     modules: state.modules.map(moduleConfig => {
       const module = MODULES.get(moduleConfig.type);
@@ -29,7 +27,7 @@ export function reduce(state : Sheet = {modules: List()}, action : SheetAction) 
       } else {
         return moduleConfig
       }
-    })
+    }).toList()
   };
 }
 
@@ -42,7 +40,7 @@ const packeryOptions = {
   percentPosition: true
 };
 
-function SheetPresentation({ modules }) {
+function SheetPresentation({ modules } : { modules: Iterable<number, React.ReactElement<any>> }) {
   return <div className={styles.root}>
     <Packery options={packeryOptions} className="sheets">
       <div className={styles.gutterSizer}></div>
@@ -56,8 +54,7 @@ function SheetPresentation({ modules }) {
   </div>
 }
 
-export class Sheets extends React.Component {
-  props: { character: Character, state: Sheet };
+export class Sheets extends React.Component<{ character: Character, state: Sheet }, {}> {
   render() {
     const { modules } = this.props.state;
     return <SheetPresentation modules={modules.map(moduleConfig => {

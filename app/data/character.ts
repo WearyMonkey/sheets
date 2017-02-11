@@ -1,12 +1,11 @@
-// @flow
 import { Map, List } from 'immutable';
 
 export type Description =
-    | { type: 'IMAGE', url: string }
+    { type: 'IMAGE', url: string }
     | { type: 'TEXT',  value: string };
 
 export type Bonus =
-    | { type: 'STAT', description: Description, statId: string  }
+    { type: 'STAT', description: Description, statId: string  }
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
@@ -14,7 +13,7 @@ export type DiceRoll = {
 };
 
 export type Action =
-    | { type: 'ROLL', diceRoll: DiceRoll, description: Description };
+    { type: 'ROLL', diceRoll: DiceRoll, description: Description };
 
 export type Ability = {
   id: string,
@@ -36,14 +35,14 @@ export type Character = {
 };
 
 export type CharacterAction =
-    | { type: 'SET_STAT_MODIFIER', modifier: Modifier }
+    { type: 'SET_STAT_MODIFIER', modifier: Modifier }
     | { type: 'REMOVE_STAT_MODIFIER', statId: string, modifierId: string }
     | { type: 'REMOVE_ABILITY', abilityId: string }
     | { type: 'ADD_ABILITY', ability: Ability }
 
 
 export function getStatValue(character: Character, statId: string) : number {
-  const modifiers = character.stats.get(statId) || Map();
+  const modifiers = character.stats.get(statId) || Map<string, Modifier>();
   return modifiers.reduce((total, modifier) => {
     let value = modifier.value;
     if (typeof value == 'number') {
@@ -54,7 +53,7 @@ export function getStatValue(character: Character, statId: string) : number {
   }, 0);
 }
 
-export function getModifier(character: Character, statId: string, id: string) : ?Modifier {
+export function getModifier(character: Character, statId: string, id: string) : Modifier|null {
   return character.stats.getIn([statId, id]);
 }
 
@@ -81,11 +80,11 @@ export function removeStatModifier(statId: string, modifierId: string) : Charact
   return { type: 'REMOVE_STAT_MODIFIER', statId, modifierId }
 }
 
-export function reduce(character: Character = { stats: Map(), abilities: List() }, action : CharacterAction) : Character {
+export function reduce(character: Character = { stats: Map<string, Map<string, Modifier>>(), abilities: List<Ability>() }, action : CharacterAction) : Character {
   switch (action.type) {
     case 'REMOVE_ABILITY':
       const id = action.abilityId;
-      return { ...character, abilities: character.abilities.filter(a => a.id != id) };
+      return { ...character, abilities: character.abilities.filter(a => a.id != id).toList() };
     case 'ADD_ABILITY':
       return { ...character, abilities: character.abilities.push(action.ability) };
     case 'SET_STAT_MODIFIER':

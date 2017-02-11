@@ -1,26 +1,22 @@
-// @flow
-import React from 'react';
+import * as React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import styles from './verticale-table.scss';
+import * as styles from './verticale-table.css';
 
 type Column = {
   displayName: string
 }
 
 type Row = {
-  elements: Array<{view: React.Element<any>, edit: React.Element<any>|null}>,
-  onDelete: () => void
+  elements: Array<{view: React.ReactElement<any>, edit?: React.ReactElement<any>}>,
+  onDelete: (i : number) => void
 }
 
-export class VerticalTable extends React.Component {
-
-  props: {
-    editMode: boolean,
-    rows: Array<Row>,
-    cols: Array<Column>,
-    onAdd: () => void,
-  };
-
+export class VerticalTable extends React.Component<{
+  editMode: boolean,
+  rows: Array<Row>,
+  cols: Array<Column>,
+  onAdd: () => void,
+}, {}> {
   render() {
     const { editMode, cols, rows, onAdd } = this.props;
     return <div>

@@ -1,5 +1,5 @@
-// @flow
-import type { Description } from 'data/character';
+import * as React from 'react';
+import { Description } from 'data/character';
 import TextField from 'material-ui/TextField';
 
 export function ViewDescription({ description } : { description: Description }) {
@@ -11,7 +11,7 @@ export function ViewDescription({ description } : { description: Description }) 
   }
 }
 
-export function EditDescription({ description, onSave } : { description: ?Description, onSave: (d: Description) => void }) {
+export function EditDescription({ description, onSave } : { description: Description|null, onSave: (d: Description) => void }) {
   description = description || { type: 'TEXT', value: '' };
   switch (description.type) {
     case 'IMAGE':

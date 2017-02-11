@@ -1,8 +1,7 @@
-// @flow
-import React from 'react';
+import * as React from 'react';
 import { List } from 'immutable';
 import { EditDescription, ViewDescription } from 'components/common/description';
-import type { Ability, Character, CharacterAction } from 'data/character';
+import { Ability, Character, CharacterAction } from 'data/character';
 import RaisedButton from 'material-ui/RaisedButton';
 
 type AbilitiesState = {
@@ -15,13 +14,12 @@ export function addToSheet(character: Character, moduleId: string, state: Abilit
 
 export const MODULE_TYPE : string = 'ABILITIES_MODULE';
 
-export function reduce(state: AbilitiesState = { }, action: *) {
+export function reduce(state: AbilitiesState = { }, action: any) {
   return state;
 }
 
-export class Abilities extends React.Component {
+export class Abilities extends React.Component<{ moduleId: number, character: Character, state: AbilitiesState }, {}> {
 
-  props: { moduleId: number, character: Character, state: AbilitiesState };
   context: { dispatch:  (a: CharacterAction ) => CharacterAction };
 
   render() {

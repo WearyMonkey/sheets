@@ -1,0 +1,17 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./app",
+    "noImplicitAny": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "typeRoots" : ["./typings/modules"],
+    "jsx": "React",
+    "moduleResolution": "node",
+    "outDir": "tsc-out"
+  },
+  "include": [
+    "app/**/*",
+    "declarations"
+  ]
+}

@@ -1,36 +1,28 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const FlowWebpackPlugin = require('./flow-webpack-plugin');
 
-const flowWebpackPlugin = new FlowWebpackPlugin({
-  srcPath: __dirname,
-  cachePath: path.join(__dirname, '.flowcache')
-});
 const extractCSS = new ExtractTextPlugin('[name].css');
 
 module.exports = {
   resolve: {
     modules: [path.join(__dirname, 'app'), 'node_modules'],
-    extensions: ['.jsx', '.js']
+    extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
-  entry: ['index.js'],
+  entry: ['index.tsx'],
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: [/\.tsx?$/],
         exclude: /node_modules/,
-        use: [
-          'babel-loader',
-          flowWebpackPlugin.loader()
-        ],
+        use: [{
+          loader: 'ts-loader'
+        }],
       },
       {
         test: /\.(css|scss)$/,
-        use: [
-          flowWebpackPlugin.loader(),
-          ...extractCSS.extract(['css-loader?modules', 'sass-loader']).split('!')
-        ]
+        exclude: /node_modules/,
+        use: extractCSS.extract(['css-loader?modules'])
       }
     ]
   },
@@ -43,8 +35,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'app/index.ejs'
     }),
-    extractCSS,
-    flowWebpackPlugin
+    extractCSS
   ],
   devServer: {
     port: 9999,

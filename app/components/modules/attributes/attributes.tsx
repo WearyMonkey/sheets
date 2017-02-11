@@ -3,41 +3,21 @@ import * as styles from './attributes.css';
 import NumberInput from 'material-ui-number-input';
 import TextField from 'material-ui/TextField';
 import { List } from 'immutable';
-import { bindActionCreators } from 'redux';
 import { setStatModifier, removeStatModifier } from 'data/character';
-import { CharacterAction } from 'data/character';
-import { PropTypes } from 'react'
 import { Character } from 'data/character';
 import { getStatValue, getModifier } from 'data/character';
 import { makeBatch } from 'data/batch';
 import { BatchAction } from 'data/batch';
 import { VerticalTable } from 'components/common/vertical-table';
 import { Action } from 'components/root';
+import { Store } from 'data/store';
 
 type Attribute = {
   statId: string,
   displayName: string,
 }
 
-export type AttributeAction =
-    { type: 'ADD_ATTRIBUTE', moduleId: number }
-    | { type: 'REMOVE_ATTRIBUTE', moduleId: number, index: number }
-    | { type: 'CHANGE_ATTRIBUTE_STAT_ID', moduleId: number, index: number, newStatId: string }
-
-
 export const MODULE_TYPE = 'ATTRIBUTES_MODULE';
-export function reduce(state: List<Attribute> = List<Attribute>(), action : AttributeAction) {
-  switch (action.type) {
-    case 'ADD_ATTRIBUTE':
-      return state.push({ statId: '', displayName: '' });
-    case 'REMOVE_ATTRIBUTE':
-      return state.delete(action.index);
-    case 'CHANGE_ATTRIBUTE_STAT_ID':
-      return state.set(action.index, { ...state.get(action.index), statId: action.newStatId });
-    default:
-      return state;
-  }
-}
 
 export function addToSheet(character: Character, moduleId: number, state: List<Attribute>) : Array<Action> {
   return state.reduce((actions, attr) => {
@@ -48,13 +28,10 @@ export function addToSheet(character: Character, moduleId: number, state: List<A
   }, []);
 }
 
-export class Attributes extends React.Component<{ moduleId: number, character: Character, state: List<Attribute> }, {}> {
-
-  context: { dispatch:  (a: BatchAction | CharacterAction | AttributeAction ) => BatchAction | CharacterAction | AttributeAction };
-
+export class Attributes extends React.Component<{ moduleId: number, character: Character, store: Store<List<Attribute>> }, {}> {
   render() {
-    const { state, character, moduleId } = this.props;
-    const attributeValues = state.map(attr => {
+    const { store, character, moduleId } = this.props;
+    const attributeValues = store.get().map(attr => {
       const modifier = getModifier(character, attr.statId, `${moduleId}/${attr.statId}`);
       return {
         attr,
@@ -63,35 +40,31 @@ export class Attributes extends React.Component<{ moduleId: number, character: C
         mod: getStatValue(character, `${attr.statId}-mod`)
       };
     }).toList();
-    const actionCreators = bindActionCreators({
-      onAddAttribute() : AttributeAction {
-        return { type: 'ADD_ATTRIBUTE', moduleId };
+    const actionCreators = {
+      onAddAttribute() {
+        store.update(attributes => attributes.push({ statId: '', displayName: '' }));
       },
-      onRemoveAttribute(index: number) : AttributeAction {
-        return { type: 'REMOVE_ATTRIBUTE', moduleId, index };
+      onRemoveAttribute(index: number) {
+        store.update(attributes => attributes.delete(index));
       },
-      onAttributeChange(attribute: Attribute, value: number) : BatchAction {
-        return setAttributeModifier(moduleId, attribute.statId, attribute, value);
+      onAttributeChange(attribute: Attribute, value: number) {
+        store.dispatch(setAttributeModifier(moduleId, attribute.statId, attribute, value));
       },
-      onAttributeStatIdChange(attr: Attribute, index: number, newStatId: string) : BatchAction {
+      onAttributeStatIdChange(attr: Attribute, index: number, newStatId: string) {
         const modifier = getModifier(character, attr.statId, `${moduleId}/${attr.statId}`);
-        return makeBatch([
+        store.dispatch(makeBatch([
             ...modifier ? [
               removeStatModifier(attr.statId, `${moduleId}/${attr.statId}`),
               removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`),
             ] : [],
-          setAttributeModifier(moduleId, newStatId, attr, modifier ? modifier.value : 0),
-          { type: 'CHANGE_ATTRIBUTE_STAT_ID', moduleId, index, newStatId }
-        ]);
+          setAttributeModifier(moduleId, newStatId, attr, modifier ? modifier.value : 0)
+        ]));
+        store.update(attributes => attributes.set(index, { ...attributes.get(index), statId: newStatId }));
       }
-    }, this.context.dispatch );
+    };
 
     return <AttributesPresentation {...actionCreators} attributeValues={attributeValues} />;
   }
-
-  static contextTypes = {
-    dispatch: PropTypes.func.isRequired
-  };
 }
 
 function setAttributeModifier(moduleId: number, statId: string, attr: Attribute, value: any) : BatchAction {

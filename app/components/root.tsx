@@ -2,24 +2,21 @@ import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import * as styles from './root.css';
 import { Sheets, Sheet } from './sheet/sheet';
-import { reduce as character, Modifier, Ability } from 'data/character';
-import { CharacterAction, Character } from 'data/character';
+import { Modifier, Ability, Character, CharacterStore } from 'data/character';
 import { BatchAction } from 'data/batch';
 import { Map, List } from 'immutable';
 import { MODULES } from './modules/modules';
-import { makeBatch, batchReducer } from 'data/batch';
-import { ReduxStore } from "data/store";
+import { ReduxStore, Store } from "data/store";
 
-export type Action =
-      CharacterAction
-    | BatchAction;
+export type Action = BatchAction;
 
 type State = {sheet: Sheet, character: Character};
 
 export class Root extends React.Component<{}, {}> {
 
-  state: {state: State};
-  store: ReduxStore<State, State>;
+  private store: ReduxStore<State, State>;
+  private sheetStore: Store<Sheet>;
+  private characterStore: CharacterStore;
 
   constructor() {
     super();
@@ -43,14 +40,19 @@ export class Root extends React.Component<{}, {}> {
       }
     };
 
-    this.store = ReduxStore.createRoot(batchReducer((state: State, action: Action) => ({
-      ...state, character: character(state.character, action as CharacterAction)
-    })), defaultState);
+    this.store = ReduxStore.createRoot((state: State, action: Action) => state, defaultState);
     const state = this.store.get();
-    const initActions: Array<Action> = state.sheet.modules.map(moduleConfig =>
-        MODULES.get(moduleConfig.type).addToSheet(state.character, moduleConfig.id, moduleConfig.state
-        )).flatten().toArray();
-    this.store.dispatch(makeBatch(initActions));
+    this.sheetStore = this.store.lens<Sheet>({
+      get: state => state.sheet,
+      set: (state, sheet) => ({...state, sheet})
+    });
+    this.characterStore = new CharacterStore(this.store.lens<Character>({
+      get: state => state.character,
+      set: (state, character) => ({...state, character})
+    }));
+    state.sheet.modules.forEach(moduleConfig =>
+      MODULES.get(moduleConfig.type).addToSheet(this.characterStore, moduleConfig.id, moduleConfig.state)
+    );
   }
 
   componentWillMount() {
@@ -61,15 +63,11 @@ export class Root extends React.Component<{}, {}> {
   }
 
   render() {
-    const sheetStore = this.store.lens<Sheet>({
-      get: state => state.sheet,
-      set: (state, sheet) => ({...state, sheet})
-    });
     return <div>
       <AppBar/>
       <div className={styles.containerOuter}>
         <div className={styles.containerInner}>
-          <Sheets store={sheetStore} character={this.state.state.character}/>
+          <Sheets store={this.sheetStore} characterStore={this.characterStore}/>
         </div>
       </div>
     </div>

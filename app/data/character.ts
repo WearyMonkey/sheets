@@ -1,4 +1,5 @@
 import { Map, List } from 'immutable';
+import { Store } from "./store";
 
 export type Description =
     { type: 'IMAGE', url: string }
@@ -34,27 +35,56 @@ export type Character = {
   abilities: List<Ability>
 };
 
-export type CharacterAction =
-    { type: 'SET_STAT_MODIFIER', modifier: Modifier }
-    | { type: 'REMOVE_STAT_MODIFIER', statId: string, modifierId: string }
-    | { type: 'REMOVE_ABILITY', abilityId: string }
-    | { type: 'ADD_ABILITY', ability: Ability }
+export class CharacterStore {
+  private store: Store<Character>;
 
+  constructor(store: Store<Character>) {
+    this.store = store;
+  }
 
-export function getStatValue(character: Character, statId: string) : number {
-  const modifiers = character.stats.get(statId) || Map<string, Modifier>();
-  return modifiers.reduce((total, modifier) => {
-    let value = modifier.value;
-    if (typeof value == 'number') {
-      return total + value;
-    } else {
-      return total + round(getStatValue(character, value.statId) * value.factor, value.round);
-    }
-  }, 0);
-}
+  getStatValue(statId: string) : number {
+    const character = this.store.get();
+    const modifiers = character.stats.get(statId) || Map<string, Modifier>();
+    return modifiers.reduce((total, modifier) => {
+      let value = modifier.value;
+      if (typeof value == 'number') {
+        return total + value;
+      } else {
+        return total + round(this.getStatValue(value.statId) * value.factor, value.round);
+      }
+    }, 0);
+  }
 
-export function getModifier(character: Character, statId: string, id: string) : Modifier|null {
-  return character.stats.getIn([statId, id]);
+  getModifier(statId: string, id: string) : Modifier|null {
+    const character = this.store.get();
+    return character.stats.getIn([statId, id]);
+  }
+
+  setStatModifier(modifier: Modifier) : void {
+    this.store.update(character => ({ ...character, stats: character.stats.setIn([modifier.statId, modifier.id], modifier) }))
+  }
+
+  removeStatModifier(statId: string, modifierId: string) : void {
+    this.store.update(character => {
+      let stats = character.stats;
+      let stat = stats.get(statId);
+      if (stat) {
+        stat = stat.delete(modifierId);
+      }
+      if (stat && stat.size == 0) {
+        stats = stats.delete(statId);
+      }
+      return { ...character, stats };
+    });
+  }
+
+  addAbility(ability: Ability) : void {
+    this.store.update(character => ({ ...character, abilities: character.abilities.push(ability) }));
+  }
+
+  removeAbility(abilityId: string) : void {
+    this.store.update(character => ({ ...character, abilities: character.abilities.filter(a => a.id != abilityId).toList() }));
+  }
 }
 
 function round(value: number, round: 'DOWN' | 'UP' | number) : number {
@@ -69,37 +99,5 @@ function round(value: number, round: 'DOWN' | 'UP' | number) : number {
       }
   } else {
     return Number(value.toFixed(value));
-  }
-}
-
-export function setStatModifier(modifier: Modifier) : CharacterAction {
-  return { type: 'SET_STAT_MODIFIER', modifier }
-}
-
-export function removeStatModifier(statId: string, modifierId: string) : CharacterAction {
-  return { type: 'REMOVE_STAT_MODIFIER', statId, modifierId }
-}
-
-export function reduce(character: Character = { stats: Map<string, Map<string, Modifier>>(), abilities: List<Ability>() }, action : CharacterAction) : Character {
-  switch (action.type) {
-    case 'REMOVE_ABILITY':
-      const id = action.abilityId;
-      return { ...character, abilities: character.abilities.filter(a => a.id != id).toList() };
-    case 'ADD_ABILITY':
-      return { ...character, abilities: character.abilities.push(action.ability) };
-    case 'SET_STAT_MODIFIER':
-      return { ...character, stats: character.stats.setIn([action.modifier.statId, action.modifier.id], action.modifier) };
-    case 'REMOVE_STAT_MODIFIER':
-      let stats = character.stats;
-      let stat = stats.get(action.statId);
-      if (stat) {
-        stat = stat.delete(action.modifierId);
-      }
-      if (stat && stat.size == 0) {
-        stats = stats.delete(action.statId);
-      }
-      return { ...character, stats };
-    default:
-      return character;
   }
 }

@@ -3,13 +3,8 @@ import * as styles from './attributes.css';
 import NumberInput from 'material-ui-number-input';
 import TextField from 'material-ui/TextField';
 import { List } from 'immutable';
-import { setStatModifier, removeStatModifier } from 'data/character';
-import { Character } from 'data/character';
-import { getStatValue, getModifier } from 'data/character';
-import { makeBatch } from 'data/batch';
-import { BatchAction } from 'data/batch';
+import { CharacterStore } from 'data/character';
 import { VerticalTable } from 'components/common/vertical-table';
-import { Action } from 'components/root';
 import { Store } from 'data/store';
 
 type Attribute = {
@@ -19,25 +14,25 @@ type Attribute = {
 
 export const MODULE_TYPE = 'ATTRIBUTES_MODULE';
 
-export function addToSheet(character: Character, moduleId: number, state: List<Attribute>) : Array<Action> {
-  return state.reduce((actions, attr) => {
-    const modifier = getModifier(character, attr.statId, `${moduleId}/${attr.statId}`);
-    return modifier
-        ? actions.concat([setAttributeModifier(moduleId, attr.statId, attr, 0)])
-        : actions;
-  }, []);
+export function addToSheet(characterStore: CharacterStore, moduleId: number, state: List<Attribute>) : void {
+  state.forEach(attr => {
+    const modifier = characterStore.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
+    if (modifier) {
+      setAttributeModifier(characterStore, moduleId, attr.statId, attr, 0)
+    }
+  });
 }
 
-export class Attributes extends React.Component<{ moduleId: number, character: Character, store: Store<List<Attribute>> }, {}> {
+export class Attributes extends React.Component<{ moduleId: number, characterStore: CharacterStore, store: Store<List<Attribute>> }, {}> {
   render() {
-    const { store, character, moduleId } = this.props;
+    const { store, characterStore, moduleId } = this.props;
     const attributeValues = store.get().map(attr => {
-      const modifier = getModifier(character, attr.statId, `${moduleId}/${attr.statId}`);
+      const modifier = characterStore.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
       return {
         attr,
         baseValue: modifier && typeof modifier.value == 'number' ? modifier.value : 0,
-        value: getStatValue(character, attr.statId),
-        mod: getStatValue(character, `${attr.statId}-mod`)
+        value: characterStore.getStatValue(attr.statId),
+        mod: characterStore.getStatValue(`${attr.statId}-mod`)
       };
     }).toList();
     const actionCreators = {
@@ -48,17 +43,15 @@ export class Attributes extends React.Component<{ moduleId: number, character: C
         store.update(attributes => attributes.delete(index));
       },
       onAttributeChange(attribute: Attribute, value: number) {
-        store.dispatch(setAttributeModifier(moduleId, attribute.statId, attribute, value));
+        setAttributeModifier(characterStore, moduleId, attribute.statId, attribute, value);
       },
       onAttributeStatIdChange(attr: Attribute, index: number, newStatId: string) {
-        const modifier = getModifier(character, attr.statId, `${moduleId}/${attr.statId}`);
-        store.dispatch(makeBatch([
-            ...modifier ? [
-              removeStatModifier(attr.statId, `${moduleId}/${attr.statId}`),
-              removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`),
-            ] : [],
-          setAttributeModifier(moduleId, newStatId, attr, modifier ? modifier.value : 0)
-        ]));
+        const modifier = characterStore.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
+        if (modifier) {
+          characterStore.removeStatModifier(attr.statId, `${moduleId}/${attr.statId}`);
+          characterStore.removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`);
+        }
+        setAttributeModifier(characterStore, moduleId, newStatId, attr, modifier ? modifier.value : 0);
         store.update(attributes => attributes.set(index, { ...attributes.get(index), statId: newStatId }));
       }
     };
@@ -67,21 +60,19 @@ export class Attributes extends React.Component<{ moduleId: number, character: C
   }
 }
 
-function setAttributeModifier(moduleId: number, statId: string, attr: Attribute, value: any) : BatchAction {
-  return makeBatch([
-      setStatModifier({
-        id: `${moduleId}/${statId}`,
-        description: `Base ${attr.displayName}`,
-        value, statId, moduleId,
-      }),
-      setStatModifier({
-        id: `${moduleId}/${statId}-mod`,
-        statId: `${statId}-mod`,
-        moduleId,
-        value: { statId, factor: 0.5, round: 'DOWN' },
-        description: `Base ${attr.displayName} mod`
-      })
-  ]);
+function setAttributeModifier(characterStore: CharacterStore, moduleId: number, statId: string, attr: Attribute, value: any) : void {
+  characterStore.setStatModifier({
+    id: `${moduleId}/${statId}`,
+    description: `Base ${attr.displayName}`,
+    value, statId, moduleId,
+  });
+  characterStore.setStatModifier({
+    id: `${moduleId}/${statId}-mod`,
+    statId: `${statId}-mod`,
+    moduleId,
+    value: { statId, factor: 0.5, round: 'DOWN' },
+    description: `Base ${attr.displayName} mod`
+  });
 }
 
 function AttributesPresentation({onAddAttribute, onRemoveAttribute, onAttributeChange, onAttributeStatIdChange, attributeValues }

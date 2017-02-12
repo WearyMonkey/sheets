@@ -3,7 +3,7 @@ import * as styles from './sheet.css';
 import * as PackeryFactory from 'react-packery-component';
 import { MODULES, Module } from 'components/modules/modules';
 import {List, Iterable} from 'immutable';
-import { Character } from 'data/character';
+import { CharacterStore } from 'data/character';
 import { Store } from 'data/store';
 
 export type ModuleConfig = {
@@ -16,9 +16,9 @@ export type Sheet = {
   modules: List<ModuleConfig>
 }
 
-export class Sheets extends React.Component<{ character: Character, store: Store<Sheet> }, {}> {
+export class Sheets extends React.Component<{ characterStore: CharacterStore, store: Store<Sheet> }, {}> {
   render() {
-    const { store, character } = this.props;
+    const { store, characterStore } = this.props;
     const { modules } = store.get();
     return <SheetPresentation modules={modules.map((moduleConfig : ModuleConfig, i : number) => {
       const module = MODULES.get(moduleConfig.type);
@@ -28,7 +28,7 @@ export class Sheets extends React.Component<{ character: Character, store: Store
           set: (sheet, childValue) => ({...sheet, modules: modules.set(i, {...moduleConfig, state: childValue}) }),
           get: () => moduleConfig.state
         });
-        return <Module moduleId={moduleConfig.id} store={childStore} character={character} />
+        return <Module moduleId={moduleConfig.id} store={childStore} characterStore={characterStore} />
       } else {
         return <div>Unknown module type {moduleConfig.type}</div>;
       }

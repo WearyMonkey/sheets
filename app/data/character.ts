@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import { Store } from "./store";
+import { Store, Lens } from "./store";
 
 export type Description =
     { type: 'IMAGE', url: string }
@@ -10,11 +10,11 @@ export type Bonus =
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
-  dice: List<{ sides: number, dice: number, bonus: Bonus }>
+  dice: List<{ sides: number, dice: number, bonus?: Bonus }>
 };
 
 export type Action =
-    { type: 'ROLL', diceRoll: DiceRoll, description: Description };
+    { type: 'ROLL', id: string, diceRoll: DiceRoll, description: Description };
 
 export type Ability = {
   id: string,
@@ -42,6 +42,14 @@ export class CharacterStore {
     this.store = store;
   }
 
+  get() : Character {
+    return this.store.get();
+  }
+
+  lens<ChildValue>(lens: Lens<Character, ChildValue>) : Store<ChildValue> {
+    return this.store.lens(lens);
+  }
+
   getStatValue(statId: string) : number {
     const character = this.store.get();
     const modifiers = character.stats.get(statId) || Map<string, Modifier>();
@@ -61,11 +69,11 @@ export class CharacterStore {
   }
 
   setStatModifier(modifier: Modifier) : void {
-    this.store.update(character => ({ ...character, stats: character.stats.setIn([modifier.statId, modifier.id], modifier) }))
+    this.store.update('SET_STAT_MODIFIER', character => ({ ...character, stats: character.stats.setIn([modifier.statId, modifier.id], modifier) }))
   }
 
   removeStatModifier(statId: string, modifierId: string) : void {
-    this.store.update(character => {
+    this.store.update('REMOVE_STAT_MODIFIER', character => {
       let stats = character.stats;
       let stat = stats.get(statId);
       if (stat) {
@@ -79,11 +87,11 @@ export class CharacterStore {
   }
 
   addAbility(ability: Ability) : void {
-    this.store.update(character => ({ ...character, abilities: character.abilities.push(ability) }));
+    this.store.update('ADD_ABILITY', character => ({ ...character, abilities: character.abilities.push(ability) }));
   }
 
   removeAbility(abilityId: string) : void {
-    this.store.update(character => ({ ...character, abilities: character.abilities.filter(a => a.id != abilityId).toList() }));
+    this.store.update('REMOVE_ABILITY', character => ({ ...character, abilities: character.abilities.filter(a => a.id != abilityId).toList() }));
   }
 }
 

@@ -1,4 +1,3 @@
-import { Action } from 'components/root';
 import { Store as SourceStore, createStore } from 'redux';
 
 export interface Lens<ParentValue, ChildValue> {
@@ -8,18 +7,18 @@ export interface Lens<ParentValue, ChildValue> {
 
 export interface Store<Value> {
   get(): Value;
-  dispatch(a: Action): void;
-  update(updater: (v: Value) => Value): void;
+  dispatch(a: any): void;
+  update(description: string, updater: (v: Value) => Value): void;
   lens<ChildValue>(lens: Lens<Value, ChildValue>): Store<ChildValue>
 }
 
 export class ReduxStore<RootValue, Value> implements Store<Value> {
 
-  static createRoot<State>(reducer: (s: State, a: Action) => State, initialState?: State) {
+  static createRoot<State>(reducer: (s: State, a: any) => State, initialState?: State) {
     const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
     const store = createStore((state: State, action: any) => {
-      if (action.type == 'UPDATE') {
+      if (action.isUpdate) {
         return action.updater(state);
       } else {
         return reducer(state, action);
@@ -41,7 +40,7 @@ export class ReduxStore<RootValue, Value> implements Store<Value> {
     this.updater = updater;
   }
 
-  dispatch(a: Action): void {
+  dispatch(a: any): void {
     this.sourceStore.dispatch(a);
   }
 
@@ -49,8 +48,8 @@ export class ReduxStore<RootValue, Value> implements Store<Value> {
     return this.getter();
   }
 
-  update(update: (v: Value) => Value): void {
-    this.sourceStore.dispatch({type: 'UPDATE', updater: this.updater(update)})
+  update(description: string, update: (v: Value) => Value): void {
+    this.sourceStore.dispatch({type: description, isUpdate: true, updater: this.updater(update)})
   }
 
   lens<ChildValue>(lens: Lens<Value, ChildValue>): Store<ChildValue> {

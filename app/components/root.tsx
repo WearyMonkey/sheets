@@ -1,14 +1,11 @@
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import * as styles from './root.css';
-import { Sheets, Sheet } from './sheet/sheet';
-import { Modifier, Ability, Character, CharacterStore } from 'data/character';
-import { BatchAction } from 'data/batch';
+import { Sheets, Sheet, ModuleConfig } from './sheet/sheet';
+import { Modifier, Ability, Character, CharacterStore, Action, Bonus } from 'data/character';
 import { Map, List } from 'immutable';
 import { MODULES } from './modules/modules';
 import { ReduxStore, Store } from "data/store";
-
-export type Action = BatchAction;
 
 type State = {sheet: Sheet, character: Character};
 
@@ -22,25 +19,25 @@ export class Root extends React.Component<{}, {}> {
     super();
     const defaultState: State = {
       sheet: {
-        modules: List([
-          {
-            id: 1, type: 'ATTRIBUTES_MODULE', state: List([
-            {
-              statId: 'strength',
-              displayName: 'Strength',
-            }
-          ])
-          },
-          // {id: 2, type: 'ABILITIES_MODULE', state: {}},
-        ])
+        modules: List<ModuleConfig>().push(
+          { id: 1, type: 'ATTRIBUTES_MODULE', state: List().push({ id: '1', statId: 'strength', displayName: 'Strength'}) },
+          { id: 2, type: 'ABILITIES_MODULE', state: {} },
+        )
       },
       character: {
         stats: Map<string, Map<string, Modifier>>(),
-        abilities: List<Ability>()
+        abilities: List<Ability>().push(
+            { id: '1', description: { type: 'TEXT', value: 'foo' }, actions: List<Action>().push(
+                { id: '1', type: 'ROLL', description: { type: 'TEXT', value: 'Attack' }, diceRoll: { dice: List<{ sides: number, dice: number, bonus?: Bonus }>().push(
+                    { sides: 20, dice: 1 }
+                ) } }
+            ) },
+            { id: '2', description: { type: 'TEXT', value: 'baa' }, actions: List<Action>() },
+        )
       }
     };
 
-    this.store = ReduxStore.createRoot((state: State, action: Action) => state, defaultState);
+    this.store = ReduxStore.createRoot((state: State, action) => state, defaultState);
     const state = this.store.get();
     this.sheetStore = this.store.lens<Sheet>({
       get: state => state.sheet,
@@ -63,6 +60,14 @@ export class Root extends React.Component<{}, {}> {
   }
 
   render() {
+    this.sheetStore = this.store.lens<Sheet>({
+      get: state => state.sheet,
+      set: (state, sheet) => ({...state, sheet})
+    });
+    this.characterStore = new CharacterStore(this.store.lens<Character>({
+      get: state => state.character,
+      set: (state, character) => ({...state, character})
+    }));
     return <div>
       <AppBar/>
       <div className={styles.containerOuter}>

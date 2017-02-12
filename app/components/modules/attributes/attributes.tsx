@@ -8,6 +8,7 @@ import { VerticalTable } from 'components/common/vertical-table';
 import { Store } from 'data/store';
 
 type Attribute = {
+  id: string,
   statId: string,
   displayName: string,
 }
@@ -37,10 +38,10 @@ export class Attributes extends React.Component<{ moduleId: number, characterSto
     }).toList();
     const actionCreators = {
       onAddAttribute() {
-        store.update(attributes => attributes.push({ statId: '', displayName: '' }));
+        store.update('ADD_ATTRIBUTE', attributes => attributes.push({ id: Math.random().toString(), statId: '', displayName: '' }));
       },
       onRemoveAttribute(index: number) {
-        store.update(attributes => attributes.delete(index));
+        store.update('REMOVE_ATTRIBUTE', attributes => attributes.delete(index));
       },
       onAttributeChange(attribute: Attribute, value: number) {
         setAttributeModifier(characterStore, moduleId, attribute.statId, attribute, value);
@@ -52,7 +53,7 @@ export class Attributes extends React.Component<{ moduleId: number, characterSto
           characterStore.removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`);
         }
         setAttributeModifier(characterStore, moduleId, newStatId, attr, modifier ? modifier.value : 0);
-        store.update(attributes => attributes.set(index, { ...attributes.get(index), statId: newStatId }));
+        store.update('SET_ATTRIBUTE_STAT_ID', attributes => attributes.set(index, { ...attributes.get(index), statId: newStatId }));
       }
     };
 
@@ -95,8 +96,8 @@ function AttributesPresentation({onAddAttribute, onRemoveAttribute, onAttributeC
       rows={attributeValues.map(({attr, baseValue, value, mod}, i) => ({
         elements: [
             {view: <span>{attr.displayName}</span> },
-            {view: <TextField defaultValue={attr.statId} onChange={(e : React.FormEvent<HTMLInputElement>) => onAttributeStatIdChange(attr, i, e.currentTarget.value)} /> },
-            {view: <NumberInput name={attr.statId} defaultValue={baseValue} onValid={newValue => onAttributeChange(attr, newValue)}/> },
+            {view: <TextField id={`stat_id_${attr.id}`} defaultValue={attr.statId} onChange={(e : React.FormEvent<HTMLInputElement>) => onAttributeStatIdChange(attr, i, e.currentTarget.value)} /> },
+            {view: <NumberInput id={`value_${attr.id}`} name={attr.statId} defaultValue={baseValue} onValid={newValue => onAttributeChange(attr, newValue)}/> },
             {view: <span>{value}</span> },
             {view: <span>{mod}</span> },
         ],

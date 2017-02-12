@@ -4,13 +4,14 @@ import * as Abilities from './abilities/abilities';
 import { CharacterStore } from 'data/character';
 import { Map } from 'immutable';
 import { Store } from "../../data/store";
+import { SheetUiActionCallback } from '../sheet/sheet';
 
-export type Module = {
-  component: ComponentClass<{ moduleId: number, characterStore: CharacterStore, store: Store<any> }>,
-  addToSheet: (c: CharacterStore, moduleId: number, s: any) => void
+type Module = {
+  component: ComponentClass<{ moduleId: number, characterStore: CharacterStore, store: Store<any>, sheetUiAction?: SheetUiActionCallback }>,
+  addToSheet: (c: CharacterStore, moduleId: number, state: any) => void
 }
 
-export const MODULES : Map<string, Module> = Map<string, Module>([
-    [Attributes.MODULE_TYPE, { component: Attributes.Attributes, addToSheet: Attributes.addToSheet }],
-    // [Abilities.MODULE_TYPE, { component: Abilities.Abilities, reduce: Abilities.reduce, addToSheet: Abilities.addToSheet }],
-]);
+export const MODULES = Map<string, Module>().withMutations(map => map
+    .set(Attributes.MODULE_TYPE, { component: Attributes.Attributes, addToSheet: Attributes.addToSheet })
+    .set(Abilities.MODULE_TYPE, { component: Abilities.Abilities, addToSheet: Abilities.addToSheet })
+);

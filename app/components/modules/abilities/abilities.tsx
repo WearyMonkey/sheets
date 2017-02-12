@@ -1,41 +1,40 @@
 import * as React from 'react';
 import { List } from 'immutable';
-import { EditDescription, ViewDescription } from 'components/common/description';
-import { Ability, Character, CharacterStore } from 'data/character';
+import { Ability, CharacterStore } from 'data/character';
 import RaisedButton from 'material-ui/RaisedButton';
+import { Store } from 'data/store';
+import { AbilityCard } from './ability_card';
+import { SheetUiActionCallback } from 'components/sheet/sheet';
 
 type AbilitiesState = {
 
 }
 
-export function addToSheet(characterStore: CharacterStore, moduleId: string, state: AbilitiesState) : void {
+export function addToSheet(characterStore: CharacterStore, moduleId: number, state: AbilitiesState) : void {
 
 }
 
 export const MODULE_TYPE : string = 'ABILITIES_MODULE';
 
-export function reduce(state: AbilitiesState = { }, action: any) {
-  return state;
-}
-
-export class Abilities extends React.Component<{ moduleId: number, character: Character, state: AbilitiesState }, {}> {
-
+export class Abilities extends React.Component<{ moduleId: number, characterStore: CharacterStore, store: Store<AbilitiesState>, sheetUiAction: SheetUiActionCallback }, {}> {
   render() {
-    const { character } = this.props;
-    return <AbilitiesPresentation abilities={character.abilities} addMode={false} />;
+    const { characterStore, sheetUiAction } = this.props;
+    const abilities = characterStore.get().abilities;
+    const abilityStores = abilities.map((ability, i) => {
+      return characterStore.lens({
+        get: character => character.abilities.get(i),
+        set: (character, ability : Ability) => ({ ...character, abilities: character.abilities.set(i, ability) })
+      })
+    }).toList();
+    return <AbilitiesPresentation {...{abilityStores, sheetUiAction}} />;
   }
 }
 
-function AbilitiesPresentation({ abilities, addMode } : { abilities: List<Ability>, addMode: boolean }) {
+function AbilitiesPresentation({ abilityStores, sheetUiAction } : { abilityStores: List<Store<Ability>>, sheetUiAction: SheetUiActionCallback }) {
   return <div>
-    {abilities.map(ability =>
-      <ViewDescription key={ability.id} description={ability.description} />
+    {abilityStores.map(abilityStore =>
+      <AbilityCard key={abilityStore.get().id} {...{abilityStore, sheetUiAction}} />
     )}
-    {addMode &&
-      <EditDescription onSave={() => {}} description={null} />
-    }
-    {!addMode &&
-      <RaisedButton>Add</RaisedButton>
-    }
+    <RaisedButton>Add</RaisedButton>
   </div>
 }

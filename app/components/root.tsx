@@ -9,7 +9,7 @@ import { ReduxStore, Store } from "data/store";
 
 type State = {sheet: Sheet, character: Character};
 
-export class Root extends React.Component<{}, {}> {
+export class Root extends React.Component<{}, {store: Store<State>}> {
 
   private store: ReduxStore<State, State>;
   private sheetStore: Store<Sheet>;
@@ -37,34 +37,29 @@ export class Root extends React.Component<{}, {}> {
       }
     };
 
-    this.store = ReduxStore.createRoot((state: State, action) => state, defaultState);
-    const state = this.store.get();
-    this.sheetStore = this.store.lens<Sheet>({
+    const store = ReduxStore.createRoot((state: State, action) => state, store => {
+      this.setState({ store });
+    }, defaultState);
+    this.state = { store };
+    this.sheetStore = store.lens<Sheet>({
       get: state => state.sheet,
       set: (state, sheet) => ({...state, sheet})
     });
-    this.characterStore = new CharacterStore(this.store.lens<Character>({
+    this.characterStore = new CharacterStore(store.lens<Character>({
       get: state => state.character,
       set: (state, character) => ({...state, character})
     }));
-    state.sheet.modules.forEach(moduleConfig =>
+    store.get().sheet.modules.forEach(moduleConfig =>
       MODULES.get(moduleConfig.type).addToSheet(this.characterStore, moduleConfig.id, moduleConfig.state)
     );
   }
 
-  componentWillMount() {
-    this.setState({state: this.store.get()});
-    this.store.subscribe((state) => {
-      this.setState({state: state});
-    });
-  }
-
   render() {
-    this.sheetStore = this.store.lens<Sheet>({
+    this.sheetStore = this.state.store.lens<Sheet>({
       get: state => state.sheet,
       set: (state, sheet) => ({...state, sheet})
     });
-    this.characterStore = new CharacterStore(this.store.lens<Character>({
+    this.characterStore = new CharacterStore(this.state.store.lens<Character>({
       get: state => state.character,
       set: (state, character) => ({...state, character})
     }));

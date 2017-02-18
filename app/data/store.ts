@@ -14,7 +14,7 @@ export interface Store<Value> {
 
 export class ReduxStore<RootValue, Value> implements Store<Value> {
 
-  static createRoot<State>(reducer: (s: State, a: any) => State, initialState?: State) {
+  static createRoot<State>(reducer: (s: State, a: any) => State, cb: (store: Store<State>) => void, initialState?: State) : Store<State> {
     const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
     const store = createStore((state: State, action: any) => {
@@ -25,18 +25,21 @@ export class ReduxStore<RootValue, Value> implements Store<Value> {
       }
     }, initialState, reduxDevTools && reduxDevTools());
 
-    return new ReduxStore(store, () => store.getState(), rootValue => rootValue);
+    store.subscribe(() => {
+      cb(new ReduxStore(store, store.getState(), rootValue => rootValue));
+    });
+    return new ReduxStore(store, store.getState(), rootValue => rootValue);
   }
 
   private sourceStore: SourceStore<RootValue>;
-  private getter: () => Value;
+  private value: Value;
   private updater: (update: (value: Value) => Value) => (rootValue: RootValue) => RootValue;
 
   private constructor(sourceStore: SourceStore<RootValue>,
-                      getter: () => Value,
+                      value: Value,
                       updater: (update: (value: Value) => Value) => (rootValue: RootValue) => RootValue) {
     this.sourceStore = sourceStore;
-    this.getter = getter;
+    this.value = value;
     this.updater = updater;
   }
 
@@ -45,7 +48,7 @@ export class ReduxStore<RootValue, Value> implements Store<Value> {
   }
 
   get(): Value {
-    return this.getter();
+    return this.value;
   }
 
   update(description: string, update: (v: Value) => Value): void {
@@ -55,12 +58,8 @@ export class ReduxStore<RootValue, Value> implements Store<Value> {
   lens<ChildValue>(lens: Lens<Value, ChildValue>): Store<ChildValue> {
     return new ReduxStore<RootValue, ChildValue>(
         this.sourceStore,
-        () => lens.get(this.get()),
+        lens.get(this.get()),
         (update: (childValue: ChildValue) => ChildValue) => this.updater(value => lens.set(value, update(lens.get(value))))
     );
-  }
-
-  subscribe(listener: (v: RootValue) => void) {
-    this.sourceStore.subscribe(() => listener(this.sourceStore.getState()))
   }
 }

@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require('webpack');
 
 const extractCSS = new ExtractTextPlugin('[name].css');
 
@@ -35,7 +36,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'app/index.ejs'
     }),
-    extractCSS
+    extractCSS,
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': '"production"'
+      }
+    }),
   ],
   devServer: {
     port: 9999,

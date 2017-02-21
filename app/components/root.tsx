@@ -4,8 +4,7 @@ import { Character } from 'data/character';
 import { Sheet } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
-import { autorun } from 'mobx';
-
+import DevTools from 'mobx-react-devtools';
 
 export class Root extends React.Component<{}, {}> {
 
@@ -27,8 +26,6 @@ export class Root extends React.Component<{}, {}> {
         { id: 1, type: 'ATTRIBUTES_MODULE', state: [{ id: '1', statId: 'strength', displayName: 'Strength' }] },
         { id: 2, type: 'ABILITIES_MODULE', state: {} },
     );
-
-    autorun(() => console.log(this.sheet.modules[0].state.length));
   }
 
   render() {
@@ -39,6 +36,7 @@ export class Root extends React.Component<{}, {}> {
           <Sheets sheet={this.sheet} character={this.character} />
         </div>
       </div>
+      <DevTools/>
     </div>
   }
 }

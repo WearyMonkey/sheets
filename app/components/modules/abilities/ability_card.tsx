@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { Ability, Description } from 'data/character';
-import { Store } from 'data/store';
 import { DescriptionCard } from 'components/description_card/description_card';
 import { SheetUiActionCallback } from '../../sheet/sheet';
+import { observer } from 'mobx-react';
+import { action } from 'mobx';
 
-export class AbilityCard extends React.Component<{ abilityStore: Store<Ability>, sheetUiAction: SheetUiActionCallback }, {}> {
+@observer
+export class AbilityCard extends React.Component<{ ability: Ability, sheetUiAction: SheetUiActionCallback }, {}> {
   render() {
-    const { abilityStore } = this.props;
-    return <div onClick={this.handleClick.bind(this)}>
-      <DescriptionCard descriptionStore={abilityStore.lens<Description>({
-        get: ability => ability.description,
-        set: (ability, description) => ({ ...ability, description })
-      })} />
-    </div>
+    const { ability } = this.props;
+    return (<div onClick={this.handleClick}>
+      <DescriptionCard description={ability.description} />
+    </div>);
   }
 
-  private handleClick() {
-    const { abilityStore, sheetUiAction } = this.props;
-    sheetUiAction({ type: 'ABILITY_SELECTED', abilityId: abilityStore.get().id });
+  @action
+  handleClick = () => {
+    const { ability, sheetUiAction } = this.props;
+    sheetUiAction({ type: 'ABILITY_SELECTED', ability });
   }
 }

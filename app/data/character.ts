@@ -1,5 +1,4 @@
-import { Map, List } from 'immutable';
-import { Store, Lens } from "./store";
+import { observable, asMap, ObservableMap } from 'mobx';
 
 export type Description =
     { type: 'IMAGE', url: string }
@@ -10,7 +9,7 @@ export type Bonus =
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
-  dice: List<{ sides: number, dice: number, bonus?: Bonus }>
+  dice: { sides: number, dice: number, bonus?: Bonus }[]
 };
 
 export type Action =
@@ -19,7 +18,7 @@ export type Action =
 export type Ability = {
   id: string,
   description: Description,
-  actions: List<Action>
+  actions: Action[]
 };
 
 export type Modifier = {
@@ -30,30 +29,13 @@ export type Modifier = {
   value: number | { statId: string, factor: number, round: 'DOWN' | 'UP' | number }
 };
 
-export type Character = {
-  stats: Map<string, Map<string, Modifier>>,
-  abilities: List<Ability>
-};
-
-export class CharacterStore {
-  private store: Store<Character>;
-
-  constructor(store: Store<Character>) {
-    this.store = store;
-  }
-
-  get() : Character {
-    return this.store.get();
-  }
-
-  lens<ChildValue>(lens: Lens<Character, ChildValue>) : Store<ChildValue> {
-    return this.store.lens(lens);
-  }
+export class Character {
+  @observable readonly stats: ObservableMap<ObservableMap<Modifier>> = observable.map([]);
+  @observable readonly abilities: Ability[] = [];
 
   getStatValue(statId: string) : number {
-    const character = this.store.get();
-    const modifiers = character.stats.get(statId) || Map<string, Modifier>();
-    return modifiers.reduce((total, modifier) => {
+    const modifiers = this.stats.get(statId) || new Map<string, Modifier>();
+    return Array.from(modifiers.values()).reduce((total, modifier) => {
       let value = modifier.value;
       if (typeof value == 'number') {
         return total + value;
@@ -64,34 +46,33 @@ export class CharacterStore {
   }
 
   getModifier(statId: string, id: string) : Modifier|null {
-    const character = this.store.get();
-    return character.stats.getIn([statId, id]);
+    const modifiers = this.stats.get(statId);
+    return modifiers && modifiers.get(id);
   }
 
   setStatModifier(modifier: Modifier) : void {
-    this.store.update('SET_STAT_MODIFIER', character => ({ ...character, stats: character.stats.setIn([modifier.statId, modifier.id], modifier) }))
+    if (!this.stats.has(modifier.statId)) {
+      this.stats.set(modifier.statId, observable.map([]));
+    }
+    this.stats.get(modifier.statId).set(modifier.id, modifier);
   }
 
   removeStatModifier(statId: string, modifierId: string) : void {
-    this.store.update('REMOVE_STAT_MODIFIER', character => {
-      let stats = character.stats;
-      let stat = stats.get(statId);
-      if (stat) {
-        stat = stat.delete(modifierId);
-      }
-      if (stat && stat.size == 0) {
-        stats = stats.delete(statId);
-      }
-      return { ...character, stats };
-    });
+    let stat = this.stats.get(statId);
+    if (stat) {
+      stat.delete(modifierId);
+    }
+    if (stat && stat.size == 0) {
+      this.stats.delete(statId);
+    }
   }
 
   addAbility(ability: Ability) : void {
-    this.store.update('ADD_ABILITY', character => ({ ...character, abilities: character.abilities.push(ability) }));
+    this.abilities.push(ability);
   }
 
   removeAbility(abilityId: string) : void {
-    this.store.update('REMOVE_ABILITY', character => ({ ...character, abilities: character.abilities.filter(a => a.id != abilityId).toList() }));
+    this.abilities.splice(this.abilities.findIndex(a => a.id == abilityId), 1);
   }
 }
 

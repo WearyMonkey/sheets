@@ -1,25 +1,18 @@
 import * as React from 'react';
-import { Store } from 'data/store';
-import { Ability, Action, Description } from 'data/character';
+import { Ability } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
 import { ActionCard } from './action_card/action_card';
+import { observer } from 'mobx-react';
 
-export class AbilityPanel extends React.Component<{ abilityStore: Store<Ability> }, {}>{
+@observer
+export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
   render() {
-    const { abilityStore } = this.props;
-    const ability = abilityStore.get();
+    const { ability } = this.props;
     return <div>
-      <DescriptionCard descriptionStore={ abilityStore.lens<Description>({
-        get: ability => ability.description,
-        set: (ability, description) => ({...ability, description})
-      }) } />
+      <DescriptionCard description={ability.description} />
       <div>
         {ability.actions.map((action, i) => {
-          const actionStore = abilityStore.lens<Action>({
-            get: ability => ability.actions.get(i),
-            set: (ability, action) => ({...ability, actions: ability.actions.set(i, action)})
-          });
-          return <ActionCard key={action.id} actionStore={actionStore} />
+          return <ActionCard key={action.id} action={action} />
         })}
       </div>
     </div>

@@ -8,14 +8,10 @@
     "flow": "flow"
   },
   "devDependencies": {
-    "@types/immutable": "^3.8.7",
     "@types/material-ui": "^0.16.50",
     "@types/react": "^15.0.8",
     "@types/react-dom": "^0.14.23",
-    "@types/react-redux": "^4.4.36",
     "@types/react-tap-event-plugin": "0.0.30",
-    "@types/redux": "^3.6.0",
-    "@types/reselect": "^2.0.27",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-webpack-plugin": "^2.26.0",
@@ -27,15 +23,13 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
-    "immutable": "^3.8.1",
     "material-ui": "^0.16.6",
     "material-ui-number-input": "^5.0.16",
+    "mobx": "^3.1.0",
+    "mobx-react": "^4.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-packery-component": "^1.0.2",
-    "react-redux": "^5.0.1",
-    "react-tap-event-plugin": "^2.0.1",
-    "redux": "^3.6.0",
-    "reselect": "^2.5.4"
+    "react-tap-event-plugin": "^2.0.1"
   }
 }

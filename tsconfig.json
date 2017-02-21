@@ -8,10 +8,13 @@
     "typeRoots" : ["./typings/modules"],
     "jsx": "React",
     "moduleResolution": "node",
-    "outDir": "tsc-out"
+    "outDir": "tsc-out",
+    "experimentalDecorators": true,
+    "lib": ["dom", "es6"]
   },
   "include": [
-    "app/**/*",
-    "declarations"
+    "app/index.tsx",
+    "declarations",
+    "dts/typescript/lib.es6.d.ts"
   ]
 }

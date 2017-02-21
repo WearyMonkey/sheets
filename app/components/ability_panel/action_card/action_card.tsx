@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { Store } from 'data/store';
-import { Action, Description } from 'data/character';
+import { Action } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
+import { observer } from 'mobx-react';
 
-export class ActionCard extends React.Component<{ actionStore: Store<Action> }, {}> {
+@observer
+export class ActionCard extends React.Component<{ action: Action }, {}> {
   render() {
-    const { actionStore } = this.props;
+    const { action } = this.props;
     return <div>
-      <DescriptionCard descriptionStore={actionStore.lens<Description>({
-        get: action => action.description,
-        set: (action, description) => ({ ...action, description })
-      })} />
+      <DescriptionCard description={action.description} />
     </div>
   }
 }

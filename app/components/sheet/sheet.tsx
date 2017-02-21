@@ -2,61 +2,45 @@ import * as React from 'react';
 import * as styles from './sheet.css';
 import * as PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
-import {List, Iterable} from 'immutable';
-import { CharacterStore, Ability } from 'data/character';
-import { Store } from 'data/store';
+import { Ability, Character } from 'data/character';
 import { Drawer } from "material-ui";
-import { AbilityPanel } from 'components/ability_panel/ability_panel';
+// import { AbilityPanel } from 'components/ability_panel/ability_panel';
+import { Sheet, ModuleConfig } from 'data/sheet';
+import { observer } from 'mobx-react';
+import { AbilityPanel } from '../ability_panel/ability_panel';
 
 export type SheetUiAction =
-    { type: 'ABILITY_SELECTED', abilityId: string } |
+    { type: 'ABILITY_SELECTED', ability: Ability } |
     { type: 'STAT_SELECTED', statId: string }
 
-export type SheetUiActionCallback = (action : SheetUiAction) => void;
+export type SheetUiActionCallback = (action : SheetUiAction) => void
 
-export type ModuleConfig = {
-  id: number,
-  type: string,
-  state: any
-}
-
-export type Sheet = {
-  modules: List<ModuleConfig>
-}
-
-export class Sheets extends React.Component<{ characterStore: CharacterStore, store: Store<Sheet> }, { selectedAbility?: string }> {
-  constructor() {
-    super();
+@observer
+export class Sheets extends React.Component<{ sheet: Sheet, character: Character }, { selectedAbility?: Ability }> {
+  constructor(props: any) {
+    super(props);
     this.state = {};
   }
 
   render() {
     const { selectedAbility } = this.state;
-    const { store, characterStore } = this.props;
-    const modules = store.get().modules.map((moduleConfig : ModuleConfig, i : number) => {
+    const { sheet, character } = this.props;
+    const modules = sheet.modules.map((moduleConfig : ModuleConfig) => {
       const module = MODULES.get(moduleConfig.type);
       if (module) {
         const Module = module.component;
-        const childStore: Store<any> = store.lens({
-          set: (sheet, state) => ({...sheet, modules: sheet.modules.set(i, {...moduleConfig, state }) }),
-          get: (sheet) => sheet.modules.get(i).state
-        });
-        return <Module moduleId={moduleConfig.id} store={childStore} characterStore={characterStore} sheetUiAction={this.handleUiAction.bind(this)} />
+        return <Module moduleId={moduleConfig.id} state={moduleConfig.state} character={character} sheetUiAction={this.handleUiAction.bind(this)} />
       } else {
         return <div>Unknown module type {moduleConfig.type}</div>;
       }
     });
-    const selectedAbilityStore = selectedAbility && characterStore.lens<Ability>({
-      get: character => character.abilities.find(a => a.id == selectedAbility),
-      set: (character, ability) => ({...character, abilities: character.abilities.set(character.abilities.findIndex(a => a.id == selectedAbility), ability)})
-    });
-    return <SheetPresentation modules={modules} selectedAbility={selectedAbilityStore} />
+    return <SheetPresentation modules={modules} selectedAbility={selectedAbility} />
   }
 
   handleUiAction(action: SheetUiAction) {
     switch (action.type) {
       case 'ABILITY_SELECTED':
-        this.setState({ selectedAbility: action.abilityId });
+        this.setState({ selectedAbility: action.ability });
         break;
       case 'STAT_SELECTED': {
 
@@ -66,7 +50,7 @@ export class Sheets extends React.Component<{ characterStore: CharacterStore, st
   }
 }
 
-function SheetPresentation({ modules, selectedAbility } : { modules: Iterable<number, React.ReactElement<any>>, selectedAbility?: Store<Ability> }) {
+function SheetPresentation({ modules, selectedAbility } : { modules: React.ReactElement<any>[], selectedAbility?: Ability }) {
   return <div className={styles.root}>
     <Packery options={packeryOptions} className="sheets">
       <div className={styles.gutterSizer}></div>
@@ -79,7 +63,7 @@ function SheetPresentation({ modules, selectedAbility } : { modules: Iterable<nu
     </Packery>
     <Drawer width={200} openSecondary={true} open={!!selectedAbility}>
       {!!selectedAbility &&
-        <AbilityPanel abilityStore={selectedAbility} />
+        <AbilityPanel ability={selectedAbility} />
       }
     </Drawer>
   </div>

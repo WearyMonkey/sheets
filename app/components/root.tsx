@@ -2,18 +2,16 @@ import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import * as styles from './root.css';
 import { Sheets, Sheet, ModuleConfig } from './sheet/sheet';
-import { Modifier, Ability, Character, CharacterStore, Action, Bonus } from 'data/character';
+import { Modifier, Ability, Character, Action, Bonus } from 'data/character';
 import { Map, List } from 'immutable';
-import { MODULES } from './modules/modules';
-import { ReduxStore, Store } from "data/store";
+import { createStore, Store } from 'redux';
+import { Provider } from 'react-redux'
 
-type State = {sheet: Sheet, character: Character};
+export type State = {sheet: Sheet, character: Character};
 
-export class Root extends React.Component<{}, {store: Store<State>}> {
+export class Root extends React.Component<{}, {}> {
 
-  private store: ReduxStore<State, State>;
-  private sheetStore: Store<Sheet>;
-  private characterStore: CharacterStore;
+  private store: Store<State>;
 
   constructor() {
     super();
@@ -37,39 +35,30 @@ export class Root extends React.Component<{}, {store: Store<State>}> {
       }
     };
 
-    const store = ReduxStore.createRoot((state: State, action) => state, store => {
-      this.setState({ store });
-    }, defaultState);
-    this.state = { store };
-    this.sheetStore = store.lens<Sheet>({
-      get: state => state.sheet,
-      set: (state, sheet) => ({...state, sheet})
-    });
-    this.characterStore = new CharacterStore(store.lens<Character>({
-      get: state => state.character,
-      set: (state, character) => ({...state, character})
-    }));
-    store.get().sheet.modules.forEach(moduleConfig =>
-      MODULES.get(moduleConfig.type).addToSheet(this.characterStore, moduleConfig.id, moduleConfig.state)
-    );
+    const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+    this.store = createStore(function reduce(state: State, action: any) {
+      if (action.type == 'BATCH') {
+        return action.actions.reduce((s : State, action : Action) => {
+          return reduce(s, action);
+        }, state);
+      } else if (action.isUpdate) {
+        return action.update(state);
+      } else {
+        return state;
+      }
+    }, defaultState, reduxDevTools && reduxDevTools());
   }
 
   render() {
-    this.sheetStore = this.state.store.lens<Sheet>({
-      get: state => state.sheet,
-      set: (state, sheet) => ({...state, sheet})
-    });
-    this.characterStore = new CharacterStore(this.state.store.lens<Character>({
-      get: state => state.character,
-      set: (state, character) => ({...state, character})
-    }));
-    return <div>
-      <AppBar/>
-      <div className={styles.containerOuter}>
-        <div className={styles.containerInner}>
-          <Sheets store={this.sheetStore} characterStore={this.characterStore}/>
+    return (<Provider store={this.store}>
+      <div>
+        <AppBar/>
+        <div className={styles.containerOuter}>
+          <div className={styles.containerInner}>
+            <Sheets/>
+          </div>
         </div>
       </div>
-    </div>
+    </Provider>)
   }
 }

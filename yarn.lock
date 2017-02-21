@@ -75,16 +75,9 @@ ajv-keywords@^1.1.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.0.tgz#c11e6859eafff83e0dafc416929472eca946aa2c"
 
-ajv@^4.11.2:
+ajv@^4.11.2, ajv@^4.7.0:
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.2.tgz#f166c3c11cbc6cb9dcc102a5bcfe5b72c95287e6"
-  dependencies:
-    co "^4.6.0"
-    json-stable-stringify "^1.0.1"
-
-ajv@^4.7.0:
-  version "4.11.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.1.tgz#a903487faabf8608aa22871032ca447440afe494"
   dependencies:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
@@ -3030,6 +3023,10 @@ require-main-filename@^1.0.1:
 requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+reselect-map@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/reselect-map/-/reselect-map-1.0.0.tgz#bf838c62eede12766cb42272df3ebcb38a99d3ac"
 
 reselect@^2.5.4:
   version "2.5.4"

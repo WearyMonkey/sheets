@@ -1,5 +1,6 @@
 import { Map, List } from 'immutable';
-import { Store, Lens } from "./store";
+import { Dispatch } from 'react-redux';
+import { State } from '../components/root';
 
 export type Description =
     { type: 'IMAGE', url: string }
@@ -36,45 +37,29 @@ export type Character = {
 };
 
 export class CharacterStore {
-  private store: Store<Character>;
-
-  constructor(store: Store<Character>) {
-    this.store = store;
-  }
-
-  get() : Character {
-    return this.store.get();
-  }
-
-  lens<ChildValue>(lens: Lens<Character, ChildValue>) : Store<ChildValue> {
-    return this.store.lens(lens);
-  }
-
-  getStatValue(statId: string) : number {
-    const character = this.store.get();
+  static getStatValue(character: Character, statId: string) : number {
     const modifiers = character.stats.get(statId) || Map<string, Modifier>();
     return modifiers.reduce((total, modifier) => {
       let value = modifier.value;
       if (typeof value == 'number') {
         return total + value;
       } else {
-        return total + round(this.getStatValue(value.statId) * value.factor, value.round);
+        return total + round(this.getStatValue(character, value.statId) * value.factor, value.round);
       }
     }, 0);
   }
 
-  getModifier(statId: string, id: string) : Modifier|null {
-    const character = this.store.get();
+  static getModifier(character: Character, statId: string, id: string) : Modifier|null {
     return character.stats.getIn([statId, id]);
   }
 
-  setStatModifier(modifier: Modifier) : void {
-    this.store.update('SET_STAT_MODIFIER', character => ({ ...character, stats: character.stats.setIn([modifier.statId, modifier.id], modifier) }))
+  static setStatModifier(modifier: Modifier) : any {
+    return {type: 'SET_STAT_MODIFIER', isUpdate: true, update: (state: State) : State => ({...state, character: {...state.character, stats: state.character.stats.setIn([modifier.statId, modifier.id], modifier)} })};
   }
 
-  removeStatModifier(statId: string, modifierId: string) : void {
-    this.store.update('REMOVE_STAT_MODIFIER', character => {
-      let stats = character.stats;
+  static removeStatModifier(statId: string, modifierId: string) : any {
+    return {type: 'SET_STAT_MODIFIER', isUpdate: true, update: (state: State) : State => {
+      let stats = state.character.stats;
       let stat = stats.get(statId);
       if (stat) {
         stat = stat.delete(modifierId);
@@ -82,16 +67,16 @@ export class CharacterStore {
       if (stat && stat.size == 0) {
         stats = stats.delete(statId);
       }
-      return { ...character, stats };
-    });
+      return {...state, character: {...state.character, stats } };
+    }}
   }
 
-  addAbility(ability: Ability) : void {
-    this.store.update('ADD_ABILITY', character => ({ ...character, abilities: character.abilities.push(ability) }));
+  static addAbility(ability: Ability) : any {
+    return {type: 'SET_STAT_MODIFIER', isUpdate: true, update: (state: State) : State => ({...state, character: {...state.character, abilities: state.character.abilities.push(ability)} })};
   }
 
-  removeAbility(abilityId: string) : void {
-    this.store.update('REMOVE_ABILITY', character => ({ ...character, abilities: character.abilities.filter(a => a.id != abilityId).toList() }));
+  static removeAbility(abilityId: string) : any {
+    return {type: 'SET_STAT_MODIFIER', isUpdate: true, update: (state: State) : State => ({...state, character: {...state.character, abilities: state.character.abilities.filter(a => a.id != abilityId).toList()} })};
   }
 }
 

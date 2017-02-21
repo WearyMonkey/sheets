@@ -19,7 +19,7 @@ export class AbilityPanel extends React.Component<{ abilityStore: Store<Ability>
             get: ability => ability.actions.get(i),
             set: (ability, action) => ({...ability, actions: ability.actions.set(i, action)})
           });
-          return <ActionCard key={action.id} actionStore={actionStore} />
+          return <ActionCard key={action.moduleId} actionStore={actionStore} />
         })}
       </div>
     </div>

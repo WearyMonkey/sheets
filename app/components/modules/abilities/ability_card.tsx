@@ -17,6 +17,6 @@ export class AbilityCard extends React.Component<{ abilityStore: Store<Ability>,
 
   private handleClick() {
     const { abilityStore, sheetUiAction } = this.props;
-    sheetUiAction({ type: 'ABILITY_SELECTED', abilityId: abilityStore.get().id });
+    sheetUiAction({ type: 'ABILITY_SELECTED', abilityId: abilityStore.get().moduleId });
   }
 }

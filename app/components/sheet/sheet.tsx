@@ -3,10 +3,11 @@ import * as styles from './sheet.css';
 import * as PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
 import {List, Iterable} from 'immutable';
-import { CharacterStore, Ability } from 'data/character';
-import { Store } from 'data/store';
-import { Drawer } from "material-ui";
-import { AbilityPanel } from 'components/ability_panel/ability_panel';
+// import { Drawer } from "material-ui";
+// import { AbilityPanel } from 'components/ability_panel/ability_panel';
+import { connect } from 'react-redux';
+import { State } from 'components/root';
+import { Lens, Store } from '../../data/lens';
 
 export type SheetUiAction =
     { type: 'ABILITY_SELECTED', abilityId: string } |
@@ -24,49 +25,26 @@ export type Sheet = {
   modules: List<ModuleConfig>
 }
 
-export class Sheets extends React.Component<{ characterStore: CharacterStore, store: Store<Sheet> }, { selectedAbility?: string }> {
-  constructor() {
-    super();
-    this.state = {};
-  }
+type Props = { modules: Iterable<number, React.ReactElement<any>> };
 
-  render() {
-    const { selectedAbility } = this.state;
-    const { store, characterStore } = this.props;
-    const modules = store.get().modules.map((moduleConfig : ModuleConfig, i : number) => {
-      const module = MODULES.get(moduleConfig.type);
-      if (module) {
-        const Module = module.component;
-        const childStore: Store<any> = store.lens({
-          set: (sheet, state) => ({...sheet, modules: sheet.modules.set(i, {...moduleConfig, state }) }),
-          get: (sheet) => sheet.modules.get(i).state
-        });
-        return <Module moduleId={moduleConfig.id} store={childStore} characterStore={characterStore} sheetUiAction={this.handleUiAction.bind(this)} />
-      } else {
-        return <div>Unknown module type {moduleConfig.type}</div>;
-      }
-    });
-    const selectedAbilityStore = selectedAbility && characterStore.lens<Ability>({
-      get: character => character.abilities.find(a => a.id == selectedAbility),
-      set: (character, ability) => ({...character, abilities: character.abilities.set(character.abilities.findIndex(a => a.id == selectedAbility), ability)})
-    });
-    return <SheetPresentation modules={modules} selectedAbility={selectedAbilityStore} />
-  }
-
-  handleUiAction(action: SheetUiAction) {
-    switch (action.type) {
-      case 'ABILITY_SELECTED':
-        this.setState({ selectedAbility: action.abilityId });
-        break;
-      case 'STAT_SELECTED': {
-
-        break;
-      }
+function stateToProps(state: State, { lens } : { lens: Store<Sheet> }) : Props {
+  const modules = lens.get(state).modules.map((moduleConfig : ModuleConfig) => {
+    const module = MODULES.get(moduleConfig.type);
+    if (module) {
+      const Module = module.component;
+      return <Module moduleId={moduleConfig.id} />
+    } else {
+      return <div>Unknown module type {moduleConfig.type}</div>;
     }
-  }
+  });
+  return { modules };
 }
 
-function SheetPresentation({ modules, selectedAbility } : { modules: Iterable<number, React.ReactElement<any>>, selectedAbility?: Store<Ability> }) {
+
+export const Sheets = connect(stateToProps)(SheetPresentation);
+
+
+function SheetPresentation({ modules } : Props) {
   return <div className={styles.root}>
     <Packery options={packeryOptions} className="sheets">
       <div className={styles.gutterSizer}></div>
@@ -77,11 +55,6 @@ function SheetPresentation({ modules, selectedAbility } : { modules: Iterable<nu
         </div>
       })}
     </Packery>
-    <Drawer width={200} openSecondary={true} open={!!selectedAbility}>
-      {!!selectedAbility &&
-        <AbilityPanel abilityStore={selectedAbility} />
-      }
-    </Drawer>
   </div>
 }
 

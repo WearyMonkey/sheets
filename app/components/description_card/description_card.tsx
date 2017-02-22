@@ -14,7 +14,7 @@ export class DescriptionCard extends React.Component<{description: Description},
       case 'IMAGE':
         return <img src={description.url}/>;
       case 'TEXT':
-        return <input type="text" onChange={this.handleChange} value={description.value}/>
+        return <TextField type="text" onChange={this.handleChange} value={description.value}/>
     }
   }
 

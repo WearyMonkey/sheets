@@ -3,7 +3,7 @@ import * as styles from './attributes.css';
 import NumberInput from 'material-ui-number-input';
 import TextField from 'material-ui/TextField';
 import { Character } from 'data/character';
-import { VerticalTable } from 'components/common/vertical-table';
+import { VerticalTable } from 'components/common/vertical_table';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
 
@@ -39,27 +39,25 @@ export class Attributes extends React.Component<{ moduleId: number, character: C
     });
 
     return (<VerticalTable
-        editMode={true}
-        cols={[
-          {displayName: 'Attribute'},
-          {displayName: 'Stat Id'},
-          {displayName: 'Base'},
-          {displayName: 'Value'},
-          {displayName: 'Mod'},
-      ]}
-        rows={attributeValues.map(({attr, baseValue, value, mod}, i) => ({
-        elements: [
-            {view: <span>{attr.displayName}</span> },
-            {view: <TextField id={`stat_id_${attr.id}`} defaultValue={attr.statId} onChange={(e : React.FormEvent<HTMLInputElement>) => this.onAttributeStatIdChange(attr, i, e.currentTarget.value)} /> },
-            {view: <NumberInput id={`value_${attr.id}`} name={attr.statId} defaultValue={baseValue} onValid={(newValue) => this.onAttributeChange(attr, newValue)}/> },
-            {view: <span>{value}</span> },
-            {view: <span>{mod}</span> },
-        ],
-        onDelete: () => this.onRemoveAttribute(i)
-      }))}
-        onAdd={this.onAddAttribute}
-    />
-)
+      cols={[
+        {displayName: 'Attribute'},
+        {displayName: 'Stat Id'},
+        {displayName: 'Base'},
+        {displayName: 'Value'},
+        {displayName: 'Mod'},
+    ]}
+    rows={attributeValues.map(({attr, baseValue, value, mod}, i) => ({
+      elements: [
+          <span>{attr.displayName}</span>,
+          <TextField id={`stat_id_${attr.id}`} defaultValue={attr.statId} onChange={(e : React.FormEvent<HTMLInputElement>) => this.onAttributeStatIdChange(attr, i, e.currentTarget.value)} />,
+          <NumberInput id={`value_${attr.id}`} name={attr.statId} defaultValue={baseValue} onValid={(newValue) => this.onAttributeChange(attr, newValue)}/>,
+          <span>{value}</span>,
+          <span>{mod}</span>,
+      ],
+      onDelete: this.onRemoveAttribute
+    }))}
+    onAdd={this.onAddAttribute}
+    />);
   }
 
   @action

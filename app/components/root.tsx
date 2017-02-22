@@ -5,6 +5,7 @@ import { Sheet } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
 import DevTools from 'mobx-react-devtools';
+import { generateId } from '../data/guid';
 
 export class Root extends React.Component<{}, {}> {
 
@@ -17,7 +18,7 @@ export class Root extends React.Component<{}, {}> {
     this.character = new Character();
     this.character.addAbility({
       id: '1', description: {type: 'TEXT', value: 'foo'}, actions: [
-        { id: '1', type: 'ROLL', description: {type: 'TEXT', value: 'Attack'}, diceRoll: { dice: [{ sides: 20, dice: 1 }] } }
+        { id: '1', type: 'ROLL', description: {type: 'TEXT', value: 'Attack'}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
       ]
     });
 

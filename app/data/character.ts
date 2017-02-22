@@ -9,11 +9,16 @@ export type Bonus =
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
-  dice: { sides: number, dice: number, bonus?: Bonus }[]
+  dice: { id: string, sides: number, dice: number, bonus?: Bonus }[]
 };
 
 export type Action =
     { type: 'ROLL', id: string, diceRoll: DiceRoll, description: Description };
+
+
+export const actionTypes : { type: string, displayName: string }[] = [
+  { type: 'ROLL', displayName: 'Dice Roll' }
+];
 
 export type Ability = {
   id: string,

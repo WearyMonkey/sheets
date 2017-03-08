@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Ability, Description } from 'data/character';
+import { Ability } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
-import { SheetUiActionCallback } from '../../sheet/sheet';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
+import { AppState } from 'data/app_state';
 
 @observer
-export class AbilityCard extends React.Component<{ ability: Ability, sheetUiAction: SheetUiActionCallback }, {}> {
+export class AbilityCard extends React.Component<{ ability: Ability, appState: AppState }, {}> {
   render() {
     const { ability } = this.props;
     return (<div onClick={this.handleClick}>
@@ -16,7 +16,6 @@ export class AbilityCard extends React.Component<{ ability: Ability, sheetUiActi
 
   @action
   handleClick = () => {
-    const { ability, sheetUiAction } = this.props;
-    sheetUiAction({ type: 'ABILITY_SELECTED', ability });
+    this.props.appState.selectedAbility = this.props.ability;
   }
 }

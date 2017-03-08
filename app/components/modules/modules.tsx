@@ -1,11 +1,11 @@
 import { ComponentClass } from 'react';
 import * as Attributes from './attributes/attributes';
 import * as Abilities from './abilities/abilities';
-import { SheetUiActionCallback } from '../sheet/sheet';
 import { Character } from 'data/character';
+import { AppState } from 'data/app_state';
 
 type Module = {
-  component: ComponentClass<{ moduleId: number, character: Character, state: any, sheetUiAction?: SheetUiActionCallback }>,
+  component: ComponentClass<{ moduleId: number, character: Character, state: any, appState?: AppState }>,
   addToCharacter: (c: Character, moduleId: number, state: any) => void
 }
 

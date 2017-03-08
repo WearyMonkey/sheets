@@ -8,6 +8,7 @@
     "flow": "flow"
   },
   "devDependencies": {
+    "@types/expr-eval": "^1.0.1",
     "@types/material-ui": "^0.16.50",
     "@types/react": "^15.0.8",
     "@types/react-dom": "^0.14.23",
@@ -22,6 +23,7 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
+    "expr-eval": "^1.0.0",
     "material-ui": "^0.16.6",
     "material-ui-number-input": "^5.0.16",
     "mobx": "^3.1.0",

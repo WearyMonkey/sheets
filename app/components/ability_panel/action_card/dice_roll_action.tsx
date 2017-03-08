@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DiceRoll } from 'data/character';
 import { observer } from 'mobx-react';
 import NumberInput from 'material-ui-number-input';
-import { VerticalTable } from 'components/common/vertical_table'
+import { VerticalTable } from 'components/vertical_table/vertical_table'
 import { generateId } from 'data/guid';
 import { action } from 'mobx';
 import RaisedButton from 'material-ui/RaisedButton';

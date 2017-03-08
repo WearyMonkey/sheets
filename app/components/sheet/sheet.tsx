@@ -7,33 +7,35 @@ import { Drawer } from "material-ui";
 import { Sheet, ModuleConfig } from 'data/sheet';
 import { observer } from 'mobx-react';
 import { AbilityPanel } from '../ability_panel/ability_panel';
-
-export type SheetUiAction =
-    { type: 'ABILITY_SELECTED', ability: Ability } |
-    { type: 'STAT_SELECTED', statId: string }
-
-export type SheetUiActionCallback = (action : SheetUiAction) => void
+import { AppState } from '../../data/app_state';
+import { StatField } from '../stat_field/stat_field';
+import { StatPanel } from '../stat_panel/stat_panel';
 
 @observer
-export class Sheets extends React.Component<{ sheet: Sheet, character: Character }, { selectedAbility?: Ability }> {
+export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, character: Character }, {}> {
   constructor(props: any) {
     super(props);
     this.state = {};
   }
 
   render() {
-    const { selectedAbility } = this.state;
-    const { sheet, character } = this.props;
+    const { sheet, character, appState } = this.props;
+    const { selectedAbility, selectedStat } = appState;
     const modules = sheet.modules.map((moduleConfig : ModuleConfig) => {
       const module = MODULES.get(moduleConfig.type);
       if (module) {
         const Module = module.component;
-        return <Module moduleId={moduleConfig.id} state={moduleConfig.state} character={character} sheetUiAction={this.handleUiAction} />
+        return <Module moduleId={moduleConfig.id} state={moduleConfig.state} character={character} appState={appState} />
       } else {
         return <div>Unknown module type {moduleConfig.type}</div>;
       }
     });
     return (<div className={styles.root}>
+          <Drawer width={200} openSecondary={false} open={!!selectedStat}>
+            {!!selectedStat &&
+              <StatPanel stat={selectedStat} character={character} />
+            }
+          </Drawer>
           <Packery options={packeryOptions} className="sheets">
             <div className={styles.gutterSizer}></div>
             <div className={styles.gridSizer}></div>
@@ -50,20 +52,6 @@ export class Sheets extends React.Component<{ sheet: Sheet, character: Character
           </Drawer>
         </div>
     );
-  }
-
-  handleUiAction = (action: SheetUiAction) => {
-    switch (action.type) {
-      case 'ABILITY_SELECTED':
-        if (this.state.selectedAbility !== action.ability) {
-          this.setState({ selectedAbility: action.ability });
-        }
-        break;
-      case 'STAT_SELECTED': {
-
-        break;
-      }
-    }
   }
 }
 

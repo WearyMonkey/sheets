@@ -4,7 +4,7 @@ import { DescriptionCard } from 'components/description_card/description_card';
 import { observer } from 'mobx-react';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import { observable, action } from 'mobx';
+import { action } from 'mobx';
 import { DiceRollAction } from './dice_roll_action';
 
 

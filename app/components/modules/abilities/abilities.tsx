@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Ability, Character } from 'data/character';
+import { Character } from 'data/character';
 import RaisedButton from 'material-ui/RaisedButton';
 import { AbilityCard } from './ability_card';
-import { SheetUiActionCallback } from 'components/sheet/sheet';
 import { observer } from 'mobx-react';
+import { AppState } from 'data/app_state';
 
 type AbilitiesState = {
 
@@ -16,13 +16,13 @@ export function addToCharacter(character: Character, moduleId: number, state: Ab
 export const MODULE_TYPE : string = 'ABILITIES_MODULE';
 
 @observer
-export class Abilities extends React.Component<{moduleId: number, character: Character, state: AbilitiesState, sheetUiAction: SheetUiActionCallback}, {}> {
+export class Abilities extends React.Component<{moduleId: number, character: Character, state: AbilitiesState, appState: AppState}, {}> {
   render() {
-    const {character, sheetUiAction} = this.props;
+    const {character, appState} = this.props;
     const abilities = character.abilities;
     return (<div>
       {abilities.map(ability =>
-          <AbilityCard key={ability.id} {...{ability, sheetUiAction}} />
+          <AbilityCard key={ability.id} {...{ability, appState}} />
       )}
       <RaisedButton>Add</RaisedButton>
     </div>);

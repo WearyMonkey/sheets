@@ -1,11 +1,10 @@
 import * as React from 'react';
-import * as styles from './attributes.css';
-import NumberInput from 'material-ui-number-input';
-import TextField from 'material-ui/TextField';
-import { Character } from 'data/character';
-import { VerticalTable } from 'components/common/vertical_table';
+import { Character, getOrCreateStat, generateStatId } from 'data/character';
+import { VerticalTable } from 'components/vertical_table/vertical_table';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
+import { StatField } from 'components/stat_field/stat_field';
+import { AppState } from 'data/app_state';
 
 type Attribute = {
   id: string,
@@ -17,42 +16,25 @@ export const MODULE_TYPE = 'ATTRIBUTES_MODULE';
 
 export function addToCharacter(character: Character, moduleId: number, state: Attribute[]) : void {
   state.forEach(attr => {
-    const modifier = character.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
-    if (modifier) {
-      setAttributeModifier(character, moduleId, attr.statId, attr, 0)
-    }
+    initialiseAttribute(moduleId, character, attr);
   });
 }
 
 @observer
-export class Attributes extends React.Component<{ moduleId: number, character: Character, state: Attribute[] }, {}> {
+export class Attributes extends React.Component<{ moduleId: number, character: Character, state: Attribute[], appState: AppState }, {}> {
   render() {
-    const { state, character, moduleId } = this.props;
-    const attributeValues = state.map(attr => {
-      const modifier = character.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
-      return {
-        attr,
-        baseValue: modifier && typeof modifier.value == 'number' ? modifier.value : 0,
-        value: character.getStatValue(attr.statId),
-        mod: character.getStatValue(`${attr.statId}-mod`)
-      };
-    });
-
+    const { state, character, appState } = this.props;
     return (<VerticalTable
       cols={[
         {displayName: 'Attribute'},
-        {displayName: 'Stat Id'},
         {displayName: 'Base'},
-        {displayName: 'Value'},
         {displayName: 'Mod'},
     ]}
-    rows={attributeValues.map(({attr, baseValue, value, mod}, i) => ({
+    rows={state.map(attr => ({
       elements: [
           <span>{attr.displayName}</span>,
-          <TextField id={`stat_id_${attr.id}`} defaultValue={attr.statId} onChange={(e : React.FormEvent<HTMLInputElement>) => this.onAttributeStatIdChange(attr, i, e.currentTarget.value)} />,
-          <NumberInput id={`value_${attr.id}`} name={attr.statId} defaultValue={baseValue} onValid={(newValue) => this.onAttributeChange(attr, newValue)}/>,
-          <span>{value}</span>,
-          <span>{mod}</span>,
+          <StatField statId={attr.statId} character={character} appState={appState} />,
+          <StatField statId={`${attr.statId}-mod`} character={character} appState={appState} />,
       ],
       onDelete: this.onRemoveAttribute
     }))}
@@ -62,44 +44,28 @@ export class Attributes extends React.Component<{ moduleId: number, character: C
 
   @action
   onAddAttribute = () => {
-    this.props.state.push({ id: Math.random().toString(), statId: '', displayName: '' });
+    const character = this.props.character;
+    const attribute = { id: Math.random().toString(), statId: generateStatId(character), displayName: 'Attribute' };
+    this.props.state.push(attribute);
+    initialiseAttribute(this.props.moduleId, character, attribute);
   };
 
   @action
   onRemoveAttribute = (index: number) => {
     this.props.state.splice(index, 1);
   };
-
-  @action
-  onAttributeChange = (attribute: Attribute, value: number) => {
-    const { character, moduleId } = this.props;
-    setAttributeModifier(character, moduleId, attribute.statId, attribute, value);
-  };
-
-  @action
-  onAttributeStatIdChange = (attr: Attribute, index: number, newStatId: string) => {
-    const { character, moduleId, state } = this.props;
-    const modifier = character.getModifier(attr.statId, `${moduleId}/${attr.statId}`);
-    if (modifier) {
-      character.removeStatModifier(attr.statId, `${moduleId}/${attr.statId}`);
-      character.removeStatModifier(`${attr.statId}-mod`, `${moduleId}/${attr.statId}-mod`);
-    }
-    setAttributeModifier(character, moduleId, newStatId, attr, modifier ? modifier.value : 0);
-    state[index].statId = newStatId;
-  }
 }
 
-function setAttributeModifier(character: Character, moduleId: number, statId: string, attr: Attribute, value: any) : void {
-  character.setStatModifier({
-    id: `${moduleId}/${statId}`,
-    description: `Base ${attr.displayName}`,
-    value, statId, moduleId,
-  });
-  character.setStatModifier({
-    id: `${moduleId}/${statId}-mod`,
-    statId: `${statId}-mod`,
-    moduleId,
-    value: { statId, factor: 0.5, round: 'DOWN' },
-    description: `Base ${attr.displayName} mod`
-  });
+function initialiseAttribute(moduleId: number, character: Character, attr: Attribute) {
+  const baseStateId = attr.statId;
+  const baseModId = `${moduleId}-${baseStateId}`;
+  const baseStat = getOrCreateStat(character, baseStateId);
+  if (!baseStat.modifiers.has(baseModId)) {
+    baseStat.modifiers.set(baseModId, { id: baseModId, description: `Base ${attr.displayName}`, value: '0', moduleId });
+  }
+
+  const modStatId = `${baseStateId}-mod`;
+  const modModId = `${baseModId}-mod`;
+  const modStat = getOrCreateStat(character, modStatId);
+  modStat.modifiers.set(modModId, { id: modModId, description: `Mod ${attr.displayName}`, value: `floor(${baseStateId} / 2)`, moduleId });
 }

@@ -13,7 +13,7 @@
     "lib": ["dom", "es6"]
   },
   "include": [
-    "app/index.tsx",
+    "app/**/*",
     "declarations",
     "dts/typescript/lib.es6.d.ts"
   ]

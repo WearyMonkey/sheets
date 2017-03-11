@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DiceRoll } from 'data/character';
 
-export class DiceRoller extends React.PureComponent<{ diceRoll?: DiceRoll }, {}> {
+export class DiceRoller extends React.PureComponent<{ diceRoll?: DiceRoll, rollNum: number }, {}> {
   render() {
     const diceRoll = this.props.diceRoll;
     if (diceRoll) {
@@ -11,7 +11,7 @@ export class DiceRoller extends React.PureComponent<{ diceRoll?: DiceRoll }, {}>
         {results.map(rolls => (<div>
           {rolls.map(r => <span>{r} </span>)}
         </div>))}
-        <span>{total}</span>
+        <span>total: {total}</span>
       </div>);
     } else {
       return null;

@@ -6,6 +6,7 @@ import { VerticalTable } from 'components/vertical_table/vertical_table'
 import { generateId } from 'data/guid';
 import { action } from 'mobx';
 import RaisedButton from 'material-ui/RaisedButton';
+import ChangeEvent = React.ChangeEvent;
 
 @observer
 export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll: (diceRoll: DiceRoll) => void }, {}> {
@@ -19,8 +20,8 @@ export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll:
         ]}
           rows={this.props.diceRoll.dice.map(({id, sides, dice, bonus}, i) => ({
           elements: [
-              <NumberInput name={`sides_${id}`} defaultValue={sides} />,
-              <NumberInput name={`dice_${id}`} defaultValue={dice} />,
+              <NumberInput name={`sides_${id}`} defaultValue={sides} onChange={this.onSidesChange} data-index={i} />,
+              <NumberInput name={`dice_${id}`} defaultValue={dice} onChange={this.onDiceChange} data-index={i} />,
           ],
           onDelete: this.onDeleteDie
         }))}
@@ -29,6 +30,18 @@ export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll:
       <RaisedButton onClick={this.onRoll}>Roll</RaisedButton>
     </div>);
   }
+
+  @action
+  onSidesChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
+    dice.sides = Number(event.currentTarget.value);
+  };
+
+  @action
+  onDiceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
+    dice.dice = Number(event.currentTarget.value);
+  };
 
   @action
   onRoll = () => {

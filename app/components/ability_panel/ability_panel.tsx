@@ -9,13 +9,13 @@ import { observable } from 'mobx';
 @observer
 export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
 
-  @observable
-  diceRoll?: DiceRoll = null;
+  @observable diceRoll?: DiceRoll = null;
+  @observable rollNum: number = 0;
 
   render() {
     const { ability } = this.props;
     return <div>
-      <DiceRoller diceRoll={this.diceRoll} />
+      <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum} />
       <DescriptionCard description={ability.description} />
       <div>
         {ability.actions.map((action, i) => {
@@ -27,5 +27,6 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
 
   handleAbilityPanelUiAction = (diceRoll: DiceRoll) => {
     this.diceRoll = diceRoll;
+    this.rollNum += 1;
   }
 }

@@ -4,6 +4,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { AbilityCard } from './ability_card';
 import { observer } from 'mobx-react';
 import { AppState } from 'data/app_state';
+import { action } from 'mobx';
+import { generateId } from 'data/guid';
 
 type AbilitiesState = {
 
@@ -24,7 +26,12 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
       {abilities.map(ability =>
           <AbilityCard key={ability.id} {...{ability, appState}} />
       )}
-      <RaisedButton>Add</RaisedButton>
+      <RaisedButton onClick={this.onAdd}>Add</RaisedButton>
     </div>);
+  }
+
+  @action
+  onAdd = () => {
+    this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT', value: '' } })
   }
 }

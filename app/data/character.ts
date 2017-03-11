@@ -16,8 +16,10 @@ export type DiceRoll = {
 export type Action =
     { type: 'ROLL', id: string, diceRoll: DiceRoll, description: Description };
 
+export type ActionType =
+    { type: string, displayName: string };
 
-export const actionTypes : { type: string, displayName: string }[] = [
+export const actionTypes : ActionType[] = [
   { type: 'ROLL', displayName: 'Dice Roll' }
 ];
 

@@ -16,7 +16,6 @@ export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll:
           cols={[
           {displayName: 'Sides'},
           {displayName: 'Dice'},
-          {displayName: 'Roll'},
         ]}
           rows={this.props.diceRoll.dice.map(({id, sides, dice, bonus}, i) => ({
           elements: [

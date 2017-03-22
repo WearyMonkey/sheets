@@ -8,8 +8,7 @@ import { observable, action } from 'mobx';
 import RaisedButton from 'material-ui/RaisedButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-import { generateId } from '../../data/guid';
-
+import { generateId } from 'data/guid';
 
 @observer
 export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
@@ -20,13 +19,13 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
 
   render() {
     const { ability } = this.props;
-    return <div>
+    return (<div>
       <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum} />
-      <DescriptionCard description={ability.description} />
+      <DescriptionCard description={ability.description}/>
       <div>
-        {ability.actions.map((action, i) => {
-          return <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction} />
-        })}
+        {ability.actions.map(action =>
+          <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction} />
+        )}
       </div>
       <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
       <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
@@ -34,8 +33,7 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
             <MenuItem value={actionType.type} primaryText={actionType.displayName} />
         )}
       </DropDownMenu>
-
-    </div>
+    </div>);
   }
 
   @action
@@ -47,7 +45,12 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
   onAddAction = () => {
     switch (this.addActionType) {
       case 'ROLL':
-        this.props.ability.actions.push({ type: 'ROLL', diceRoll: { dice: [] }, id: generateId(), description: { type: 'TEXT', value: ''} })
+        this.props.ability.actions.push({
+          type: 'ROLL',
+          diceRoll: { dice: [] },
+          id: generateId(),
+          description: { type: 'TEXT', value: ''}
+        });
         break;
       default:
         throw new Error(`Unknown action type ${this.addActionType}`);

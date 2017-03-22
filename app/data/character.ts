@@ -1,9 +1,10 @@
 import { observable, ObservableMap } from 'mobx';
 import { Parser } from 'expr-eval';
+import { TextState } from './text_state';
 
 export type Description =
-    { type: 'IMAGE', url: string }
-    | { type: 'TEXT',  value: string };
+    { type: 'IMAGE', url?: string }
+    | { type: 'TEXT',  state?: TextState };
 
 export type Bonus =
     { type: 'STAT', description: Description, statId: string  }

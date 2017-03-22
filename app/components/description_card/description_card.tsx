@@ -1,29 +1,39 @@
 import * as React from 'react';
 import { Description } from 'data/character';
-import TextField from 'material-ui/TextField';
 import { observer } from 'mobx-react';
 import { action } from 'mobx';
+import * as DropZone from 'react-dropzone';
+import * as styles from './description_card.css';
 import ChangeEvent = React.ChangeEvent;
+import { TextEditor } from 'components/text_editor/text_editor';
+import { TextState } from 'data/text_state';
 
 @observer
-export class DescriptionCard extends React.Component<{description: Description}, {}> {
+export class DescriptionCard extends React.Component<{description: Description}, { }> {
 
   render() {
-    const {description} = this.props;
+    const { description } = this.props;
+    let content;
     switch (description.type) {
       case 'IMAGE':
-        return <img src={description.url}/>;
+        content = <img src={description.url}/>;
+        break;
       case 'TEXT':
-        return <TextField type="text" onChange={this.handleChange} value={description.value}/>
+        content = <TextEditor textState={description.state} onChange={this.onEditorChange} />;
+        break;
     }
+
+    return (<DropZone disableClick={true} className={styles.dropZone} activeClassName={styles.activeDropZone} >
+      { content }
+    </DropZone>);
   }
 
   @action
-  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {description} = this.props;
+  onEditorChange = (state: TextState) => {
+    const { description } = this.props;
     description.type = 'TEXT';
     if (description.type == 'TEXT') {
-      description.value = event.currentTarget.value;
+      description.state = state;
     }
   }
 }

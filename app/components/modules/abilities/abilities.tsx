@@ -32,6 +32,6 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
 
   @action
   onAdd = () => {
-    this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT', value: '' } })
+    this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT' } })
   }
 }

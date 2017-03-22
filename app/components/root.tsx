@@ -8,6 +8,7 @@ import DevTools from 'mobx-react-devtools';
 import { generateId } from 'data/guid';
 import { AppState } from 'data/app_state';
 import { MODULES } from 'components/modules/modules';
+import { TextState } from 'data/text_state';
 
 export class Root extends React.Component<{}, {}> {
 
@@ -20,8 +21,8 @@ export class Root extends React.Component<{}, {}> {
 
     this.character = new Character();
     this.character.abilities.push({
-      id: '1', description: {type: 'TEXT', value: 'foo'}, actions: [
-        { id: '1', type: 'ROLL', description: {type: 'TEXT', value: 'Attack'}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
+      id: '1', description: {type: 'TEXT', state: TextState.createFromText('foo') }, actions: [
+        { id: '1', type: 'ROLL', description: {type: 'TEXT', state: TextState.createFromText('attack')}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
       ]
     });
 

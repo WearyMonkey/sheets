@@ -30,7 +30,7 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
       <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
       <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
         {actionTypes.map(actionType =>
-            <MenuItem value={actionType.type} primaryText={actionType.displayName} />
+          <MenuItem value={actionType.type} primaryText={actionType.displayName} />
         )}
       </DropDownMenu>
     </div>);
@@ -49,7 +49,7 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
           type: 'ROLL',
           diceRoll: { dice: [] },
           id: generateId(),
-          description: { type: 'TEXT', value: ''}
+          description: { type: 'TEXT' }
         });
         break;
       default:

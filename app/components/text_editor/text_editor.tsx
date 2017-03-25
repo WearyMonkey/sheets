@@ -6,14 +6,14 @@ import { Editor, EditorState } from 'draft-js';
 import { TextState } from 'data/text_state';
 
 @observer
-export class TextEditor extends React.Component<{textState?: TextState, onChange?: (textState: TextState) => void}, { }> {
+export class TextEditor extends React.Component<{textState?: TextState|null, onChange?: (textState: TextState) => void}, { }> {
 
-  @observable.ref editorState?: EditorState = null;
+  @observable.ref editorState: EditorState|null = null;
   @observable focused: boolean = false;
 
   render() {
     let editorState;
-    if (this.focused) {
+    if (this.focused && this.editorState) {
       editorState = this.editorState;
     } else {
       editorState = this.props.textState

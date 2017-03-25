@@ -10,6 +10,7 @@
     "moduleResolution": "node",
     "outDir": "tsc-out",
     "experimentalDecorators": true,
+    "strictNullChecks": true,
     "lib": ["dom", "es6"]
   },
   "include": [

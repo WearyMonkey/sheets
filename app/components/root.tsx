@@ -21,8 +21,8 @@ export class Root extends React.Component<{}, {}> {
 
     this.character = new Character();
     this.character.abilities.push({
-      id: '1', description: {type: 'TEXT', state: TextState.createFromText('foo') }, actions: [
-        { id: '1', type: 'ROLL', description: {type: 'TEXT', state: TextState.createFromText('attack')}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
+      id: '1', description: {type: 'TEXT', textState: TextState.createFromText('foo') }, actions: [
+        { id: '1', type: 'ROLL', description: {type: 'TEXT', textState: TextState.createFromText('attack')}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
       ]
     });
 
@@ -33,7 +33,7 @@ export class Root extends React.Component<{}, {}> {
         { id: 2, type: 'ABILITIES_MODULE', state: {} },
     );
     this.sheet.modules.forEach(module => {
-      MODULES.get(module.type).addToCharacter(this.character, module.id, module.state);
+      MODULES.get(module.type)!.addToCharacter(this.character, module.id, module.state);
     });
 
     this.appState = new AppState();

@@ -3,15 +3,14 @@ import { Parser } from 'expr-eval';
 import { TextState } from './text_state';
 
 export type Description =
-    { type: 'IMAGE', url?: string }
-    | { type: 'TEXT',  state?: TextState };
+    { type: 'IMAGE' | 'TEXT', imageUrl?: string|null, textState?: TextState|null }
 
 export type Bonus =
     { type: 'STAT', description: Description, statId: string  }
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
-  dice: { id: string, sides: number, dice: number, bonus?: Bonus }[]
+  dice: { id: string, sides: number, dice: number, bonus?: Bonus|null }[]
 };
 
 export type Action =

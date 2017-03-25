@@ -7,17 +7,17 @@ type Column = {
 }
 
 type Row = {
-  elements: Array<React.ReactElement<any>>,
-  onDelete: (i : number) => void
+  elements: Array<React.ReactElement<any>>
 }
 
 export class VerticalTable extends React.Component<{
   rows: Array<Row>,
   cols: Array<Column>,
-  onAdd: () => void,
+  onAddRow: () => void,
+  onDeleteRow: (row: number) => void
 }, {}> {
   render() {
-    const { cols, rows, onAdd } = this.props;
+    const { cols, rows, onAddRow, onDeleteRow } = this.props;
     return <div>
       <table className={styles.table}>
         <thead>
@@ -34,14 +34,14 @@ export class VerticalTable extends React.Component<{
                   <td key={i}>{e}</td>
               )}
               <td>
-                <RaisedButton onClick={() => row.onDelete(i)}>Delete</RaisedButton>
+                <RaisedButton onClick={() => onDeleteRow(i)}>Delete</RaisedButton>
               </td>
             </tr>
           )}
 
         </tbody>
       </table>
-      <RaisedButton onClick={onAdd}>Add</RaisedButton>
+      <RaisedButton onClick={onAddRow}>Add</RaisedButton>
     </div>;
   }
 }

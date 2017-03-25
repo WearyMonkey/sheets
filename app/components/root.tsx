@@ -26,11 +26,19 @@ export class Root extends React.Component<{}, {}> {
       ]
     });
 
-
     this.sheet = new Sheet();
     this.sheet.modules.push(
-        { id: 1, type: 'ATTRIBUTES_MODULE', state: [{ id: '1', statId: 'strength', displayName: 'Strength' }] },
-        { id: 2, type: 'ABILITIES_MODULE', state: {} },
+        { id: 2, type: 'GRID_MODULE', state: {
+          columns: [
+            { type: 'LABEL', displayName: 'Attribute' },
+            { type: 'STAT', displayName: 'Base' },
+            { type: 'STAT', displayName: 'Mod' },
+          ],
+          rows: [
+            { values: ['Strength', 'strength', 'strength_mod'] },
+          ]
+        } },
+        { id: 3, type: 'ABILITIES_MODULE', state: {} },
     );
     this.sheet.modules.forEach(module => {
       MODULES.get(module.type)!.addToCharacter(this.character, module.id, module.state);

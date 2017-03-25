@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Character, getStatValue } from 'data/character';
+import { Character, getStatValue, getOrCreateStat } from 'data/character';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { AppState } from 'data/app_state';
@@ -14,6 +14,6 @@ export class StatField extends React.Component<{character: Character, appState: 
   }
 
   @action onClick = () => {
-    this.props.appState.selectedStat = this.props.character.stats.get(this.props.statId);
+    this.props.appState.selectedStat = getOrCreateStat(this.props.character, this.props.statId);
   }
 }

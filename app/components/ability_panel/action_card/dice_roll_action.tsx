@@ -21,10 +21,10 @@ export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll:
           elements: [
               <NumberInput name={`sides_${id}`} defaultValue={sides} onChange={this.onSidesChange} data-index={i} />,
               <NumberInput name={`dice_${id}`} defaultValue={dice} onChange={this.onDiceChange} data-index={i} />,
-          ],
-          onDelete: this.onDeleteDie
+          ]
         }))}
-          onAdd={this.onAddDie}
+          onAddRow={this.onAddDie}
+          onDeleteRow={this.onDeleteDie}
       />
       <RaisedButton onClick={this.onRoll}>Roll</RaisedButton>
     </div>);

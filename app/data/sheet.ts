@@ -7,5 +7,17 @@ export type ModuleConfig = {
 }
 
 export class Sheet {
-  @observable modules: ModuleConfig[] = [];
+  constructor(modules: ModuleConfig[] = []) {
+    this.modules = modules;
+  }
+
+  @observable readonly modules: ModuleConfig[];
+}
+
+export function sheetToJson(sheet: Sheet) {
+  return { 'modules': sheet.modules };
+}
+
+export function sheetFromJson(json: any): Sheet {
+  return new Sheet(json['modules']);
 }

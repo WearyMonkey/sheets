@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
-import { Character } from 'data/character';
-import { Sheet } from 'data/sheet';
+import { Character, characterFromJson, characterToJson } from 'data/character';
+import { Sheet, sheetFromJson, sheetToJson } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
 import DevTools from 'mobx-react-devtools';
@@ -19,6 +19,36 @@ export class Root extends React.Component<{}, {}> {
   constructor() {
     super();
 
+    if (localStorage.character && localStorage.sheet) {
+      this.character = characterFromJson(JSON.parse(localStorage.character));
+      this.sheet = sheetFromJson(JSON.parse(localStorage.sheet));
+    } else {
+      this.loadTestCharacter();
+    }
+
+    this.appState = new AppState();
+  }
+
+  componentDidMount() {
+    window.onunload = () => {
+      localStorage.setItem('character', JSON.stringify(characterToJson(this.character)));
+      localStorage.setItem('sheet', JSON.stringify(sheetToJson(this.sheet)));
+    }
+  }
+
+  render() {
+    return <div>
+      <AppBar/>
+      <div className={styles.containerOuter}>
+        <div className={styles.containerInner}>
+          <Sheets appState={this.appState} sheet={this.sheet} character={this.character} />
+        </div>
+      </div>
+      <DevTools/>
+    </div>
+  }
+
+  loadTestCharacter() {
     this.character = new Character();
     this.character.abilities.push({
       id: '1', description: {type: 'TEXT', textState: TextState.createFromText('foo') }, actions: [
@@ -44,26 +74,6 @@ export class Root extends React.Component<{}, {}> {
     this.sheet.modules.forEach(module => {
       MODULES.get(module.type)!.addToCharacter(this.character, module.id, module.state);
     });
-
-    this.appState = new AppState();
-  }
-
-  componentDidMount() {
-    window.onunload = function() {
-
-    }
-  }
-
-  render() {
-    return <div>
-      <AppBar/>
-      <div className={styles.containerOuter}>
-        <div className={styles.containerInner}>
-          <Sheets appState={this.appState} sheet={this.sheet} character={this.character} />
-        </div>
-      </div>
-      <DevTools/>
-    </div>
   }
 
   getChildContext() {

@@ -14,7 +14,6 @@
     "@types/react": "^15.0.8",
     "@types/react-dom": "^0.14.23",
     "@types/react-dropzone": "^0.0.32",
-    "@types/react-icons": "^2.2.0",
     "@types/react-tap-event-plugin": "0.0.30",
     "@types/whatwg-fetch": "^0.0.33",
     "css-loader": "^0.26.1",
@@ -27,6 +26,7 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
+    "@types/react-icons": "^2.2.0",
     "draft-js": "^0.10.0",
     "expr-eval": "^1.0.0",
     "material-ui": "^0.16.6",
@@ -36,6 +36,7 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.12.2",
+    "react-icons": "^2.2.3",
     "react-packery-component": "^1.0.2",
     "react-tap-event-plugin": "^2.0.1"
   }

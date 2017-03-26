@@ -14,6 +14,7 @@
     "@types/react": "^15.0.8",
     "@types/react-dom": "^0.14.23",
     "@types/react-dropzone": "^0.0.32",
+    "@types/react-icons": "^2.2.0",
     "@types/react-tap-event-plugin": "0.0.30",
     "@types/whatwg-fetch": "^0.0.33",
     "css-loader": "^0.26.1",

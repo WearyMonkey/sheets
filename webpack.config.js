@@ -8,11 +8,20 @@ const extractCSS = new ExtractTextPlugin('[name].css');
 module.exports = {
   resolve: {
     modules: [path.join(__dirname, 'app'), 'node_modules'],
-    extensions: ['.tsx', '.ts', '.js', '.jsx']
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    alias: {
+      'react-icons': path.resolve('node_modules/react-icons/lib')
+    }
   },
   entry: ['index.tsx'],
   module: {
     rules: [
+      {
+        test: [/react-icons\/lib/],
+        use: [{
+          loader: './react-icons-loader.js'
+        }]
+      },
       {
         test: [/\.tsx?$/],
         exclude: /node_modules/,
@@ -39,7 +48,7 @@ module.exports = {
     extractCSS,
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': '"production"'
+        // 'NODE_ENV': '"production"'
       }
     }),
   ],

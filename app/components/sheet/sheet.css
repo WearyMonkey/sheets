@@ -3,8 +3,9 @@
 }
 
 .moduleContainer {
-  background-color: #ffffff;
   margin-bottom: 1rem;
+  border: 1px solid lightgray;
+  padding: 1rem;
 }
 
 .moduleContainer,

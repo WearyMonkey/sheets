@@ -29,6 +29,7 @@ export class Root extends React.Component<{}, {}> {
     this.sheet = new Sheet();
     this.sheet.modules.push(
         { id: 2, type: 'GRID_MODULE', state: {
+          title: 'Attributes',
           columns: [
             { type: 'LABEL', displayName: 'Attribute' },
             { type: 'STAT', displayName: 'Base' },
@@ -47,6 +48,12 @@ export class Root extends React.Component<{}, {}> {
     this.appState = new AppState();
   }
 
+  componentDidMount() {
+    window.onunload = function() {
+
+    }
+  }
+
   render() {
     return <div>
       <AppBar/>
@@ -58,4 +65,16 @@ export class Root extends React.Component<{}, {}> {
       <DevTools/>
     </div>
   }
+
+  getChildContext() {
+    return {
+      reactIconBase: { size: '100%' }
+    };
+  }
+
+  static childContextTypes = {
+    reactIconBase: React.PropTypes.shape({
+      size: React.PropTypes.string
+    })
+  };
 }

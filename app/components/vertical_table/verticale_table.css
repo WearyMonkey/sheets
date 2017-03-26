@@ -1,4 +1,16 @@
 .table {
   width: 100%;
-  table-layout: fixed;
+}
+
+.table thead {
+  text-align: left;
+}
+
+.table th {
+  position: relative;
+}
+
+.deleteColumn {
+  position: absolute !important;
+  right: 0;
 }

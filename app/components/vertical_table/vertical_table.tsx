@@ -1,6 +1,14 @@
 import * as React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import * as styles from './verticale_table.css';
+import IconButton from 'material-ui/IconButton';
+import TimesCircle from 'react-icons/fa/times-circle';
+import TextField from 'material-ui/TextField';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import { observer } from 'mobx-react';
+import { observable, action } from 'mobx';
 
 type Column = {
   displayName: string
@@ -10,20 +18,38 @@ type Row = {
   elements: Array<React.ReactElement<any>>
 }
 
+@observer
 export class VerticalTable extends React.Component<{
   rows: Array<Row>,
   cols: Array<Column>,
-  onAddRow: () => void,
-  onDeleteRow: (row: number) => void
+  onAddRow?: () => void,
+  onAddColumn?: (option?: any) => void,
+  onDeleteRow?: (row: number) => void,
+  onDeleteColumn?: (column: number) => void,
+  onColumnChange?: (i: number, value: string) => void
+  editMode?: boolean,
+  addColumnOptions?: { displayName: string, id: string|number }[]
 }, {}> {
+
+  @observable addColumnMenuAnchor: Element|null = null;
+
   render() {
-    const { cols, rows, onAddRow, onDeleteRow } = this.props;
+    const { cols, rows, onAddRow, onDeleteRow, onDeleteColumn, editMode, addColumnOptions } = this.props;
+    const width = `${100 / cols.length}%`;
     return <div>
       <table className={styles.table}>
         <thead>
           <tr>
             {cols.map((col, i) =>
-              <th key={i}>{col.displayName}</th>
+              <th key={i}>
+                {this.props.onColumnChange
+                  ? (<TextField fullWidth={true} value={col.displayName} onChange={(e: React.FormEvent<HTMLInputElement>) => this.props.onColumnChange!(i, e.currentTarget.value)} />)
+                  : col.displayName
+                }
+                {editMode && onDeleteColumn &&
+                  <IconButton onClick={() => onDeleteColumn(i)} className={styles.deleteColumn}><TimesCircle/></IconButton>
+                }
+              </th>
             )}
           </tr>
         </thead>
@@ -31,17 +57,65 @@ export class VerticalTable extends React.Component<{
           {rows.map((row, i) =>
             <tr key={i}>
               {row.elements.map((e, i) =>
-                  <td key={i}>{e}</td>
+                  <td style={{ width }} key={i}>{e}</td>
               )}
-              <td>
-                <RaisedButton onClick={() => onDeleteRow(i)}>Delete</RaisedButton>
-              </td>
+              {editMode && onDeleteRow &&
+                <td>
+                  <IconButton onClick={() => onDeleteRow(i)}><TimesCircle/></IconButton>
+                </td>
+              }
             </tr>
           )}
 
         </tbody>
       </table>
-      <RaisedButton onClick={onAddRow}>Add</RaisedButton>
+      {editMode &&
+        <div>
+          {this.props.onAddRow &&
+            <FlatButton onClick={onAddRow}>Add Row</FlatButton>
+          }
+          {this.props.onAddColumn &&
+            <FlatButton onClick={this.onAddColumn}>Add Column</FlatButton>
+          }
+          {addColumnOptions &&
+            <Popover
+                open={!!this.addColumnMenuAnchor}
+                anchorEl={this.addColumnMenuAnchor!}
+                anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                onRequestClose={this.onCloseColumnMenu}
+            >
+              <Menu>
+                {addColumnOptions.map(option =>
+                    <MenuItem key={option.id} primaryText={option.displayName} onClick={() => this.onAddColumnSelect(option)} />
+                )}
+              </Menu>
+            </Popover>
+          }
+        </div>
+      }
     </div>;
   }
+
+  @action
+  onAddColumnSelect = (option: {displayName: string, id: string|number}) => {
+    this.addColumnMenuAnchor = null;
+    if (this.props.onAddColumn) {
+      this.props.onAddColumn(option);
+    }
+  };
+
+  @action
+  onAddColumn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (this.props.addColumnOptions) {
+      this.addColumnMenuAnchor = e.currentTarget;
+    } else if (this.props.onAddColumn) {
+      this.props.onAddColumn();
+    }
+  };
+
+  @action
+  onCloseColumnMenu = () => {
+    this.addColumnMenuAnchor = null;
+  };
 }

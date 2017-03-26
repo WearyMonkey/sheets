@@ -1,0 +1,13 @@
+.header {
+    margin-top: -1rem;
+}
+
+.title {
+    display: inline-block;
+    margin: 0;
+    padding: 12px 0;
+}
+
+.icon {
+    float: right;
+}

@@ -38,6 +38,19 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-icon-base@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-icon-base/-/react-icon-base-2.0.0.tgz#9e2cb9b9347b75a89c438d0dcfd63dfe982799d7"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-icons@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react-icons/-/react-icons-2.2.0.tgz#ea07e60ca5136e55d77e2e25eefada71d6a64976"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-icon-base" "*"
+
 "@types/react-tap-event-plugin@0.0.30":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/react-tap-event-plugin/-/react-tap-event-plugin-0.0.30.tgz#123f35080412f489b6770c5a65c159ff96654cb5"

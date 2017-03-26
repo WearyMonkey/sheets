@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
-import { Character, characterFromJson, characterToJson } from 'data/character';
+import { Character } from 'data/character';
+import { characterFromJson, characterToJson } from 'data/character_serialization';
 import { Sheet, sheetFromJson, sheetToJson } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';

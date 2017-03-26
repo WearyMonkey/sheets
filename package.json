@@ -8,6 +8,7 @@
     "flow": "flow"
   },
   "devDependencies": {
+    "@types/classnames": "^0.0.32",
     "@types/draft-js": "^0.10.0",
     "@types/expr-eval": "^1.0.1",
     "@types/material-ui": "^0.16.50",
@@ -26,7 +27,7 @@
     "webpack-dev-server": "^2.2.0"
   },
   "dependencies": {
-    "@types/react-icons": "^2.2.0",
+    "classnames": "^2.2.5",
     "draft-js": "^0.10.0",
     "expr-eval": "^1.0.0",
     "material-ui": "^0.16.6",
@@ -36,7 +37,6 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.12.2",
-    "react-icons": "^2.2.3",
     "react-packery-component": "^1.0.2",
     "react-tap-event-plugin": "^2.0.1"
   }

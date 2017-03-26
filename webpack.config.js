@@ -8,20 +8,11 @@ const extractCSS = new ExtractTextPlugin('[name].css');
 module.exports = {
   resolve: {
     modules: [path.join(__dirname, 'app'), 'node_modules'],
-    extensions: ['.tsx', '.ts', '.js', '.jsx'],
-    alias: {
-      'react-icons': path.resolve('node_modules/react-icons/lib')
-    }
+    extensions: ['.tsx', '.ts', '.js', '.jsx']
   },
   entry: ['index.tsx'],
   module: {
     rules: [
-      {
-        test: [/react-icons\/lib/],
-        use: [{
-          loader: './react-icons-loader.js'
-        }]
-      },
       {
         test: [/\.tsx?$/],
         exclude: /node_modules/,

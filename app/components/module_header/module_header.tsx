@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styles from './module_header.css';
 import IconButton from 'material-ui/IconButton';
-import Cog from 'react-icons/fa/cog';
+import Create from 'material-ui/svg-icons/content/create';
 
 export class ModuleHeader extends React.Component<{title: string, onEditMode?: (editMode :boolean) => void}, {editMode: boolean}> {
 
@@ -15,7 +15,7 @@ export class ModuleHeader extends React.Component<{title: string, onEditMode?: (
     return (<div className={styles.header}>
       <h1 className={styles.title}>{title}</h1>
       {onEditMode &&
-        <IconButton onClick={this.onEditMode} className={styles.icon}><Cog /></IconButton>
+        <IconButton onClick={this.onEditMode} className={styles.icon}><Create /></IconButton>
       }
     </div>)
   }

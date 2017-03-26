@@ -33,7 +33,7 @@ export type Ability = {
 
 export type Modifier = {
   id: string,
-  moduleId: number,
+  moduleId?: number|null,
   description: string,
   value: string,
 };
@@ -68,7 +68,7 @@ export function getStatValue(character: Character, statId: string) : number {
   return Array.from(modifiers.values()).reduce((total, modifier) => total + evaluateModifier(character, modifier), 0);
 }
 
-function evaluateModifier(character: Character, modifier: Modifier) {
+export function evaluateModifier(character: Character, modifier: Modifier) {
   const parser = new Parser();
   const expr = parser.parse(modifier.value);
   const variableValues : { [variable: string]: number } = {};

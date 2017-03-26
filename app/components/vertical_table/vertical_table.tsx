@@ -1,8 +1,8 @@
 import * as React from 'react';
-import FlatButton from 'material-ui/FlatButton';
 import * as styles from './verticale_table.css';
+import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
-import TimesCircle from 'react-icons/fa/times-circle';
+import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
 import TextField from 'material-ui/TextField';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
@@ -47,7 +47,7 @@ export class VerticalTable extends React.Component<{
                   : col.displayName
                 }
                 {editMode && onDeleteColumn &&
-                  <IconButton onClick={() => onDeleteColumn(i)} className={styles.deleteColumn}><TimesCircle/></IconButton>
+                  <IconButton onClick={() => onDeleteColumn(i)} className={styles.deleteColumn}><RemoveCircle/></IconButton>
                 }
               </th>
             )}
@@ -61,7 +61,7 @@ export class VerticalTable extends React.Component<{
               )}
               {editMode && onDeleteRow &&
                 <td>
-                  <IconButton onClick={() => onDeleteRow(i)}><TimesCircle/></IconButton>
+                  <IconButton onClick={() => onDeleteRow(i)}><RemoveCircle/></IconButton>
                 </td>
               }
             </tr>

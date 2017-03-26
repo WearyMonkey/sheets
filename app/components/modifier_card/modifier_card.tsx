@@ -1,15 +1,25 @@
 import * as React from 'react';
-import { Modifier } from '../../data/character';
+import { Character, Modifier, evaluateModifier } from 'data/character';
 import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
-import ChangeEvent = React.ChangeEvent;
 import { action, observable } from 'mobx';
 import { Parser } from 'expr-eval';
+import * as styles from './modifier_card.css';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
-type Props = { modifier: Modifier };
+type Props = {
+  character: Character,
+  modifier: Modifier,
+  onDelete: () => void
+};
 
 @observer
 export class ModifierCard extends React.Component<Props, { currentValue: string }> {
+
+  @observable currentValue: string;
 
   constructor(props: Props) {
     super(props);
@@ -21,16 +31,38 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
   }
 
   render() {
-    return <div>
-      <TextField value={this.state.currentValue} onChange={this.onChange} onBlur={this.onBlur} />
-    </div>;
+    const { character, modifier, onDelete } = this.props;
+    const { currentValue } = this.state;
+    const total = evaluateModifier(character, modifier);
+    return (<div className={styles.card}>
+      <div className={styles.left}>
+        <TextField hintText="Description" fullWidth={true} value={modifier.description} onChange={this.onDescriptionChange} />
+        <TextField hintText="Value" fullWidth={true} value={currentValue} onChange={this.onChange} onBlur={this.onBlur} />
+      </div>
+      <div className={styles.right}>
+        <IconMenu
+            iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
+        >
+          <MenuItem primaryText="Delete" onClick={onDelete} />
+          <MenuItem primaryText="Enabled" />
+        </IconMenu>
+        <div className={styles.total}>{total}</div>
+      </div>
+    </div>);
   }
 
-  @action onBlur = () => {
+  @action
+  onDescriptionChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.props.modifier.description = e.currentTarget.value;
+  };
+
+  @action
+  onBlur = () => {
     this.setState({ currentValue: this.props.modifier.value });
   };
 
-  @action onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  @action
+  onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
     this.setState({ currentValue: newValue });
     if (validateValue(newValue)) {

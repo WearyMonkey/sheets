@@ -19,8 +19,6 @@ type Props = {
 @observer
 export class ModifierCard extends React.Component<Props, { currentValue: string }> {
 
-  @observable currentValue: string;
-
   constructor(props: Props) {
     super(props);
     this.state = { currentValue: props.modifier.value };

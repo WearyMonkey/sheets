@@ -7,6 +7,7 @@ import { AppState } from 'data/app_state';
 import { VerticalTable } from '../../vertical_table/vertical_table';
 import TextField from 'material-ui/TextField';
 import { ModuleHeader } from 'components/module_header/module_header';
+import MenuItem from 'material-ui/MenuItem';
 
 type Column = {
   type: 'LABEL' | 'STAT',
@@ -30,27 +31,31 @@ export function addToCharacter(character: Character, moduleId: number, state: Gr
 }
 
 @observer
-export class GridModule extends React.Component<{ moduleId: number, character: Character, appState: AppState, state: Grid }, {}> {
+export class GridModule extends React.Component<{ moduleId: number, character: Character, appState: AppState, state: Grid, onDelete: () => void }, {}> {
 
   @observable editMode: boolean = false;
 
   render() {
-    const { character, appState, state } = this.props;
+    const { character, appState, state, onDelete } = this.props;
     const { title, rows, columns } = state;
     const tableRows = rows.map((row, r) => {
       const elements = row.values.map((value, c) => {
         const column = columns[c];
         switch (column.type) {
           case 'LABEL': return <TextField fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
-          case 'STAT': return <StatField character={character} appState={appState} statId={value} />;
+          case 'STAT': return <StatField character={character} appState={appState} statId={value} onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)} />;
           default: throw new Error(`Unknown column type ${column.type}`);
         }
       });
       return { elements };
     });
 
+    const menuItems = [
+      <MenuItem key="edit" primaryText="Edit" onClick={this.onEditMode} />
+    ];
+
     return (<div>
-      <ModuleHeader title={title} onEditMode={this.onEditMode} />
+      <ModuleHeader title={title} menuItems={menuItems} onDelete={onDelete} onTitleChange={this.onTitleChange} />
       <VerticalTable
           rows={tableRows} cols={columns}
           onAddRow={this.onAddRow} onDeleteRow={this.onDeleteRow} onColumnChange={this.onColumnChange}
@@ -62,6 +67,11 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
           editMode={this.editMode} />
     </div>);
   }
+
+  @action
+  onTitleChange = (title: string) => {
+    this.props.state.title = title;
+  };
 
   @action
   onDeleteColumn = (index: number) => {
@@ -76,13 +86,18 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
   };
 
   @action
-  onEditMode = (editMode: boolean) => {
-    this.editMode = editMode;
+  onEditMode = () => {
+    this.editMode = !this.editMode;
   };
 
   @action
   onLabelChange = (rowIndex: number, columnIndex: number, e: React.FormEvent<HTMLInputElement>) => {
     this.props.state.rows[rowIndex].values[columnIndex] = e.currentTarget.value;
+  };
+
+  @action
+  onStatIdChange = (statId: string, row: number, col: number) => {
+    this.props.state.rows[row].values[col] = statId;
   };
 
   @action

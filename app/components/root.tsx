@@ -24,7 +24,8 @@ export class Root extends React.Component<{}, {}> {
       this.character = characterFromJson(JSON.parse(localStorage.character));
       this.sheet = sheetFromJson(JSON.parse(localStorage.sheet));
     } else {
-      this.loadTestCharacter();
+      this.character = new Character();
+      this.sheet = new Sheet();
     }
 
     this.appState = new AppState();
@@ -47,34 +48,6 @@ export class Root extends React.Component<{}, {}> {
       </div>
       <DevTools/>
     </div>
-  }
-
-  loadTestCharacter() {
-    this.character = new Character();
-    this.character.abilities.push({
-      id: '1', description: {type: 'TEXT', textState: TextState.createFromText('foo') }, actions: [
-        { id: '1', type: 'ROLL', description: {type: 'TEXT', textState: TextState.createFromText('attack')}, diceRoll: { dice: [{ id: generateId(), sides: 20, dice: 1 }] } }
-      ]
-    });
-
-    this.sheet = new Sheet();
-    this.sheet.modules.push(
-        { id: 2, type: 'GRID_MODULE', state: {
-          title: 'Attributes',
-          columns: [
-            { type: 'LABEL', displayName: 'Attribute' },
-            { type: 'STAT', displayName: 'Base' },
-            { type: 'STAT', displayName: 'Mod' },
-          ],
-          rows: [
-            { values: ['Strength', 'strength', 'strength_mod'] },
-          ]
-        } },
-        { id: 3, type: 'ABILITIES_MODULE', state: {} },
-    );
-    this.sheet.modules.forEach(module => {
-      MODULES.get(module.type)!.addToCharacter(this.character, module.id, module.state);
-    });
   }
 
   getChildContext() {

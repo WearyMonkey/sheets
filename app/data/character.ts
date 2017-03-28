@@ -2,7 +2,9 @@ import { observable, ObservableMap } from 'mobx';
 import { Parser } from 'expr-eval';
 import { TextState } from './text_state';
 
-type JSON = any;
+export type Tag = {
+  id: string
+}
 
 export type Description =
     { type: 'IMAGE' | 'TEXT', imageUrl?: string|null, textState?: TextState|null }
@@ -28,7 +30,8 @@ export const actionTypes : ActionType[] = [
 export type Ability = {
   id: string,
   description: Description,
-  actions: Action[]
+  actions: Action[],
+  tags: Tag[]
 };
 
 export type Modifier = {
@@ -69,14 +72,18 @@ export function getStatValue(character: Character, statId: string) : number {
 }
 
 export function evaluateModifier(character: Character, modifier: Modifier) {
-  const parser = new Parser();
-  const expr = parser.parse(modifier.value);
-  const variableValues : { [variable: string]: number } = {};
-  expr.variables().forEach(variable => {
-    const stat = character.stats.get(variable);
-    variableValues[variable] = stat ? getStatValue(character, stat.id) : 0;
-  });
-  return expr.evaluate(variableValues);
+  try {
+    const parser = new Parser();
+    const expr = parser.parse(modifier.value);
+    const variableValues : { [variable: string]: number } = {};
+    expr.variables().forEach(variable => {
+      const stat = character.stats.get(variable);
+      variableValues[variable] = stat ? getStatValue(character, stat.id) : 0;
+    });
+    return expr.evaluate(variableValues);
+  } catch (e) {
+    return 0;
+  }
 }
 
 export function generateStatId(character: Character) {

@@ -6,8 +6,10 @@
     display: inline-block;
     margin: 0;
     padding: 12px 0;
+    font-size: 26px !important;
+    font-weight: bold;
 }
 
-.icon {
+.menuDropDown {
     float: right;
 }

@@ -1,9 +1,15 @@
 import * as React from 'react';
 import * as styles from './module_header.css';
 import IconButton from 'material-ui/IconButton';
-import Create from 'material-ui/svg-icons/content/create';
+import TextField from 'material-ui/TextField';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
+import { observer } from 'mobx-react';
 
-export class ModuleHeader extends React.Component<{title: string, onEditMode?: (editMode :boolean) => void}, {editMode: boolean}> {
+@observer
+export class ModuleHeader extends React.Component<
+    {title: string, menuItems: JSX.Element[], onDelete: () => void, onTitleChange: (title: string) => void }, {}> {
 
   constructor(props: any) {
     super(props);
@@ -11,19 +17,21 @@ export class ModuleHeader extends React.Component<{title: string, onEditMode?: (
   }
 
   render() {
-    const { title, onEditMode } = this.props;
+    const { title, menuItems, onDelete } = this.props;
     return (<div className={styles.header}>
-      <h1 className={styles.title}>{title}</h1>
-      {onEditMode &&
-        <IconButton onClick={this.onEditMode} className={styles.icon}><Create /></IconButton>
-      }
-    </div>)
+      <TextField className={styles.title} value={title} onChange={this.onTitleChange} />
+      <IconMenu
+          className={styles.menuDropDown}
+          anchorOrigin={{horizontal: 'middle', vertical: 'bottom'}}
+          iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
+      >
+        {menuItems}
+        <MenuItem primaryText="Delete" onClick={onDelete} />
+      </IconMenu>
+    </div>);
   }
 
-  onEditMode = () => {
-    this.setState({editMode: !this.state.editMode});
-    if (this.props.onEditMode) {
-      this.props.onEditMode(!this.state.editMode);
-    }
+  onTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.props.onTitleChange(e.currentTarget.value);
   }
 }

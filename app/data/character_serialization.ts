@@ -1,6 +1,14 @@
 import { mapFromJson, mapToJson } from './serialization';
-import { Ability, Action, Bonus, Character, Description, DiceRoll, Modifier, Stat } from './character';
+import { Ability, Action, Bonus, Character, Description, DiceRoll, Modifier, Stat, Tag } from './character';
 import { TextState } from './text_state';
+
+function tagToJson(tag: Tag) {
+  return { 'id': tag.id };
+}
+
+function tagFromJson(json: any) {
+  return { id: json['id'] };
+}
 
 function descriptionToJson(desc: Description): any {
   return { 'type': desc.type, 'imageUrl': desc.imageUrl, 'textState': desc.textState && TextState.toJson(desc.textState) };
@@ -51,11 +59,11 @@ function actionFromJson(json: any): Action {
 }
 
 function abilityToJson(ability: Ability): any {
-  return { 'id': ability.id, 'description': descriptionToJson(ability.description), 'actions': ability.actions.map(action => actionToJson(action)) };
+  return { 'id': ability.id, 'tags': ability.tags.map(tagToJson), 'description': descriptionToJson(ability.description), 'actions': ability.actions.map(action => actionToJson(action)) };
 }
 
 function abilityFromJson(json: any): Ability {
-  return { id: json['id'], description: descriptionFromJson(json['description']), actions: json['actions'].map((action: any) => actionFromJson(action)) };
+  return { id: json['id'], tags: json['tags'] ? json['tags'].map(tagFromJson) : [], description: descriptionFromJson(json['description']), actions: json['actions'].map((action: any) => actionFromJson(action)) };
 }
 
 function modifierToJson(modifier: Modifier): any {

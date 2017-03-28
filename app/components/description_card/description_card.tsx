@@ -22,7 +22,7 @@ export class DescriptionCard extends React.Component<{description: Description},
     switch (description.type) {
       case 'IMAGE':
         const url = this.uploadPreview || description.imageUrl;
-        content = <img src={url || ''}/>;
+        content = <img className={styles.image} src={url || ''}/>;
         break;
       case 'TEXT':
         content = <TextEditor textState={description.textState} onChange={this.onEditorChange} />;

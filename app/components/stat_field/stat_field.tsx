@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Character, getStatValue, getOrCreateStat } from 'data/character';
+import { Character, getStatValue } from 'data/character';
 import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { AppState } from 'data/app_state';
@@ -8,12 +8,12 @@ import * as classnames from 'classnames';
 
 
 @observer
-export class StatField extends React.Component<{character: Character, appState: AppState, statId: string} ,{}> {
+export class StatField extends React.Component<{character: Character, appState: AppState, statId: string, onStatIdChange: (statId: string) => void} ,{}> {
 
   render() {
     const { character, statId, appState } = this.props;
     const currentValue = getStatValue(character, statId);
-    const active = appState.selectedStat && appState.selectedStat.id == statId;
+    const active = appState.selectedStatId == statId;
     return (<div
         className={classnames(styles.field, { [styles.active]: active })}
         onClick={this.onClick}>
@@ -22,6 +22,10 @@ export class StatField extends React.Component<{character: Character, appState: 
   }
 
   @action onClick = () => {
-    this.props.appState.selectedStat = getOrCreateStat(this.props.character, this.props.statId);
+    this.props.appState.selectedStatId = this.props.statId;
+    this.props.appState.onStatIdChange = (statId: string) => {
+      this.props.appState.selectedStatId = statId;
+      this.props.onStatIdChange(statId);
+    };
   }
 }

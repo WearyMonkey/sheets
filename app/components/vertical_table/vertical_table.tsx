@@ -116,8 +116,8 @@ export class VerticalTable extends React.Component<{
 
   @action
   onDeleteColumn = () => {
-    this.onCloseColumnOptionsMenu();
     this.props.onDeleteColumn!(this.columnMenu!);
+    this.onCloseColumnOptionsMenu();
   };
 
   @action

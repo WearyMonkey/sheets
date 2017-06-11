@@ -57,9 +57,13 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
     return (<div>
       <ModuleHeader title={title} menuItems={menuItems} onDelete={onDelete} onTitleChange={this.onTitleChange} />
       <VerticalTable
-          rows={tableRows} cols={columns}
-          onAddRow={this.onAddRow} onDeleteRow={this.onDeleteRow} onColumnChange={this.onColumnChange}
-          onAddColumn={this.onAddColumn} onDeleteColumn={this.onDeleteColumn}
+          rows={tableRows}
+          cols={columns}
+          onAddRow={this.onAddRow}
+          onDeleteRow={this.onDeleteRow}
+          onColumnTitleChange={this.onColumnTitleChange}
+          onAddColumn={this.onAddColumn}
+          onDeleteColumn={this.onDeleteColumn}
           addColumnOptions={[
               { displayName: 'Label', id: 'LABEL' },
               { displayName: 'Stat', id: 'STAT' },
@@ -81,7 +85,7 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
   };
 
   @action
-  onColumnChange = (index: number, value: string) => {
+  onColumnTitleChange = (index: number, value: string) => {
     this.props.state.columns[index].displayName = value;
   };
 

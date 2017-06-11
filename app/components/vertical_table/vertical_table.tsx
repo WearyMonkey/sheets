@@ -3,6 +3,7 @@ import * as styles from './verticale_table.css';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
+import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import TextField from 'material-ui/TextField';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
@@ -11,7 +12,8 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 
 type Column = {
-  displayName: string
+  displayName: string,
+  onlyVisibleInEdit?: boolean,
 }
 
 type Row = {
@@ -26,15 +28,17 @@ export class VerticalTable extends React.Component<{
   onAddColumn?: (option?: any) => void,
   onDeleteRow?: (row: number) => void,
   onDeleteColumn?: (column: number) => void,
-  onColumnChange?: (i: number, value: string) => void
+  onColumnTitleChange?: (i: number, value: string) => void
   editMode?: boolean,
   addColumnOptions?: { displayName: string, id: string|number }[]
 }, {}> {
 
-  @observable addColumnMenuAnchor: Element|null = null;
+  @observable addColumnMenuAnchor?: Element;
+  @observable columnOptionsAnchor?: Element;
+  @observable columnMenu?: number;
 
   render() {
-    const { cols, rows, onAddRow, onDeleteRow, onDeleteColumn, editMode, addColumnOptions } = this.props;
+    const { cols, rows, onAddRow, onDeleteRow, editMode, addColumnOptions } = this.props;
     const width = `${100 / cols.length}%`;
     return <div>
       <table className={styles.table}>
@@ -42,12 +46,12 @@ export class VerticalTable extends React.Component<{
           <tr>
             {cols.map((col, i) =>
               <th key={i}>
-                {this.props.onColumnChange
-                  ? (<TextField name={`header_${i}`} hintText="Header" fullWidth={true} value={col.displayName} onChange={this.onColumnChange.bind(this, i)} />)
+                {this.props.onColumnTitleChange
+                  ? (<TextField name={`header_${i}`} hintText="Header" fullWidth={true} value={col.displayName} onChange={this.onColumnTitleChange.bind(this, i)} />)
                   : col.displayName
                 }
-                {editMode && onDeleteColumn &&
-                  <IconButton onClick={() => onDeleteColumn(i)} className={styles.deleteColumn}><RemoveCircle/></IconButton>
+                {editMode &&
+                  <IconButton className={styles.deleteColumn} onClick={this.onOpenColumnOptionsMenu .bind(this, i)}><ArrayDropDownIcon /></IconButton>
                 }
               </th>
             )}
@@ -92,21 +96,52 @@ export class VerticalTable extends React.Component<{
               </Menu>
             </Popover>
           }
+          <Popover
+              open={!!this.columnOptionsAnchor}
+              anchorEl={this.columnOptionsAnchor!}
+              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+              targetOrigin={{horizontal: 'left', vertical: 'top'}}
+              onRequestClose={this.onCloseColumnOptionsMenu}
+          >
+            <Menu>
+              {this.props.onDeleteColumn &&
+                <MenuItem primaryText="Delete" onClick={this.onDeleteColumn}/>
+              }
+            </Menu>
+          </Popover>
         </div>
       }
     </div>;
   }
 
   @action
-  onColumnChange = (i: number, e: React.FormEvent<HTMLInputElement>) => {
-    if (this.props.onColumnChange) {
-      this.props.onColumnChange(i, e.currentTarget.value)
+  onDeleteColumn = () => {
+    this.onCloseColumnOptionsMenu();
+    this.props.onDeleteColumn!(this.columnMenu!);
+  };
+
+  @action
+  onOpenColumnOptionsMenu = (i: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    this.columnOptionsAnchor = e.currentTarget;
+    this.columnMenu = i;
+  };
+
+  @action
+  onCloseColumnOptionsMenu = () => {
+    this.columnOptionsAnchor = undefined;
+    this.columnMenu = undefined;
+  };
+
+  @action
+  onColumnTitleChange = (i: number, e: React.FormEvent<HTMLInputElement>) => {
+    if (this.props.onColumnTitleChange) {
+      this.props.onColumnTitleChange(i, e.currentTarget.value)
     }
   };
 
   @action
   onAddColumnSelect = (option: {displayName: string, id: string|number}) => {
-    this.addColumnMenuAnchor = null;
+    this.addColumnMenuAnchor = undefined;
     if (this.props.onAddColumn) {
       this.props.onAddColumn(option);
     }
@@ -123,6 +158,6 @@ export class VerticalTable extends React.Component<{
 
   @action
   onCloseColumnMenu = () => {
-    this.addColumnMenuAnchor = null;
+    this.addColumnMenuAnchor = undefined;
   };
 }

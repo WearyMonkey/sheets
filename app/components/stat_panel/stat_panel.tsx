@@ -18,7 +18,7 @@ export class StatPanel extends React.Component<{ character: Character, statId: s
 
     return (<div className={styles.panel}>
       <h1>{value}</h1>
-      <TextField fullWidth={true} value={stat.id} onChange={this.onStatIdChange} hintText="Stat Id" />
+      <TextField name={`${statId}_id`} fullWidth={true} value={stat.id} onChange={this.onStatIdChange} hintText="Stat Id" />
       <div>
         {stat.modifiers.values().map((modifier, i) =>
           <div key={modifier.id} className={styles.modifierContainer}>

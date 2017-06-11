@@ -36,13 +36,13 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
   @observable editMode: boolean = false;
 
   render() {
-    const { character, appState, state, onDelete } = this.props;
+    const { moduleId, character, appState, state, onDelete } = this.props;
     const { title, rows, columns } = state;
     const tableRows = rows.map((row, r) => {
       const elements = row.values.map((value, c) => {
         const column = columns[c];
         switch (column.type) {
-          case 'LABEL': return <TextField fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
+          case 'LABEL': return <TextField name={`${moduleId}_column_header_${c}`} hintText="Label" fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
           case 'STAT': return <StatField character={character} appState={appState} statId={value} onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)} />;
           default: throw new Error(`Unknown column type ${column.type}`);
         }
@@ -130,7 +130,7 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
     const { rows, columns } = state;
     switch (id) {
       case 'LABEL':
-        columns.push({ displayName: '', type: id });
+        columns.push({ displayName: '', type: 'LABEL' });
         rows.forEach(row => {
           row.values.push('');
         });
@@ -138,7 +138,7 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
       case 'STAT':
         const statId = generateStatId(this.props.character);
         getOrCreateStat(character, statId);
-        columns.push({ displayName: '', type: id });
+        columns.push({ displayName: '', type: 'STAT' });
         rows.forEach(row => {
           row.values.push(statId);
         });

@@ -23,7 +23,7 @@ export const MODULE_TYPE : string = 'ABILITIES_MODULE';
 @observer
 export class Abilities extends React.Component<{moduleId: number, character: Character, state: AbilitiesState, appState: AppState, onDelete: () => void}, {}> {
   render() {
-    const { character, appState, state, onDelete } = this.props;
+    const { moduleId, character, appState, state, onDelete } = this.props;
     const { title, filter } = state;
     const abilities = filter
         ? character.abilities.filter(a => a.tags.find(t => t.id == filter))
@@ -31,7 +31,7 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
 
     return (<div>
       <ModuleHeader title={title} menuItems={[]} onDelete={onDelete} onTitleChange={this.onTitleChange} />
-      <TextField value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
+      <TextField name={`${moduleId}_filter`} value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
       {abilities.map(ability =>
           <AbilityCard key={ability.id} {...{ability, appState}} />
       )}

@@ -43,7 +43,7 @@ export class VerticalTable extends React.Component<{
             {cols.map((col, i) =>
               <th key={i}>
                 {this.props.onColumnChange
-                  ? (<TextField fullWidth={true} value={col.displayName} onChange={(e: React.FormEvent<HTMLInputElement>) => this.props.onColumnChange!(i, e.currentTarget.value)} />)
+                  ? (<TextField name={`header_${i}`} hintText="Header" fullWidth={true} value={col.displayName} onChange={this.onColumnChange.bind(this, i)} />)
                   : col.displayName
                 }
                 {editMode && onDeleteColumn &&
@@ -96,6 +96,13 @@ export class VerticalTable extends React.Component<{
       }
     </div>;
   }
+
+  @action
+  onColumnChange = (i: number, e: React.FormEvent<HTMLInputElement>) => {
+    if (this.props.onColumnChange) {
+      this.props.onColumnChange(i, e.currentTarget.value)
+    }
+  };
 
   @action
   onAddColumnSelect = (option: {displayName: string, id: string|number}) => {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as styles from './sheet.css';
 import * as PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
-import { Character } from 'data/character';
+import { Ability, Character } from 'data/character';
 import { Drawer } from "material-ui";
 import { Sheet, ModuleConfig } from 'data/sheet';
 import { observer } from 'mobx-react';
@@ -48,7 +48,7 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
           </Packery>
           <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
             {selectedAbility != null &&
-            <AbilityPanel ability={selectedAbility} />
+            <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility} />
             }
           </Drawer>
         </div>
@@ -68,6 +68,15 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
       return <div>Unknown module type {moduleConfig.type}</div>;
     }
   }
+
+  @action
+  onDeleteAbility = (ability: Ability) => {
+    const index = this.props.character.abilities.indexOf(ability);
+    this.props.character.abilities.splice(index, 1);
+    if (ability === this.props.appState.selectedAbility) {
+      this.props.appState.selectedAbility = undefined;
+    }
+  };
 
   @action
   onDeleteModule = (moduleId: number) => {

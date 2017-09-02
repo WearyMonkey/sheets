@@ -10,8 +10,13 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { generateId } from 'data/guid';
 
+type Props = {
+  ability: Ability,
+  onDelete(ability: Ability): void
+}
+
 @observer
-export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
+export class AbilityPanel extends React.Component<Props, {}>{
 
   @observable diceRoll?: DiceRoll;
   @observable rollNum: number = 0;
@@ -33,12 +38,18 @@ export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
           <MenuItem value={actionType.type} primaryText={actionType.displayName} />
         )}
       </DropDownMenu>
+      <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
     </div>);
   }
 
   @action
   onTypeChange = (e: React.SyntheticEvent<{}>, index: number, menuItemValue: string) => {
     this.addActionType = menuItemValue;
+  };
+
+  @action
+  onDelete = () => {
+    this.props.onDelete(this.props.ability);
   };
 
   @action

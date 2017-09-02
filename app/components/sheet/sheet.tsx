@@ -14,19 +14,21 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import { action } from 'mobx';
 
+type Props = {
+  appState: AppState,
+  sheet: Sheet,
+  character: Character
+};
+
 @observer
-export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, character: Character }, {}> {
-  constructor(props: any) {
-    super(props);
-    this.state = {};
-  }
+export class Sheets extends React.Component<Props, {}> {
 
   render() {
     const { sheet, character, appState } = this.props;
     const { selectedAbility, selectedStatId, onStatIdChange } = appState;
     return (<div className={styles.root}>
           <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
-            {selectedStatId != null &&
+            {selectedStatId &&
               <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange} />
             }
           </Drawer>
@@ -47,8 +49,8 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
             })}
           </Packery>
           <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
-            {selectedAbility != null &&
-            <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility} />
+            {selectedAbility &&
+              <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility} />
             }
           </Drawer>
         </div>

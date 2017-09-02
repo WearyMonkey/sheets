@@ -30,8 +30,16 @@ export function addToCharacter(character: Character, moduleId: number, state: Gr
 
 }
 
+type Props = {
+  moduleId: number,
+  character: Character,
+  appState: AppState,
+  state: Grid,
+  onDelete(): void
+};
+
 @observer
-export class GridModule extends React.Component<{ moduleId: number, character: Character, appState: AppState, state: Grid, onDelete: () => void }, {}> {
+export class GridModule extends React.Component<Props, {}> {
 
   @observable editMode: boolean = false;
 

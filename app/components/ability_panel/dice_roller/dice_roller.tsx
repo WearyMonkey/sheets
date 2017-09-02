@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { DiceRoll } from 'data/character';
 
-export class DiceRoller extends React.PureComponent<{ diceRoll?: DiceRoll, rollNum: number }, {}> {
+type Props = {
+  diceRoll?: DiceRoll,
+  rollNum: number
+};
+
+export class DiceRoller extends React.PureComponent<Props, {}> {
   render() {
     const diceRoll = this.props.diceRoll;
     if (diceRoll) {

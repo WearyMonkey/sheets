@@ -20,8 +20,7 @@ type Row = {
   elements: Array<React.ReactElement<any>>
 }
 
-@observer
-export class VerticalTable extends React.Component<{
+type Props = {
   rows: Array<Row>,
   cols: Array<Column>,
   editMode?: boolean,
@@ -31,7 +30,10 @@ export class VerticalTable extends React.Component<{
   onDeleteRow?(row: number): void,
   onDeleteColumn?(column: number): void,
   onColumnTitleChange?(i: number, value: string): void
-}, {}> {
+}
+
+@observer
+export class VerticalTable extends React.Component<Props, {}> {
 
   @observable addColumnMenuAnchor?: Element;
   @observable columnOptionsAnchor?: Element;

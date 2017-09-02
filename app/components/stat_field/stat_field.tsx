@@ -6,9 +6,15 @@ import { AppState } from 'data/app_state';
 import * as styles from './stat_field.css';
 import * as classnames from 'classnames';
 
+type Props = {
+  character: Character,
+  appState: AppState,
+  statId: string,
+  onStatIdChange(statId: string): void
+};
 
 @observer
-export class StatField extends React.Component<{character: Character, appState: AppState, statId: string, onStatIdChange: (statId: string) => void} ,{}> {
+export class StatField extends React.Component<Props ,{}> {
 
   render() {
     const { character, statId, appState } = this.props;

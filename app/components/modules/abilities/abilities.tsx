@@ -20,8 +20,16 @@ export function addToCharacter(character: Character, moduleId: number, state: Ab
 
 export const MODULE_TYPE : string = 'ABILITIES_MODULE';
 
+type Props = {
+  moduleId: number,
+  character: Character,
+  state: AbilitiesState,
+  appState: AppState,
+  onDelete(): void,
+};
+
 @observer
-export class Abilities extends React.Component<{moduleId: number, character: Character, state: AbilitiesState, appState: AppState, onDelete: () => void}, {}> {
+export class Abilities extends React.Component<Props, {}> {
   render() {
     const { moduleId, character, appState, state, onDelete } = this.props;
     const { title, filter } = state;

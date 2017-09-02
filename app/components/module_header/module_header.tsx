@@ -23,7 +23,11 @@ export class ModuleHeader extends React.Component<Props, {}> {
   render() {
     const { title, menuItems } = this.props;
     return (<div className={styles.header}>
-      <TextField name="module_header" className={styles.title} value={title} onChange={this.onTitleChange}/>
+      <TextField
+          name="module_header"
+          className={styles.title}
+          value={title}
+          onChange={this.onTitleChange}/>
       <IconMenu
           className={styles.menuDropDown}
           anchorOrigin={{ horizontal: 'middle', vertical: 'bottom' }}

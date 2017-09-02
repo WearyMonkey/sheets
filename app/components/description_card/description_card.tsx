@@ -25,7 +25,8 @@ export class DescriptionCard extends React.Component<Props, {}> {
                   accept="image/*"
                   disableClick={true}
                   multiple={false}
-                  className={styles.dropZone} activeClassName={styles.activeDropZone}>
+                  className={styles.dropZone}
+                  activeClassName={styles.activeDropZone}>
           {this.renderDescription()}
         </DropZone>
     );

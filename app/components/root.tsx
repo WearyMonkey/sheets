@@ -36,15 +36,17 @@ export class Root extends React.Component<{}, {}> {
   }
 
   render() {
-    return <div>
-      <AppBar/>
-      <div className={styles.containerOuter}>
-        <div className={styles.containerInner}>
-          <Sheets appState={this.appState} sheet={this.sheet} character={this.character}/>
+    return (
+        <div>
+          <AppBar/>
+          <div className={styles.containerOuter}>
+            <div className={styles.containerInner}>
+              <Sheets appState={this.appState} sheet={this.sheet} character={this.character}/>
+            </div>
+          </div>
+          <DevTools/>
         </div>
-      </div>
-      <DevTools/>
-    </div>
+    );
   }
 
   getChildContext() {

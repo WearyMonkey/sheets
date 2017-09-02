@@ -4,19 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
-    "flow": "flow"
+    "start": "webpack-dev-server"
   },
   "devDependencies": {
     "@types/classnames": "^0.0.32",
     "@types/draft-js": "^0.10.0",
     "@types/expr-eval": "^1.0.1",
     "@types/material-ui": "^0.16.50",
-    "@types/react": "^15.0.8",
-    "@types/react-dom": "^0.14.23",
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
     "@types/react-dropzone": "^0.0.32",
     "@types/react-tap-event-plugin": "0.0.30",
-    "@types/whatwg-fetch": "^0.0.33",
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-webpack-plugin": "^2.26.0",

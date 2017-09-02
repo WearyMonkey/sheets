@@ -30,9 +30,9 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-dom@^0.14.23":
-  version "0.14.23"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.23.tgz#cecfcfad754b4c2765fe5d29b81b301889ad6c2e"
+"@types/react-dom@^15.5.4":
+  version "15.5.4"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-15.5.4.tgz#3f75ba86a2ce9a7d1d9e7d1ee3f186f3a9652d8f"
   dependencies:
     "@types/react" "*"
 
@@ -46,23 +46,9 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/react-tap-event-plugin/-/react-tap-event-plugin-0.0.30.tgz#123f35080412f489b6770c5a65c159ff96654cb5"
 
-"@types/react@*":
+"@types/react@*", "@types/react@^16.0.5":
   version "16.0.5"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.0.5.tgz#d713cf67cc211dea20463d2a0b66005c22070c4b"
-
-"@types/react@^15.0.8":
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-15.6.2.tgz#2c8495aa853cb37591d0046e9afe544fb837c612"
-
-"@types/whatwg-fetch@^0.0.33":
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/@types/whatwg-fetch/-/whatwg-fetch-0.0.33.tgz#19c0d2863c8cb2380f21a1c736b79cbf7895bb13"
-  dependencies:
-    "@types/whatwg-streams" "*"
-
-"@types/whatwg-streams@*":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@types/whatwg-streams/-/whatwg-streams-0.0.3.tgz#4853d869f3e26d5adfd0d9407b6edce716d06bfe"
 
 abbrev@1:
   version "1.1.0"
@@ -1633,9 +1619,9 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-"imagesloaded@git+https://github.com/eiriklv/imagesloaded":
+imagesloaded@eiriklv/imagesloaded:
   version "3.1.8"
-  resolved "git+https://github.com/eiriklv/imagesloaded#04535a148206e58790927e133f24ca199163b995"
+  resolved "https://codeload.github.com/eiriklv/imagesloaded/tar.gz/04535a148206e58790927e133f24ca199163b995"
   dependencies:
     eventie ">=1.0.4 <2"
     wolfy87-eventemitter "4.x"
@@ -2435,9 +2421,9 @@ p-map@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/p-map/-/p-map-1.1.1.tgz#05f5e4ae97a068371bc2a5cc86bfbdbc19c4ae7a"
 
-"packery@git+https://github.com/eiriklv/packery":
+packery@eiriklv/packery:
   version "1.3.0"
-  resolved "git+https://github.com/eiriklv/packery#8e812a0a16575ef923f5e72efcea85aadc6fea67"
+  resolved "https://codeload.github.com/eiriklv/packery/tar.gz/8e812a0a16575ef923f5e72efcea85aadc6fea67"
   dependencies:
     classie eiriklv/classie
     desandro-get-style-property eiriklv/get-style-property
@@ -3576,7 +3562,7 @@ type-is@~1.6.15:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-typescript@^2.5.0:
+typescript@^2.1.6:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.5.2.tgz#038a95f7d9bbb420b1bf35ba31d4c5c1dd3ffe34"
 

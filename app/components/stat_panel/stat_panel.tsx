@@ -16,7 +16,7 @@ type Props = {
 };
 
 @observer
-export class StatPanel extends React.Component<Props, {}> {
+export class StatPanel extends React.Component<Props> {
   render() {
     const { statId, character } = this.props;
     const stat = getOrCreateStat(character, statId);

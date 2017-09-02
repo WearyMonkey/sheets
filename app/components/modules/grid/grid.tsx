@@ -39,7 +39,7 @@ type Props = {
 };
 
 @observer
-export class GridModule extends React.Component<Props, {}> {
+export class GridModule extends React.Component<Props> {
 
   @observable private editMode: boolean = false;
 

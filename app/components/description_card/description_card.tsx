@@ -13,7 +13,7 @@ type Props = {
 };
 
 @observer
-export class DescriptionCard extends React.Component<Props, {}> {
+export class DescriptionCard extends React.Component<Props> {
 
   private readonly fileUploader: FileUploader = new FileUploader();
   @observable private uploadPreview?: string;

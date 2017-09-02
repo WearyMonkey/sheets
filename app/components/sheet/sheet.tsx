@@ -21,7 +21,7 @@ type Props = {
 };
 
 @observer
-export class Sheets extends React.Component<Props, {}> {
+export class Sheets extends React.Component<Props> {
 
   render() {
     const { sheet, character, appState } = this.props;

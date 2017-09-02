@@ -14,7 +14,7 @@ type Props = {
 };
 
 @observer
-export class DiceRollAction extends React.Component<Props, {}> {
+export class DiceRollAction extends React.Component<Props> {
   render() {
     return (
         <div>

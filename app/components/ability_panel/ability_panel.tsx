@@ -16,7 +16,7 @@ type Props = {
 }
 
 @observer
-export class AbilityPanel extends React.Component<Props, {}> {
+export class AbilityPanel extends React.Component<Props> {
 
   @observable private diceRoll?: DiceRoll;
   @observable private rollNum: number = 0;

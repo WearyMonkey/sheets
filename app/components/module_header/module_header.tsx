@@ -16,7 +16,7 @@ type Props = {
 };
 
 @observer
-export class ModuleHeader extends React.Component<Props, {}> {
+export class ModuleHeader extends React.Component<Props> {
 
   render() {
     const { title, menuItems } = this.props;

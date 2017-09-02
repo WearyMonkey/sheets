@@ -33,7 +33,7 @@ type Props = {
 }
 
 @observer
-export class VerticalTable extends React.Component<Props, {}> {
+export class VerticalTable extends React.Component<Props> {
 
   @observable private addColumnMenuAnchor?: Element;
   @observable private columnOptionsAnchor?: Element;

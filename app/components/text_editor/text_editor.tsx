@@ -10,7 +10,7 @@ type Props = {
 };
 
 @observer
-export class TextEditor extends React.Component<Props, {}> {
+export class TextEditor extends React.Component<Props> {
 
   @observable.ref private editorState?: EditorState;
   @observable private focused: boolean = false;

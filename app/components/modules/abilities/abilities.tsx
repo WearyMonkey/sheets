@@ -29,7 +29,7 @@ type Props = {
 };
 
 @observer
-export class Abilities extends React.Component<Props, {}> {
+export class Abilities extends React.Component<Props> {
   render() {
     const { moduleId, character, appState, state, onDelete } = this.props;
     const { title, filter } = state;

@@ -8,7 +8,7 @@ import { Sheets } from './sheet/sheet';
 import DevTools from 'mobx-react-devtools';
 import { AppState } from 'data/app_state';
 
-export class Root extends React.Component<{}, {}> {
+export class Root extends React.Component {
 
   private readonly character: Character;
   private readonly sheet: Sheet;

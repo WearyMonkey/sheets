@@ -11,7 +11,7 @@ type Props = {
 };
 
 @observer
-export class AbilityCard extends React.Component<Props, {}> {
+export class AbilityCard extends React.Component<Props> {
   render() {
     const { ability } = this.props;
     return (<div onClick={this.handleClick}>

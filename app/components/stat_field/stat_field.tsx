@@ -14,7 +14,7 @@ type Props = {
 };
 
 @observer
-export class StatField extends React.Component<Props, {}> {
+export class StatField extends React.Component<Props> {
 
   render() {
     const { character, statId, appState } = this.props;

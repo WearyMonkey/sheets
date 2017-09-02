@@ -6,7 +6,7 @@ type Props = {
   rollNum: number
 };
 
-export class DiceRoller extends React.PureComponent<Props, {}> {
+export class DiceRoller extends React.PureComponent<Props> {
   render() {
     const diceRoll = this.props.diceRoll;
     if (diceRoll) {

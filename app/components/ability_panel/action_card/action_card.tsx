@@ -10,7 +10,7 @@ type Props = {
 };
 
 @observer
-export class ActionCard extends React.Component<Props, {}> {
+export class ActionCard extends React.Component<Props> {
   render() {
     const { action } = this.props;
     return (

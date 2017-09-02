@@ -17,7 +17,7 @@ type Props = {
 };
 
 @observer
-export class ModifierCard extends React.Component<Props, {}> {
+export class ModifierCard extends React.Component<Props> {
 
   @observable private currentValue = this.props.modifier.value;
 

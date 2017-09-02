@@ -20,24 +20,28 @@ export class DescriptionCard extends React.Component<Props, { }> {
   @observable uploadPercentage: number = 0;
 
   render() {
+    return (
+      <DropZone onDrop={this.onImageDrop} accept="image/*" disableClick={true} multiple={false} className={styles.dropZone} activeClassName={styles.activeDropZone} >
+        {this.renderDescription()}
+      </DropZone>
+    );
+  }
+
+  private renderDescription() {
     const { description } = this.props;
-    let content;
     switch (description.type) {
       case 'IMAGE':
         const url = this.uploadPreview || description.imageUrl;
-        content = <img className={styles.image} src={url || ''}/>;
-        break;
+        return <img className={styles.image} src={url || ''}/>;
       case 'TEXT':
-        content = <TextEditor textState={description.textState} onChange={this.onEditorChange} />;
-        break;
+        return <TextEditor textState={description.textState} onChange={this.onEditorChange} />;
+      default:
+        throw new Error(`Unknown description type ${description.type}`);
     }
-    return (<DropZone onDrop={this.onImageDrop} accept="image/*" disableClick={true} multiple={false} className={styles.dropZone} activeClassName={styles.activeDropZone} >
-      { content }
-    </DropZone>);
   }
 
   @action
-  onImageDrop = ([file] : (File & {preview: string})[]) => {
+  private readonly onImageDrop = ([file] : (File & {preview: string})[]) => {
     this.props.description.type = 'IMAGE';
     this.uploadPreview = file.preview;
     this.uploadPercentage = 0;
@@ -50,7 +54,7 @@ export class DescriptionCard extends React.Component<Props, { }> {
   };
 
   @action
-  onEditorChange = (state: TextState) => {
+  private readonly onEditorChange = (state: TextState) => {
     const { description } = this.props;
     description.textState = state;
   }

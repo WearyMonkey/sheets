@@ -19,10 +19,7 @@ type Props = {
 @observer
 export class ModifierCard extends React.Component<Props, { currentValue: string }> {
 
-  constructor(props: Props) {
-    super(props);
-    this.state = { currentValue: props.modifier.value };
-  }
+  state = { currentValue: this.props.modifier.value };
 
   componentWillReceiveProps(nextProps: Props) {
     this.setState({ currentValue: nextProps.modifier.value });
@@ -32,35 +29,37 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
     const { character, modifier, onDelete } = this.props;
     const { currentValue } = this.state;
     const total = evaluateModifier(character, modifier);
-    return (<div className={styles.card}>
-      <div className={styles.left}>
-        <TextField name={`${modifier.id}_card_description`} hintText="Description" fullWidth={true} value={modifier.description} onChange={this.onDescriptionChange} />
-        <TextField name={`${modifier.id}_card_value`} hintText="Value" fullWidth={true} value={currentValue} onChange={this.onChange} onBlur={this.onBlur} />
+    return (
+      <div className={styles.card}>
+        <div className={styles.left}>
+          <TextField name={`${modifier.id}_card_description`} hintText="Description" fullWidth={true} value={modifier.description} onChange={this.onDescriptionChange} />
+          <TextField name={`${modifier.id}_card_value`} hintText="Value" fullWidth={true} value={currentValue} onChange={this.onChange} onBlur={this.onBlur} />
+        </div>
+        <div className={styles.right}>
+          <IconMenu
+              iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
+          >
+            <MenuItem primaryText="Delete" onClick={onDelete} />
+            <MenuItem primaryText="Enabled" />
+          </IconMenu>
+          <div className={styles.total}>{total}</div>
+        </div>
       </div>
-      <div className={styles.right}>
-        <IconMenu
-            iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
-        >
-          <MenuItem primaryText="Delete" onClick={onDelete} />
-          <MenuItem primaryText="Enabled" />
-        </IconMenu>
-        <div className={styles.total}>{total}</div>
-      </div>
-    </div>);
+    );
   }
 
   @action
-  onDescriptionChange = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly onDescriptionChange = (e: React.FormEvent<HTMLInputElement>) => {
     this.props.modifier.description = e.currentTarget.value;
   };
 
   @action
-  onBlur = () => {
+  private readonly onBlur = () => {
     this.setState({ currentValue: this.props.modifier.value });
   };
 
   @action
-  onChange = (event: React.FormEvent<HTMLInputElement>) => {
+  private readonly onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
     this.setState({ currentValue: newValue });
     if (validateValue(newValue)) {

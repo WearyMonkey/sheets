@@ -14,14 +14,18 @@ export class StatField extends React.Component<{character: Character, appState: 
     const { character, statId, appState } = this.props;
     const currentValue = getStatValue(character, statId);
     const active = appState.selectedStatId == statId;
-    return (<div
+    return (
+      <div
         className={classnames(styles.field, { [styles.active]: active })}
-        onClick={this.onClick}>
-      {currentValue}
-    </div>);
+        onClick={this.onClick}
+      >
+        {currentValue}
+      </div>
+    );
   }
 
-  @action onClick = () => {
+  @action
+  private readonly onClick = () => {
     this.props.appState.selectedStatId = this.props.statId;
     this.props.appState.onStatIdChange = (statId: string) => {
       this.props.appState.selectedStatId = statId;

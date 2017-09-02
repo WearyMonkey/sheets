@@ -29,29 +29,31 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
         ? character.abilities.filter(a => a.tags.find(t => t.id == filter))
         : character.abilities;
 
-    return (<div>
-      <ModuleHeader {...{moduleId, title, onDelete}} menuItems={[]} onTitleChange={this.onTitleChange} />
-      <TextField name={`${moduleId}_filter`} value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
-      {abilities.map(ability =>
-          <AbilityCard key={ability.id} {...{ability, appState}} />
-      )}
-      <RaisedButton onClick={this.onAdd}>Add</RaisedButton>
-    </div>);
+    return (
+      <div>
+        <ModuleHeader {...{moduleId, title, onDelete}} menuItems={[]} onTitleChange={this.onTitleChange} />
+        <TextField name={`${moduleId}_filter`} value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
+        {abilities.map(ability =>
+            <AbilityCard key={ability.id} {...{ability, appState}} />
+        )}
+        <RaisedButton onClick={this.onAdd}>Add</RaisedButton>
+      </div>
+    );
   }
 
   @action
-  onTitleChange = (title: string) => {
+  private readonly onTitleChange = (title: string) => {
     this.props.state.title = title;
   };
 
   @action
-  onAdd = () => {
+  private readonly onAdd = () => {
     const tags: Tag[] = this.props.state.filter ? [{id: this.props.state.filter}] : [];
     this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT' }, tags })
   };
 
   @action
-  onFilterChange = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly onFilterChange = (e: React.FormEvent<HTMLInputElement>) => {
     e.stopPropagation();
     e.preventDefault();
     const value = e.currentTarget.value;

@@ -39,29 +39,29 @@ export class DiceRollAction extends React.Component<Props, {}> {
   }
 
   @action
-  onSidesChange = (event: ChangeEvent<HTMLInputElement>) => {
+  private readonly onSidesChange = (event: ChangeEvent<HTMLInputElement>) => {
     const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
     dice.sides = Number(event.currentTarget.value);
   };
 
   @action
-  onDiceChange = (event: ChangeEvent<HTMLInputElement>) => {
+  private readonly onDiceChange = (event: ChangeEvent<HTMLInputElement>) => {
     const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
     dice.dice = Number(event.currentTarget.value);
   };
 
   @action
-  onRoll = () => {
+  private readonly onRoll = () => {
     this.props.onRoll(this.props.diceRoll);
   };
 
   @action
-  onDeleteDie = (i: number) => {
+  private readonly onDeleteDie = (i: number) => {
     this.props.diceRoll.dice.splice(i, 1);
   };
 
   @action
-  onAddDie = () => {
+  private readonly onAddDie = () => {
     this.props.diceRoll.dice.push({ id: generateId(), sides: 6, dice: 1 })
   }
 }

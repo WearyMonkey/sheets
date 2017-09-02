@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
-import ChangeEvent = React.ChangeEvent;
 import { Editor, EditorState } from 'draft-js';
 import { TextState } from 'data/text_state';
 
+type Props = {
+  textState?: TextState,
+  onChange?(textState: TextState): void,
+};
+
 @observer
-export class TextEditor extends React.Component<{textState?: TextState, onChange?: (textState: TextState) => void}, { }> {
+export class TextEditor extends React.Component<Props, { }> {
 
   @observable.ref editorState?: EditorState;
   @observable focused: boolean = false;
@@ -24,13 +28,17 @@ export class TextEditor extends React.Component<{textState?: TextState, onChange
   }
 
   @action
-  onBlur = () => this.focused = false;
+  private readonly onBlur = () => {
+    this.focused = false;
+  };
 
   @action
-  onFocus = () => this.focused = true;
+  private readonly onFocus = () => {
+    this.focused = true;
+  };
 
   @action
-  onEditorChange = (state: EditorState) => {
+  private readonly onEditorChange = (state: EditorState) => {
     this.editorState = state;
     if (this.props.onChange) {
       this.props.onChange(TextState.createFromContent(state.getCurrentContent()));

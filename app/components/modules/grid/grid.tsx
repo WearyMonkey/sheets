@@ -42,9 +42,12 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
       const elements = row.values.map((value, c) => {
         const column = columns[c];
         switch (column.type) {
-          case 'LABEL': return <TextField name={`${moduleId}_column_header_${c}`} hintText="Label" fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
-          case 'STAT': return <StatField character={character} appState={appState} statId={value} onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)} />;
-          default: throw new Error(`Unknown column type ${column.type}`);
+          case 'LABEL':
+            return <TextField name={`${moduleId}_column_header_${c}`} hintText="Label" fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
+          case 'STAT':
+            return <StatField character={character} appState={appState} statId={value} onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)} />;
+          default:
+            throw new Error(`Unknown column type ${column.type}`);
         }
       });
       return { elements };
@@ -54,82 +57,86 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
       <MenuItem key="edit" primaryText="Edit" onClick={this.onEditMode} />
     ];
 
-    return (<div>
-      <ModuleHeader {...{moduleId, title, menuItems, onDelete}} onTitleChange={this.onTitleChange} />
-      <VerticalTable
-          rows={tableRows}
-          cols={columns}
-          onAddRow={this.onAddRow}
-          onDeleteRow={this.onDeleteRow}
-          onColumnTitleChange={this.onColumnTitleChange}
-          onAddColumn={this.onAddColumn}
-          onDeleteColumn={this.onDeleteColumn}
-          addColumnOptions={[
-              { displayName: 'Label', id: 'LABEL' },
-              { displayName: 'Stat', id: 'STAT' },
-          ]}
-          editMode={this.editMode} />
-    </div>);
+    return (
+      <div>
+        <ModuleHeader {...{moduleId, title, menuItems, onDelete}} onTitleChange={this.onTitleChange} />
+        <VerticalTable
+            rows={tableRows}
+            cols={columns}
+            onAddRow={this.onAddRow}
+            onDeleteRow={this.onDeleteRow}
+            onColumnTitleChange={this.onColumnTitleChange}
+            onAddColumn={this.onAddColumn}
+            onDeleteColumn={this.onDeleteColumn}
+            addColumnOptions={[
+                { displayName: 'Label', id: 'LABEL' },
+                { displayName: 'Stat', id: 'STAT' },
+            ]}
+            editMode={this.editMode} />
+      </div>
+    );
   }
 
   @action
-  onTitleChange = (title: string) => {
+  private readonly onTitleChange = (title: string) => {
     this.props.state.title = title;
   };
 
   @action
-  onDeleteColumn = (index: number) => {
+  private readonly onDeleteColumn = (index: number) => {
     const { rows, columns } = this.props.state;
     columns.splice(index, 1);
     rows.forEach(row => row.values.splice(index, 1));
   };
 
   @action
-  onColumnTitleChange = (index: number, value: string) => {
+  private readonly onColumnTitleChange = (index: number, value: string) => {
     this.props.state.columns[index].displayName = value;
   };
 
   @action
-  onEditMode = () => {
+  private readonly onEditMode = () => {
     this.editMode = !this.editMode;
   };
 
   @action
-  onLabelChange = (rowIndex: number, columnIndex: number, e: React.FormEvent<HTMLInputElement>) => {
+  private readonly onLabelChange = (rowIndex: number, columnIndex: number, e: React.FormEvent<HTMLInputElement>) => {
     this.props.state.rows[rowIndex].values[columnIndex] = e.currentTarget.value;
   };
 
   @action
-  onStatIdChange = (statId: string, row: number, col: number) => {
+  private readonly onStatIdChange = (statId: string, row: number, col: number) => {
     this.props.state.rows[row].values[col] = statId;
   };
 
   @action
-  onAddRow = () => {
+  private readonly onAddRow = () => {
     const { state, character } = this.props;
     const { rows, columns } = state;
     rows.push({
       values: columns.map(column => {
         switch (column.type) {
-          case 'LABEL': return '';
+          case 'LABEL':
+            return '';
           case 'STAT':
             const statId = generateStatId(this.props.character);
             getOrCreateStat(character, statId);
             return statId;
-          default: throw new Error(`Unknown column type ${column.type}`);
+          default:
+            throw new Error(`Unknown column type ${column.type}`);
         }
       })
     });
   };
 
   @action
-  onDeleteRow = (rowIndex: number) => {
+  private readonly onDeleteRow = (rowIndex: number) => {
     const { rows } = this.props.state;
     rows.splice(rowIndex, 1);
   };
 
   @action
-  onAddColumn = ({ id }: { id: string }) => {
+  private readonly onAddColumn = ({ id }: { id: string }) => {
     const { state, character } = this.props;
     const { rows, columns } = state;
     switch (id) {
@@ -147,7 +154,8 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
           row.values.push(statId);
         });
         break;
-      default: throw new Error(`Unknown column type ${id}`);
+      default:
+        throw new Error(`Unknown column type ${id}`);
     }
 
   }

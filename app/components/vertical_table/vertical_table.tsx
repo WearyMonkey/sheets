@@ -132,32 +132,32 @@ export class VerticalTable extends React.Component<{
   }
 
   @action
-  onDeleteColumn = () => {
+  private readonly onDeleteColumn = () => {
     this.props.onDeleteColumn!(this.columnMenu!);
     this.onCloseColumnOptionsMenu();
   };
 
   @action
-  onOpenColumnOptionsMenu = (i: number, e: React.MouseEvent<HTMLButtonElement>) => {
+  private readonly onOpenColumnOptionsMenu = (i: number, e: React.MouseEvent<HTMLButtonElement>) => {
     this.columnOptionsAnchor = e.currentTarget;
     this.columnMenu = i;
   };
 
   @action
-  onCloseColumnOptionsMenu = () => {
+  private readonly onCloseColumnOptionsMenu = () => {
     this.columnOptionsAnchor = undefined;
     this.columnMenu = undefined;
   };
 
   @action
-  onColumnTitleChange = (i: number, e: React.FormEvent<HTMLInputElement>) => {
+  private readonly onColumnTitleChange = (i: number, e: React.FormEvent<HTMLInputElement>) => {
     if (this.props.onColumnTitleChange) {
       this.props.onColumnTitleChange(i, e.currentTarget.value)
     }
   };
 
   @action
-  onAddColumnSelect = (option: {displayName: string, id: string|number}) => {
+  private readonly onAddColumnSelect = (option: {displayName: string, id: string|number}) => {
     this.addColumnMenuAnchor = undefined;
     if (this.props.onAddColumn) {
       this.props.onAddColumn(option);
@@ -165,7 +165,7 @@ export class VerticalTable extends React.Component<{
   };
 
   @action
-  onAddColumn = (e: React.MouseEvent<HTMLButtonElement>) => {
+  private readonly onAddColumn = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (this.props.addColumnOptions) {
       this.addColumnMenuAnchor = e.currentTarget;
     } else if (this.props.onAddColumn) {
@@ -174,7 +174,7 @@ export class VerticalTable extends React.Component<{
   };
 
   @action
-  onCloseColumnMenu = () => {
+  private readonly onCloseColumnMenu = () => {
     this.addColumnMenuAnchor = undefined;
   };
 }

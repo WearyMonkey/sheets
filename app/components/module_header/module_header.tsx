@@ -35,11 +35,11 @@ export class ModuleHeader extends React.Component<Props, {}> {
     </div>);
   }
 
-  onTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  private readonly onTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
     this.props.onTitleChange(e.currentTarget.value);
-  }
+  };
 
-  onDelete = () => {
+  private readonly onDelete = () => {
     this.props.onDelete(this.props.moduleId);
   }
 }

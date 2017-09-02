@@ -24,36 +24,38 @@ export class AbilityPanel extends React.Component<Props, {}>{
 
   render() {
     const { ability } = this.props;
-    return (<div>
-      <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum} />
-      <DescriptionCard description={ability.description}/>
+    return (
       <div>
-        {ability.actions.map(action =>
-          <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction} />
-        )}
+        <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum} />
+        <DescriptionCard description={ability.description}/>
+        <div>
+          {ability.actions.map(action =>
+            <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction} />
+          )}
+        </div>
+        <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
+        <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
+          {actionTypes.map(actionType =>
+            <MenuItem value={actionType.type} primaryText={actionType.displayName} />
+          )}
+        </DropDownMenu>
+        <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
       </div>
-      <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
-      <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
-        {actionTypes.map(actionType =>
-          <MenuItem value={actionType.type} primaryText={actionType.displayName} />
-        )}
-      </DropDownMenu>
-      <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
-    </div>);
+    );
   }
 
   @action
-  onTypeChange = (e: React.SyntheticEvent<{}>, index: number, menuItemValue: string) => {
+  private readonly onTypeChange = (e: React.SyntheticEvent<{}>, index: number, menuItemValue: string) => {
     this.addActionType = menuItemValue;
   };
 
   @action
-  onDelete = () => {
+  private readonly onDelete = () => {
     this.props.onDelete(this.props.ability);
   };
 
   @action
-  onAddAction = () => {
+  private readonly onAddAction = () => {
     switch (this.addActionType) {
       case 'ROLL':
         this.props.ability.actions.push({
@@ -68,7 +70,7 @@ export class AbilityPanel extends React.Component<Props, {}>{
     }
   };
 
-  handleAbilityPanelUiAction = (diceRoll: DiceRoll) => {
+  private readonly handleAbilityPanelUiAction = (diceRoll: DiceRoll) => {
     this.diceRoll = diceRoll;
     this.rollNum += 1;
   }

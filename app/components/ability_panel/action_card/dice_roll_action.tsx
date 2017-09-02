@@ -54,6 +54,6 @@ export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll:
 
   @action
   onAddDie = () => {
-    this.props.diceRoll.dice.push({ id: generateId(), sides: 6, dice: 1, bonus: null })
+    this.props.diceRoll.dice.push({ id: generateId(), sides: 6, dice: 1 })
   }
 }

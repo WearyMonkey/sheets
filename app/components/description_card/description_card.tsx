@@ -4,16 +4,19 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import * as DropZone from 'react-dropzone';
 import * as styles from './description_card.css';
-import ChangeEvent = React.ChangeEvent;
 import { TextEditor } from 'components/text_editor/text_editor';
 import { TextState } from 'data/text_state';
 import { FileUploader } from 'services/file_uploader';
 
+type Props = {
+  description: Description
+};
+
 @observer
-export class DescriptionCard extends React.Component<{description: Description}, { }> {
+export class DescriptionCard extends React.Component<Props, { }> {
 
   fileUploader: FileUploader = new FileUploader();
-  @observable uploadPreview?: string|null;
+  @observable uploadPreview?: string;
   @observable uploadPercentage: number = 0;
 
   render() {
@@ -41,7 +44,7 @@ export class DescriptionCard extends React.Component<{description: Description},
     this.fileUploader.upload(file, action((uploaded: number, total: number) => {
       this.uploadPercentage = Math.floor(uploaded / total * 100);
     })).then(action((url: string) => {
-      this.uploadPreview = null;
+      this.uploadPreview = undefined;
       this.props.description.imageUrl = url;
     }));
   };

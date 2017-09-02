@@ -7,14 +7,14 @@ export type Tag = {
 }
 
 export type Description =
-    { type: 'IMAGE' | 'TEXT', imageUrl?: string|null, textState?: TextState|null }
+    { type: 'IMAGE' | 'TEXT', imageUrl?: string, textState?: TextState }
 
 export type Bonus =
     { type: 'STAT', description: Description, statId: string  }
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
-  dice: { id: string, sides: number, dice: number, bonus?: Bonus|null }[]
+  dice: { id: string, sides: number, dice: number, bonus?: Bonus }[]
 };
 
 export type Action =
@@ -36,7 +36,7 @@ export type Ability = {
 
 export type Modifier = {
   id: string,
-  moduleId?: number|null,
+  moduleId?: number,
   description: string,
   value: string,
 };

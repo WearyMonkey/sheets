@@ -11,7 +11,7 @@ import TextField from 'material-ui/TextField';
 
 type AbilitiesState = {
   title: string,
-  filter?: string|null
+  filter?: string
 }
 
 export function addToCharacter(character: Character, moduleId: number, state: AbilitiesState) : void {
@@ -55,6 +55,6 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
     e.stopPropagation();
     e.preventDefault();
     const value = e.currentTarget.value;
-    this.props.state.filter = value ? value : null;
+    this.props.state.filter = value;
   };
 }

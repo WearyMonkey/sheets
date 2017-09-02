@@ -13,7 +13,7 @@ import { generateId } from 'data/guid';
 @observer
 export class AbilityPanel extends React.Component<{ ability: Ability }, {}>{
 
-  @observable diceRoll: DiceRoll|null = null;
+  @observable diceRoll?: DiceRoll;
   @observable rollNum: number = 0;
   @observable addActionType: string = actionTypes[0].type;
 

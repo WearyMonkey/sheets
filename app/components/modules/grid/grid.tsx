@@ -55,7 +55,7 @@ export class GridModule extends React.Component<{ moduleId: number, character: C
     ];
 
     return (<div>
-      <ModuleHeader title={title} menuItems={menuItems} onDelete={onDelete} onTitleChange={this.onTitleChange} />
+      <ModuleHeader {...{moduleId, title, menuItems, onDelete}} onTitleChange={this.onTitleChange} />
       <VerticalTable
           rows={tableRows}
           cols={columns}

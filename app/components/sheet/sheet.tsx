@@ -14,7 +14,6 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import { action } from 'mobx';
 
-
 @observer
 export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, character: Character }, {}> {
   constructor(props: any) {
@@ -25,15 +24,6 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
   render() {
     const { sheet, character, appState } = this.props;
     const { selectedAbility, selectedStatId, onStatIdChange } = appState;
-    const modules = sheet.modules.map((moduleConfig : ModuleConfig) => {
-      const module = MODULES.get(moduleConfig.type);
-      if (module) {
-        const Module = module.component;
-        return <Module moduleId={moduleConfig.id} state={moduleConfig.state} character={character} appState={appState} onDelete={() => {}} />
-      } else {
-        return <div>Unknown module type {moduleConfig.type}</div>;
-      }
-    });
     return (<div className={styles.root}>
           <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
             {selectedStatId != null &&
@@ -48,11 +38,11 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
             <MenuItem primaryText="List" onClick={this.onAddList} />
           </IconMenu>
           <Packery options={packeryOptions} className="sheets">
-            <div className={styles.gutterSizer}></div>
-            <div className={styles.gridSizer}></div>
-            {modules.map((m, id) => {
-              return <div className={styles.moduleContainer} key={id}>
-                {m}
+            <div className={styles.gutterSizer} />
+            <div className={styles.gridSizer} />
+            {sheet.modules.map(moduleConfig => {
+              return <div className={styles.moduleContainer} key={moduleConfig.id}>
+                {this.renderModule(moduleConfig, character, appState)}
               </div>
             })}
           </Packery>
@@ -64,6 +54,26 @@ export class Sheets extends React.Component<{ appState: AppState, sheet: Sheet, 
         </div>
     );
   }
+
+  private renderModule(moduleConfig: ModuleConfig, character: Character, appState: AppState) {
+    const module = MODULES.get(moduleConfig.type);
+    if (module) {
+      return <module.Component
+          moduleId={moduleConfig.id}
+          state={moduleConfig.state}
+          character={character}
+          appState={appState}
+          onDelete={this.onDeleteModule} />
+    } else {
+      return <div>Unknown module type {moduleConfig.type}</div>;
+    }
+  }
+
+  @action
+  onDeleteModule = (moduleId: number) => {
+    const index = this.props.sheet.modules.findIndex(m => m.id === moduleId);
+    this.props.sheet.modules.splice(index, 1);
+  };
 
   @action
   onAddList = () => {

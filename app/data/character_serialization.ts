@@ -15,7 +15,7 @@ function descriptionToJson(desc: Description): any {
 }
 
 function descriptionFromJson(json: any): Description {
-  return { type: json['type'], imageUrl: json['imageUrl'], textState: TextState.fromJson(json['textState']) };
+  return { type: json['type'], imageUrl: json['imageUrl'], textState: json['textState'] && TextState.fromJson(json['textState']) };
 }
 
 function bonusToJson(bonus: Bonus): any {

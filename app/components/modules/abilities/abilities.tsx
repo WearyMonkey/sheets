@@ -30,7 +30,7 @@ export class Abilities extends React.Component<{moduleId: number, character: Cha
         : character.abilities;
 
     return (<div>
-      <ModuleHeader title={title} menuItems={[]} onDelete={onDelete} onTitleChange={this.onTitleChange} />
+      <ModuleHeader {...{moduleId, title, onDelete}} menuItems={[]} onTitleChange={this.onTitleChange} />
       <TextField name={`${moduleId}_filter`} value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
       {abilities.map(ability =>
           <AbilityCard key={ability.id} {...{ability, appState}} />

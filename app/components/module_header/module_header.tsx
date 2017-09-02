@@ -7,17 +7,21 @@ import MenuItem from 'material-ui/MenuItem';
 import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import { observer } from 'mobx-react';
 
-@observer
-export class ModuleHeader extends React.Component<
-    {title: string, menuItems: JSX.Element[], onDelete: () => void, onTitleChange: (title: string) => void }, {}> {
+type Props = {
+  moduleId: number,
+  title: string,
+  menuItems: JSX.Element[],
+  onDelete(moduleId: number): void,
+  onTitleChange(title: string): void
+};
 
-  constructor(props: any) {
-    super(props);
-    this.state = { editMode: false };
-  }
+@observer
+export class ModuleHeader extends React.Component<Props, {}> {
+
+  state = { editMode: false };
 
   render() {
-    const { title, menuItems, onDelete } = this.props;
+    const { title, menuItems } = this.props;
     return (<div className={styles.header}>
       <TextField name="module_header" className={styles.title} value={title} onChange={this.onTitleChange} />
       <IconMenu
@@ -26,12 +30,16 @@ export class ModuleHeader extends React.Component<
           iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
       >
         {menuItems}
-        <MenuItem primaryText="Delete" onClick={onDelete} />
+        <MenuItem primaryText="Delete" onClick={this.onDelete} />
       </IconMenu>
     </div>);
   }
 
   onTitleChange = (e: React.FormEvent<HTMLInputElement>) => {
     this.props.onTitleChange(e.currentTarget.value);
+  }
+
+  onDelete = () => {
+    this.props.onDelete(this.props.moduleId);
   }
 }

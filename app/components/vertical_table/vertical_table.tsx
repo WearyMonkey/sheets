@@ -35,9 +35,9 @@ type Props = {
 @observer
 export class VerticalTable extends React.Component<Props, {}> {
 
-  @observable addColumnMenuAnchor?: Element;
-  @observable columnOptionsAnchor?: Element;
-  @observable columnMenu?: number;
+  @observable private addColumnMenuAnchor?: Element;
+  @observable private columnOptionsAnchor?: Element;
+  @observable private columnMenu?: number;
 
   render() {
     const { cols, rows, onAddRow, onDeleteRow, editMode, addColumnOptions, onDeleteColumn } = this.props;

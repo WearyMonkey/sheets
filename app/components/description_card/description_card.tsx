@@ -15,9 +15,9 @@ type Props = {
 @observer
 export class DescriptionCard extends React.Component<Props, {}> {
 
-  fileUploader: FileUploader = new FileUploader();
-  @observable uploadPreview?: string;
-  @observable uploadPercentage: number = 0;
+  private readonly fileUploader: FileUploader = new FileUploader();
+  @observable private uploadPreview?: string;
+  @observable private uploadPercentage: number = 0;
 
   render() {
     return (

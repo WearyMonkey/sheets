@@ -18,9 +18,9 @@ type Props = {
 @observer
 export class AbilityPanel extends React.Component<Props, {}> {
 
-  @observable diceRoll?: DiceRoll;
-  @observable rollNum: number = 0;
-  @observable addActionType: string = actionTypes[0].type;
+  @observable private diceRoll?: DiceRoll;
+  @observable private rollNum: number = 0;
+  @observable private addActionType: string = actionTypes[0].type;
 
   render() {
     const { ability } = this.props;

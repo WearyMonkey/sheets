@@ -18,8 +18,6 @@ type Props = {
 @observer
 export class ModuleHeader extends React.Component<Props, {}> {
 
-  state = { editMode: false };
-
   render() {
     const { title, menuItems } = this.props;
     return (<div className={styles.header}>

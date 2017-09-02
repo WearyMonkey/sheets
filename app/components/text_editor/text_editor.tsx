@@ -12,8 +12,8 @@ type Props = {
 @observer
 export class TextEditor extends React.Component<Props, {}> {
 
-  @observable.ref editorState?: EditorState;
-  @observable focused: boolean = false;
+  @observable.ref private editorState?: EditorState;
+  @observable private focused: boolean = false;
 
   render() {
     let editorState;

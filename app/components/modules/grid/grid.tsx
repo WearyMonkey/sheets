@@ -41,7 +41,7 @@ type Props = {
 @observer
 export class GridModule extends React.Component<Props, {}> {
 
-  @observable editMode: boolean = false;
+  @observable private editMode: boolean = false;
 
   render() {
     const { moduleId, character, appState, state, onDelete } = this.props;

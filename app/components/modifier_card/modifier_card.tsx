@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Character, evaluateModifier, Modifier } from 'data/character';
 import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
-import { action } from 'mobx';
+import { action, observable } from 'mobx';
 import { Parser } from 'expr-eval';
 import * as styles from './modifier_card.css';
 import IconMenu from 'material-ui/IconMenu';
@@ -17,17 +17,16 @@ type Props = {
 };
 
 @observer
-export class ModifierCard extends React.Component<Props, { currentValue: string }> {
+export class ModifierCard extends React.Component<Props, {}> {
 
-  state = { currentValue: this.props.modifier.value };
+  @observable private currentValue = this.props.modifier.value;
 
   componentWillReceiveProps(nextProps: Props) {
-    this.setState({ currentValue: nextProps.modifier.value });
+    this.currentValue = nextProps.modifier.value;
   }
 
   render() {
     const { character, modifier, onDelete } = this.props;
-    const { currentValue } = this.state;
     const total = evaluateModifier(character, modifier);
     return (
         <div className={styles.card}>
@@ -42,7 +41,7 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
                 name={`${modifier.id}_card_value`}
                 hintText="Value"
                 fullWidth={true}
-                value={currentValue}
+                value={this.currentValue}
                 onChange={this.onChange}
                 onBlur={this.onBlur}/>
           </div>
@@ -65,13 +64,13 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
 
   @action
   private readonly onBlur = () => {
-    this.setState({ currentValue: this.props.modifier.value });
+    this.currentValue = this.props.modifier.value;
   };
 
   @action
   private readonly onChange = (event: React.FormEvent<HTMLInputElement>) => {
     const newValue = event.currentTarget.value;
-    this.setState({ currentValue: newValue });
+    this.currentValue = newValue;
     if (validateValue(newValue)) {
       this.props.modifier.value = newValue;
     }

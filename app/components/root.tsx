@@ -10,9 +10,9 @@ import { AppState } from 'data/app_state';
 
 export class Root extends React.Component<{}, {}> {
 
-  character: Character;
-  sheet: Sheet;
-  appState: AppState;
+  private readonly character: Character;
+  private readonly sheet: Sheet;
+  private readonly appState: AppState;
 
   constructor() {
     super();

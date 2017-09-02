@@ -15,7 +15,7 @@ export class AbilityCard extends React.Component<Props, {}> {
   render() {
     const { ability } = this.props;
     return (<div onClick={this.handleClick}>
-      <DescriptionCard description={ability.description} />
+      <DescriptionCard description={ability.description}/>
     </div>);
   }
 

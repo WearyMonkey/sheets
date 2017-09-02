@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { ContentState, convertToRaw, convertFromRaw } from 'draft-js';
+import { ContentState, convertFromRaw, convertToRaw } from 'draft-js';
 
 export class TextState {
   @observable.ref readonly content: ContentState;
@@ -11,6 +11,7 @@ export class TextState {
   static createFromText(text: string) {
     return new TextState(ContentState.createFromText(text));
   }
+
   static createFromContent(content: ContentState) {
     return new TextState(content);
   }

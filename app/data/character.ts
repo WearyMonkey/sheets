@@ -10,7 +10,7 @@ export type Description =
     { type: 'IMAGE' | 'TEXT', imageUrl?: string, textState?: TextState }
 
 export type Bonus =
-    { type: 'STAT', description: Description, statId: string  }
+    { type: 'STAT', description: Description, statId: string }
     | { type: 'VALUE', description: Description, value: number };
 
 export type DiceRoll = {
@@ -23,7 +23,7 @@ export type Action =
 export type ActionType =
     { type: string, displayName: string };
 
-export const actionTypes : ActionType[] = [
+export const actionTypes: ActionType[] = [
   { type: 'ROLL', displayName: 'Dice Roll' }
 ];
 
@@ -56,16 +56,16 @@ export class Character {
   @observable readonly abilities: Ability[] = [];
 }
 
-export function getOrCreateStat(character: Character, id: string, defaults: Partial<Stat> = {}) : Stat {
+export function getOrCreateStat(character: Character, id: string, defaults: Partial<Stat> = {}): Stat {
   let stat = character.stats.get(id);
   if (!stat) {
-    stat = { id, modifiers: observable.map([]), ...defaults};
+    stat = { id, modifiers: observable.map([]), ...defaults };
     character.stats.set(stat.id, stat);
   }
   return stat;
 }
 
-export function getStatValue(character: Character, statId: string) : number {
+export function getStatValue(character: Character, statId: string): number {
   const stat = character.stats.get(statId);
   const modifiers = stat ? stat.modifiers : observable.map<Modifier>();
   return Array.from(modifiers.values()).reduce((total, modifier) => total + evaluateModifier(character, modifier), 0);
@@ -75,10 +75,12 @@ export function evaluateModifier(character: Character, modifier: Modifier) {
   try {
     const parser = new Parser();
     const expr = parser.parse(modifier.value);
-    const variableValues : { [variable: string]: number } = {};
+    const variableValues: { [variable: string]: number } = {};
     expr.variables().forEach(variable => {
       const stat = character.stats.get(variable);
-      variableValues[variable] = stat ? getStatValue(character, stat.id) : 0;
+      variableValues[ variable ] = stat
+          ? getStatValue(character, stat.id)
+          : 0;
     });
     return expr.evaluate(variableValues);
   } catch (e) {

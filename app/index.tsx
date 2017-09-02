@@ -14,5 +14,5 @@ useStrict(true);
 
 const root = document.getElementById('root');
 if (root) {
-    ReactDom.render(<MuiThemeProvider><Root /></MuiThemeProvider>, root);
+  ReactDom.render(<MuiThemeProvider><Root/></MuiThemeProvider>, root);
 }

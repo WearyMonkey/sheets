@@ -21,10 +21,10 @@ export class DiceRollAction extends React.Component<Props, {}> {
           <VerticalTable
               editMode={true}
               cols={[
-                {displayName: 'Sides'},
-                {displayName: 'Dice'},
+                { displayName: 'Sides' },
+                { displayName: 'Dice' },
               ]}
-              rows={this.props.diceRoll.dice.map(({id, sides, dice, bonus}, i) => ({
+              rows={this.props.diceRoll.dice.map(({ id, sides, dice, bonus }, i) => ({
                 elements: [
                   <NumberInput name={`sides_${id}`} defaultValue={sides} onChange={this.onSidesChange} data-index={i}/>,
                   <NumberInput name={`dice_${id}`} defaultValue={dice} onChange={this.onDiceChange} data-index={i}/>,
@@ -40,13 +40,13 @@ export class DiceRollAction extends React.Component<Props, {}> {
 
   @action
   private readonly onSidesChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
+    const dice = this.props.diceRoll.dice[ Number(event.currentTarget.dataset.index) ];
     dice.sides = Number(event.currentTarget.value);
   };
 
   @action
   private readonly onDiceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
+    const dice = this.props.diceRoll.dice[ Number(event.currentTarget.dataset.index) ];
     dice.dice = Number(event.currentTarget.value);
   };
 

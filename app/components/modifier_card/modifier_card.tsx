@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Character, Modifier, evaluateModifier } from 'data/character';
+import { Character, evaluateModifier, Modifier } from 'data/character';
 import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
-import { action, observable } from 'mobx';
+import { action } from 'mobx';
 import { Parser } from 'expr-eval';
 import * as styles from './modifier_card.css';
 import IconMenu from 'material-ui/IconMenu';
@@ -30,21 +30,29 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
     const { currentValue } = this.state;
     const total = evaluateModifier(character, modifier);
     return (
-      <div className={styles.card}>
-        <div className={styles.left}>
-          <TextField name={`${modifier.id}_card_description`} hintText="Description" fullWidth={true} value={modifier.description} onChange={this.onDescriptionChange} />
-          <TextField name={`${modifier.id}_card_value`} hintText="Value" fullWidth={true} value={currentValue} onChange={this.onChange} onBlur={this.onBlur} />
+        <div className={styles.card}>
+          <div className={styles.left}>
+            <TextField name={`${modifier.id}_card_description`}
+                       hintText="Description"
+                       fullWidth={true}
+                       value={modifier.description}
+                       onChange={this.onDescriptionChange}/>
+            <TextField name={`${modifier.id}_card_value`}
+                       hintText="Value"
+                       fullWidth={true}
+                       value={currentValue}
+                       onChange={this.onChange}
+                       onBlur={this.onBlur}/>
+          </div>
+          <div className={styles.right}>
+            <IconMenu
+                iconButtonElement={<IconButton><ArrayDropDownIcon/></IconButton>}>
+              <MenuItem primaryText="Delete" onClick={onDelete}/>
+              <MenuItem primaryText="Enabled"/>
+            </IconMenu>
+            <div className={styles.total}>{total}</div>
+          </div>
         </div>
-        <div className={styles.right}>
-          <IconMenu
-              iconButtonElement={<IconButton><ArrayDropDownIcon /></IconButton>}
-          >
-            <MenuItem primaryText="Delete" onClick={onDelete} />
-            <MenuItem primaryText="Enabled" />
-          </IconMenu>
-          <div className={styles.total}>{total}</div>
-        </div>
-      </div>
     );
   }
 
@@ -68,7 +76,7 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
   };
 }
 
-function validateValue(value: string) : boolean {
+function validateValue(value: string): boolean {
   try {
     Parser.parse(value);
   } catch (e) {

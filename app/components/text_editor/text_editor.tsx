@@ -10,7 +10,7 @@ type Props = {
 };
 
 @observer
-export class TextEditor extends React.Component<Props, { }> {
+export class TextEditor extends React.Component<Props, {}> {
 
   @observable.ref editorState?: EditorState;
   @observable focused: boolean = false;
@@ -24,7 +24,10 @@ export class TextEditor extends React.Component<Props, { }> {
           ? EditorState.createWithContent(this.props.textState.content)
           : EditorState.createEmpty();
     }
-    return <Editor editorState={editorState} onChange={this.onEditorChange} onFocus={this.onFocus} onBlur={this.onBlur} />;
+    return <Editor editorState={editorState}
+                   onChange={this.onEditorChange}
+                   onFocus={this.onFocus}
+                   onBlur={this.onBlur}/>;
   }
 
   @action

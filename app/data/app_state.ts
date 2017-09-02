@@ -1,5 +1,5 @@
 import { observable } from 'mobx';
-import { Stat, Ability } from './character';
+import { Ability } from './character';
 
 export class AppState {
   @observable selectedStatId?: string;

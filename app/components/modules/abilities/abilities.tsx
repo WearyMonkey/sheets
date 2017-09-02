@@ -14,11 +14,11 @@ type AbilitiesState = {
   filter?: string
 }
 
-export function addToCharacter(character: Character, moduleId: number, state: AbilitiesState) : void {
+export function addToCharacter(character: Character, moduleId: number, state: AbilitiesState): void {
 
 }
 
-export const MODULE_TYPE : string = 'ABILITIES_MODULE';
+export const MODULE_TYPE: string = 'ABILITIES_MODULE';
 
 type Props = {
   moduleId: number,
@@ -38,14 +38,20 @@ export class Abilities extends React.Component<Props, {}> {
         : character.abilities;
 
     return (
-      <div>
-        <ModuleHeader {...{moduleId, title, onDelete}} menuItems={[]} onTitleChange={this.onTitleChange} />
-        <TextField name={`${moduleId}_filter`} value={filter ? filter : ''} onChange={this.onFilterChange} hintText="filter" />
-        {abilities.map(ability =>
-            <AbilityCard key={ability.id} {...{ability, appState}} />
-        )}
-        <RaisedButton onClick={this.onAdd}>Add</RaisedButton>
-      </div>
+        <div>
+          <ModuleHeader
+              {...{ moduleId, title, onDelete }}
+              menuItems={[]}
+              onTitleChange={this.onTitleChange}/>
+          <TextField name={`${moduleId}_filter`}
+                     value={filter ? filter : ''}
+                     onChange={this.onFilterChange}
+                     hintText="filter"/>
+          {abilities.map(ability =>
+              <AbilityCard key={ability.id} {...{ ability, appState }} />
+          )}
+          <RaisedButton onClick={this.onAdd}>Add</RaisedButton>
+        </div>
     );
   }
 
@@ -56,7 +62,7 @@ export class Abilities extends React.Component<Props, {}> {
 
   @action
   private readonly onAdd = () => {
-    const tags: Tag[] = this.props.state.filter ? [{id: this.props.state.filter}] : [];
+    const tags: Tag[] = this.props.state.filter ? [ { id: this.props.state.filter } ] : [];
     this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT' }, tags })
   };
 

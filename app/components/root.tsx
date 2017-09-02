@@ -6,10 +6,7 @@ import { Sheet, sheetFromJson, sheetToJson } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
 import DevTools from 'mobx-react-devtools';
-import { generateId } from 'data/guid';
 import { AppState } from 'data/app_state';
-import { MODULES } from 'components/modules/modules';
-import { TextState } from 'data/text_state';
 
 export class Root extends React.Component<{}, {}> {
 
@@ -43,7 +40,7 @@ export class Root extends React.Component<{}, {}> {
       <AppBar/>
       <div className={styles.containerOuter}>
         <div className={styles.containerInner}>
-          <Sheets appState={this.appState} sheet={this.sheet} character={this.character} />
+          <Sheets appState={this.appState} sheet={this.sheet} character={this.character}/>
         </div>
       </div>
       <DevTools/>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Character, getOrCreateStat, generateStatId } from 'data/character';
+import { Character, generateStatId, getOrCreateStat } from 'data/character';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { StatField } from 'components/stat_field/stat_field';
@@ -26,7 +26,7 @@ type Grid = {
 
 export const MODULE_TYPE = 'GRID_MODULE';
 
-export function addToCharacter(character: Character, moduleId: number, state: Grid) : void {
+export function addToCharacter(character: Character, moduleId: number, state: Grid): void {
 
 }
 
@@ -51,9 +51,11 @@ export class GridModule extends React.Component<Props, {}> {
         const column = columns[c];
         switch (column.type) {
           case 'LABEL':
-            return <TextField name={`${moduleId}_column_header_${c}`} hintText="Label" fullWidth={true} value={value} onChange={(e: any) => this.onLabelChange(r, c, e)} />;
+            return <TextField name={`${moduleId}_column_header_${c}`} hintText="Label" fullWidth={true} value={value}
+                              onChange={(e: any) => this.onLabelChange(r, c, e)}/>;
           case 'STAT':
-            return <StatField character={character} appState={appState} statId={value} onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)} />;
+            return <StatField character={character} appState={appState} statId={value}
+                              onStatIdChange={(statId: string) => this.onStatIdChange(statId, r, c)}/>;
           default:
             throw new Error(`Unknown column type ${column.type}`);
         }
@@ -62,26 +64,26 @@ export class GridModule extends React.Component<Props, {}> {
     });
 
     const menuItems = [
-      <MenuItem key="edit" primaryText="Edit" onClick={this.onEditMode} />
+      <MenuItem key="edit" primaryText="Edit" onClick={this.onEditMode}/>
     ];
 
     return (
-      <div>
-        <ModuleHeader {...{moduleId, title, menuItems, onDelete}} onTitleChange={this.onTitleChange} />
-        <VerticalTable
-            rows={tableRows}
-            cols={columns}
-            onAddRow={this.onAddRow}
-            onDeleteRow={this.onDeleteRow}
-            onColumnTitleChange={this.onColumnTitleChange}
-            onAddColumn={this.onAddColumn}
-            onDeleteColumn={this.onDeleteColumn}
-            addColumnOptions={[
+        <div>
+          <ModuleHeader {...{ moduleId, title, menuItems, onDelete }} onTitleChange={this.onTitleChange}/>
+          <VerticalTable
+              rows={tableRows}
+              cols={columns}
+              onAddRow={this.onAddRow}
+              onDeleteRow={this.onDeleteRow}
+              onColumnTitleChange={this.onColumnTitleChange}
+              onAddColumn={this.onAddColumn}
+              onDeleteColumn={this.onDeleteColumn}
+              addColumnOptions={[
                 { displayName: 'Label', id: 'LABEL' },
                 { displayName: 'Stat', id: 'STAT' },
-            ]}
-            editMode={this.editMode} />
-      </div>
+              ]}
+              editMode={this.editMode}/>
+        </div>
     );
   }
 

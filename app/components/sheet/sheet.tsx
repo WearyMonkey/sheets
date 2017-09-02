@@ -4,7 +4,7 @@ import * as PackeryFactory from 'react-packery-component';
 import { MODULES } from 'components/modules/modules';
 import { Ability, Character } from 'data/character';
 import { Drawer } from "material-ui";
-import { Sheet, ModuleConfig } from 'data/sheet';
+import { ModuleConfig, Sheet } from 'data/sheet';
 import { observer } from 'mobx-react';
 import { AbilityPanel } from '../ability_panel/ability_panel';
 import { AppState } from '../../data/app_state';
@@ -27,34 +27,34 @@ export class Sheets extends React.Component<Props, {}> {
     const { sheet, character, appState } = this.props;
     const { selectedAbility, selectedStatId, onStatIdChange } = appState;
     return (
-      <div className={styles.root}>
-        <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
-          {selectedStatId &&
-            <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange} />
-          }
-        </Drawer>
-        <IconMenu
-            iconButtonElement={ <RaisedButton label="Add Module" /> }
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-        >
-          <MenuItem primaryText="Grid" onClick={this.onAddGrid} />
-          <MenuItem primaryText="List" onClick={this.onAddList} />
-        </IconMenu>
-        <Packery options={packeryOptions} className="sheets">
-          <div className={styles.gutterSizer} />
-          <div className={styles.gridSizer} />
-          {sheet.modules.map(moduleConfig => {
-            return <div className={styles.moduleContainer} key={moduleConfig.id}>
-              {this.renderModule(moduleConfig, character, appState)}
-            </div>
-          })}
-        </Packery>
-        <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
-          {selectedAbility &&
-            <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility} />
-          }
-        </Drawer>
-      </div>
+        <div className={styles.root}>
+          <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
+            {selectedStatId && (
+              <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange}/>
+            )}
+          </Drawer>
+          <IconMenu
+              iconButtonElement={<RaisedButton label="Add Module"/>}
+              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          >
+            <MenuItem primaryText="Grid" onClick={this.onAddGrid}/>
+            <MenuItem primaryText="List" onClick={this.onAddList}/>
+          </IconMenu>
+          <Packery options={packeryOptions} className="sheets">
+            <div className={styles.gutterSizer}/>
+            <div className={styles.gridSizer}/>
+            {sheet.modules.map(moduleConfig => (
+                <div className={styles.moduleContainer} key={moduleConfig.id}>
+                  {this.renderModule(moduleConfig, character, appState)}
+                </div>
+            ))}
+          </Packery>
+          <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
+            {selectedAbility && (
+              <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility}/>
+            )}
+          </Drawer>
+        </div>
     );
   }
 
@@ -62,12 +62,12 @@ export class Sheets extends React.Component<Props, {}> {
     const module = MODULES.get(moduleConfig.type);
     if (module) {
       return (
-        <module.Component
-          moduleId={moduleConfig.id}
-          state={moduleConfig.state}
-          character={character}
-          appState={appState}
-          onDelete={this.onDeleteModule} />
+          <module.Component
+              moduleId={moduleConfig.id}
+              state={moduleConfig.state}
+              character={character}
+              appState={appState}
+              onDelete={this.onDeleteModule}/>
       );
     } else {
       return <div>Unknown module type {moduleConfig.type}</div>;
@@ -91,12 +91,20 @@ export class Sheets extends React.Component<Props, {}> {
 
   @action
   private readonly onAddList = () => {
-    this.props.sheet.modules.push({ id: this.props.sheet.modules.length, state: { title: '' }, type: 'ABILITIES_MODULE' });
+    this.props.sheet.modules.push({
+      id: this.props.sheet.modules.length,
+      state: { title: '' },
+      type: 'ABILITIES_MODULE'
+    });
   };
 
   @action
   private readonly onAddGrid = () => {
-    this.props.sheet.modules.push({ id: this.props.sheet.modules.length, state: { title: '', rows: [], columns: [] }, type: 'GRID_MODULE' });
+    this.props.sheet.modules.push({
+      id: this.props.sheet.modules.length,
+      state: { title: '', rows: [], columns: [] },
+      type: 'GRID_MODULE'
+    });
   };
 }
 

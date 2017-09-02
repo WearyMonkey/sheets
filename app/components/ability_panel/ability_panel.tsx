@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Ability, DiceRoll, actionTypes } from 'data/character';
+import { Ability, actionTypes, DiceRoll } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
 import { ActionCard } from './action_card/action_card';
 import { observer } from 'mobx-react';
 import { DiceRoller } from './dice_roller/dice_roller';
-import { observable, action } from 'mobx';
+import { action, observable } from 'mobx';
 import RaisedButton from 'material-ui/RaisedButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -16,31 +16,31 @@ type Props = {
 }
 
 @observer
-export class AbilityPanel extends React.Component<Props, {}>{
+export class AbilityPanel extends React.Component<Props, {}> {
 
   @observable diceRoll?: DiceRoll;
   @observable rollNum: number = 0;
-  @observable addActionType: string = actionTypes[0].type;
+  @observable addActionType: string = actionTypes[ 0 ].type;
 
   render() {
     const { ability } = this.props;
     return (
-      <div>
-        <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum} />
-        <DescriptionCard description={ability.description}/>
         <div>
-          {ability.actions.map(action =>
-            <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction} />
-          )}
+          <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum}/>
+          <DescriptionCard description={ability.description}/>
+          <div>
+            {ability.actions.map(action =>
+                <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction}/>
+            )}
+          </div>
+          <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
+          <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
+            {actionTypes.map(actionType =>
+                <MenuItem value={actionType.type} primaryText={actionType.displayName}/>
+            )}
+          </DropDownMenu>
+          <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
         </div>
-        <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
-        <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
-          {actionTypes.map(actionType =>
-            <MenuItem value={actionType.type} primaryText={actionType.displayName} />
-          )}
-        </DropDownMenu>
-        <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
-      </div>
     );
   }
 

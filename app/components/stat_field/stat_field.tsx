@@ -14,19 +14,18 @@ type Props = {
 };
 
 @observer
-export class StatField extends React.Component<Props ,{}> {
+export class StatField extends React.Component<Props, {}> {
 
   render() {
     const { character, statId, appState } = this.props;
     const currentValue = getStatValue(character, statId);
     const active = appState.selectedStatId == statId;
     return (
-      <div
-        className={classnames(styles.field, { [styles.active]: active })}
-        onClick={this.onClick}
-      >
-        {currentValue}
-      </div>
+        <div
+            className={classnames(styles.field, { [styles.active]: active })}
+            onClick={this.onClick}>
+          {currentValue}
+        </div>
     );
   }
 

@@ -35,8 +35,8 @@ export class AbilityPanel extends React.Component<Props, {}> {
           </div>
           <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>
           <DropDownMenu value={this.addActionType} onChange={this.onTypeChange}>
-            {actionTypes.map(actionType =>
-                <MenuItem value={actionType.type} primaryText={actionType.displayName}/>
+            {actionTypes.map((actionType, i) =>
+                <MenuItem key={i} value={actionType.type} primaryText={actionType.displayName}/>
             )}
           </DropDownMenu>
           <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>

@@ -30,7 +30,7 @@ export class Sheets extends React.Component<Props, {}> {
         <div className={styles.root}>
           <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
             {selectedStatId && (
-                <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange}/>
+                <StatPanel {...{ statId: selectedStatId, character, onStatIdChange }}/>
             )}
           </Drawer>
           <IconMenu

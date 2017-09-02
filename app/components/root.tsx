@@ -36,12 +36,13 @@ export class Root extends React.Component<{}, {}> {
   }
 
   render() {
+    const { appState, sheet, character } = this;
     return (
         <div>
           <AppBar/>
           <div className={styles.containerOuter}>
             <div className={styles.containerInner}>
-              <Sheets appState={this.appState} sheet={this.sheet} character={this.character}/>
+              <Sheets {...{ appState, sheet, character }} />
             </div>
           </div>
           <DevTools/>

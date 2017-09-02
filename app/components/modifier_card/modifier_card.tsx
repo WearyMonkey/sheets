@@ -32,17 +32,19 @@ export class ModifierCard extends React.Component<Props, { currentValue: string 
     return (
         <div className={styles.card}>
           <div className={styles.left}>
-            <TextField name={`${modifier.id}_card_description`}
-                       hintText="Description"
-                       fullWidth={true}
-                       value={modifier.description}
-                       onChange={this.onDescriptionChange}/>
-            <TextField name={`${modifier.id}_card_value`}
-                       hintText="Value"
-                       fullWidth={true}
-                       value={currentValue}
-                       onChange={this.onChange}
-                       onBlur={this.onBlur}/>
+            <TextField
+                name={`${modifier.id}_card_description`}
+                hintText="Description"
+                fullWidth={true}
+                value={modifier.description}
+                onChange={this.onDescriptionChange}/>
+            <TextField
+                name={`${modifier.id}_card_value`}
+                hintText="Value"
+                fullWidth={true}
+                value={currentValue}
+                onChange={this.onChange}
+                onBlur={this.onBlur}/>
           </div>
           <div className={styles.right}>
             <IconMenu

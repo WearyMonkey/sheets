@@ -1,24 +1,24 @@
 .card {
-    position: relative;
+  position: relative;
 }
 
 .left {
-    display: inline-block;
-    width: calc(100% - 3rem);
+  display: inline-block;
+  width: calc(100% - 3rem);
 }
 
 .right {
-    position: absolute;
-    display: block;
-    height: 100%;
-    width: 3rem;
-    top: 0;
-    right: 0;
-    text-align: center;
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 3rem;
+  top: 0;
+  right: 0;
+  text-align: center;
 }
 
 .total {
-    margin: 1.5rem 1.2rem;
-    font-size: 1.5rem;
-    font-weight: bold;
+  margin: 1.5rem 1.2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }

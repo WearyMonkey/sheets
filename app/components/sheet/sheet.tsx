@@ -30,7 +30,7 @@ export class Sheets extends React.Component<Props, {}> {
         <div className={styles.root}>
           <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
             {selectedStatId && (
-              <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange}/>
+                <StatPanel statId={selectedStatId} character={character} onStatIdChange={onStatIdChange}/>
             )}
           </Drawer>
           <IconMenu
@@ -51,7 +51,7 @@ export class Sheets extends React.Component<Props, {}> {
           </Packery>
           <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
             {selectedAbility && (
-              <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility}/>
+                <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility}/>
             )}
           </Drawer>
         </div>

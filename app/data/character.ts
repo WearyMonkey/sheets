@@ -78,7 +78,7 @@ export function evaluateModifier(character: Character, modifier: Modifier) {
     const variableValues: { [variable: string]: number } = {};
     expr.variables().forEach(variable => {
       const stat = character.stats.get(variable);
-      variableValues[ variable ] = stat
+      variableValues[variable] = stat
           ? getStatValue(character, stat.id)
           : 0;
     });

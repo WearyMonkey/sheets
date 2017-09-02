@@ -62,7 +62,7 @@ export class Abilities extends React.Component<Props, {}> {
 
   @action
   private readonly onAdd = () => {
-    const tags: Tag[] = this.props.state.filter ? [ { id: this.props.state.filter } ] : [];
+    const tags: Tag[] = this.props.state.filter ? [{ id: this.props.state.filter }] : [];
     this.props.character.abilities.push({ id: generateId(), actions: [], description: { type: 'TEXT' }, tags })
   };
 

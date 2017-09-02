@@ -1,12 +1,12 @@
 .field {
-    border: 1px solid lightgray;
-    height: 33px;
-    line-height: 33px;
-    padding: 0 1rem;
-    cursor: pointer;
+  border: 1px solid lightgray;
+  height: 33px;
+  line-height: 33px;
+  padding: 0 1rem;
+  cursor: pointer;
 }
 
 .active {
-    border-color: rgb(0, 188, 212);
-    border-width: 2px;
+  border-color: rgb(0, 188, 212);
+  border-width: 2px;
 }

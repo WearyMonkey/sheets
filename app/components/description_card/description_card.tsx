@@ -45,7 +45,7 @@ export class DescriptionCard extends React.Component<Props, {}> {
   }
 
   @action
-  private readonly onImageDrop = ([ file ]: (File & { preview: string })[]) => {
+  private readonly onImageDrop = ([file]: (File & { preview: string })[]) => {
     this.props.description.type = 'IMAGE';
     this.uploadPreview = file.preview;
     this.uploadPercentage = 0;

@@ -20,7 +20,7 @@ export class AbilityPanel extends React.Component<Props, {}> {
 
   @observable diceRoll?: DiceRoll;
   @observable rollNum: number = 0;
-  @observable addActionType: string = actionTypes[ 0 ].type;
+  @observable addActionType: string = actionTypes[0].type;
 
   render() {
     const { ability } = this.props;

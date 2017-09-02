@@ -40,13 +40,13 @@ export class DiceRollAction extends React.Component<Props, {}> {
 
   @action
   private readonly onSidesChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const dice = this.props.diceRoll.dice[ Number(event.currentTarget.dataset.index) ];
+    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
     dice.sides = Number(event.currentTarget.value);
   };
 
   @action
   private readonly onDiceChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const dice = this.props.diceRoll.dice[ Number(event.currentTarget.dataset.index) ];
+    const dice = this.props.diceRoll.dice[Number(event.currentTarget.dataset.index)];
     dice.dice = Number(event.currentTarget.value);
   };
 

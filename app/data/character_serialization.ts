@@ -35,13 +35,13 @@ function bonusFromJson(json: any): Bonus {
 
 function diceRollToJson(diceRoll: DiceRoll): any {
   return { 'dice': diceRoll.dice.map(die => (
-      { 'id': die.id, 'side': die.sides, 'dice': die.dice, 'bonus': die.bonus && bonusFromJson(die.bonus) }
+      { 'id': die.id, 'sides': die.sides, 'dice': die.dice, 'bonus': die.bonus && bonusFromJson(die.bonus) }
   ))};
 }
 
 function diceRollFromJson(json: any): DiceRoll {
   return { dice: json.dice.map((jsonDie : any) => (
-      { id: jsonDie['id'], side: jsonDie['sides'], dice: jsonDie['dice'], bonus: jsonDie['bonus'] && bonusToJson(jsonDie['bonus']) }
+      { id: jsonDie['id'], sides: jsonDie['sides'], dice: jsonDie['dice'], bonus: jsonDie['bonus'] && bonusToJson(jsonDie['bonus']) }
   ))};
 }
 

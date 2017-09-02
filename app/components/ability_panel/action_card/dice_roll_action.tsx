@@ -8,26 +8,34 @@ import { action } from 'mobx';
 import RaisedButton from 'material-ui/RaisedButton';
 import ChangeEvent = React.ChangeEvent;
 
+type Props = {
+  diceRoll: DiceRoll,
+  onRoll(diceRoll: DiceRoll): void
+};
+
 @observer
-export class DiceRollAction extends React.Component<{diceRoll: DiceRoll, onRoll: (diceRoll: DiceRoll) => void }, {}> {
+export class DiceRollAction extends React.Component<Props, {}> {
   render() {
-    return (<div>
-      <VerticalTable
-          cols={[
-          {displayName: 'Sides'},
-          {displayName: 'Dice'},
-        ]}
-          rows={this.props.diceRoll.dice.map(({id, sides, dice, bonus}, i) => ({
-          elements: [
-              <NumberInput name={`sides_${id}`} defaultValue={sides} onChange={this.onSidesChange} data-index={i} />,
-              <NumberInput name={`dice_${id}`} defaultValue={dice} onChange={this.onDiceChange} data-index={i} />,
-          ]
-        }))}
-          onAddRow={this.onAddDie}
-          onDeleteRow={this.onDeleteDie}
-      />
-      <RaisedButton onClick={this.onRoll}>Roll</RaisedButton>
-    </div>);
+    return (
+        <div>
+          <VerticalTable
+              editMode={true}
+              cols={[
+                {displayName: 'Sides'},
+                {displayName: 'Dice'},
+              ]}
+              rows={this.props.diceRoll.dice.map(({id, sides, dice, bonus}, i) => ({
+                elements: [
+                  <NumberInput name={`sides_${id}`} defaultValue={sides} onChange={this.onSidesChange} data-index={i}/>,
+                  <NumberInput name={`dice_${id}`} defaultValue={dice} onChange={this.onDiceChange} data-index={i}/>,
+                ]
+              }))}
+              onAddRow={this.onAddDie}
+              onDeleteRow={this.onDeleteDie}
+          />
+          <RaisedButton onClick={this.onRoll}>Roll</RaisedButton>
+        </div>
+    );
   }
 
   @action

@@ -21,7 +21,7 @@ export class ActionCard extends React.Component<Props, {}> {
     );
   }
 
-  renderAction(action: Action) {
+  private renderAction(action: Action) {
     switch (action.type) {
       case 'ROLL':
         return <DiceRollAction onRoll={this.props.abilityPanelUiAction} diceRoll={action.diceRoll} />;

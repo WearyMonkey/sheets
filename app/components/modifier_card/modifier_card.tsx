@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ChangeEvent } from 'react';
 import { Character, evaluateModifier, Modifier } from 'data/character';
 import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
@@ -10,7 +11,6 @@ import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import { DescriptionCard } from "../description_card/description_card";
-import { ChangeEvent } from "react";
 
 type Props = {
   character: Character,

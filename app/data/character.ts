@@ -55,11 +55,9 @@ export class Character {
   @observable readonly abilities: Ability[];
   @observable readonly modifiers: Modifier[];
 
-  constructor(
-      stats: ObservableMap<Stat>,
-      abilities: Ability[],
-      modifiers: Modifier[],
-  ) {
+  constructor(stats: ObservableMap<Stat>,
+              abilities: Ability[],
+              modifiers: Modifier[],) {
     this.stats = stats;
     this.abilities = abilities;
     this.modifiers = modifiers;

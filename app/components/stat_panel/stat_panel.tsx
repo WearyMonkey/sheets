@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Character, getOrCreateStat, getStatValue, Modifier } from 'data/character';
+import { Character, getOrCreateStat, getStatValue } from 'data/character';
 import TextField from 'material-ui/TextField';
 import { ModifierCard } from 'components/modifier_card/modifier_card';
 import { action } from 'mobx';
@@ -47,7 +47,14 @@ export class StatPanel extends React.Component<Props> {
   private readonly onAddModifier = () => {
     const id = generateId();
     const { statId, character } = this.props;
-    character.modifiers.push({ id, statId, sourceId: statId, sourceType: 'STAT', description: { type: 'TEXT' }, value: '0' })
+    character.modifiers.push({
+      id,
+      statId,
+      sourceId: statId,
+      sourceType: 'STAT',
+      description: { type: 'TEXT' },
+      value: '0',
+    })
   };
 
   @action

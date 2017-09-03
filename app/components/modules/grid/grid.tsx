@@ -26,12 +26,12 @@ type Grid = {
 
 export const MODULE_TYPE = 'GRID_MODULE';
 
-export function addToCharacter(character: Character, moduleId: number, state: Grid): void {
+export function addToCharacter(character: Character, moduleId: string, state: Grid): void {
 
 }
 
 type Props = {
-  moduleId: number,
+  moduleId: string,
   character: Character,
   appState: AppState,
   state: Grid,

@@ -31,7 +31,7 @@ export class StatPanel extends React.Component<Props> {
                      onChange={this.onStatIdChange}
                      hintText="Stat Id"/>
           <div>
-            {stat.modifiers.values().map((modifier, i) =>
+            {character.modifiers.filter(m => m.statId == statId).map((modifier, i) =>
                 <div key={modifier.id} className={styles.modifierContainer}>
                   <ModifierCard character={character}
                                 modifier={modifier}
@@ -47,14 +47,14 @@ export class StatPanel extends React.Component<Props> {
   @action
   private readonly onAddModifier = () => {
     const id = generateId();
-    const stat = this.props.character.stats.get(this.props.statId)!;
-    stat.modifiers.set(id, { id, description: '', value: '0' });
+    const { statId, character } = this.props;
+    character.modifiers.push({ id, statId, sourceId: statId, sourceType: 'STAT', description: { type: 'TEXT' }, value: '0' })
   };
 
   @action
   private readonly onDeleteModifier = (modifier: Modifier) => {
-    const stat = this.props.character.stats.get(this.props.statId)!;
-    stat.modifiers.delete(modifier.id);
+    const character = this.props.character;
+    character.modifiers.splice(character.modifiers.indexOf(modifier), 1);
   };
 
   @action

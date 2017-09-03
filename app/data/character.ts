@@ -31,44 +31,53 @@ export type Ability = {
   id: string,
   description: Description,
   actions: Action[],
+  modifiers: Modifier[],
   tags: Tag[]
 };
 
 export type Modifier = {
   id: string,
-  moduleId?: number,
-  description: string,
+  statId: string,
+  sourceId: string,
+  sourceType: 'STAT' | 'MODULE' | 'ABILITY',
+  description: Description,
   value: string,
 };
 
 export type Stat = {
   id: string,
-  modifiers: ObservableMap<Modifier>
+  description: Description,
 }
 
 export class Character {
-  constructor(stats: ObservableMap<Stat> = new ObservableMap<Stat>(), abilities: Ability[] = []) {
+
+  @observable readonly stats: ObservableMap<Stat>;
+  @observable readonly abilities: Ability[];
+  @observable readonly modifiers: Modifier[];
+
+  constructor(
+      stats: ObservableMap<Stat>,
+      abilities: Ability[],
+      modifiers: Modifier[],
+  ) {
     this.stats = stats;
     this.abilities = abilities;
+    this.modifiers = modifiers;
   }
-
-  @observable readonly stats: ObservableMap<Stat> = observable.map([]);
-  @observable readonly abilities: Ability[] = [];
 }
 
 export function getOrCreateStat(character: Character, id: string, defaults: Partial<Stat> = {}): Stat {
-  let stat = character.stats.get(id);
+  let stat: Stat | undefined = character.stats.get(id);
   if (!stat) {
-    stat = { id, modifiers: observable.map([]), ...defaults };
+    stat = { id, description: { type: 'TEXT' }, ...defaults };
     character.stats.set(stat.id, stat);
   }
   return stat;
 }
 
 export function getStatValue(character: Character, statId: string): number {
-  const stat = character.stats.get(statId);
-  const modifiers = stat ? stat.modifiers : observable.map<Modifier>();
-  return Array.from(modifiers.values()).reduce((total, modifier) => total + evaluateModifier(character, modifier), 0);
+  const modifiers = character.modifiers.filter(m => m.statId == statId);
+  return modifiers.reduce((total, modifier) => total + evaluateModifier(character, modifier), 0);
 }
 
 export function evaluateModifier(character: Character, modifier: Modifier) {

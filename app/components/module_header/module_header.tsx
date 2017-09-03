@@ -8,10 +8,10 @@ import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down'
 import { observer } from 'mobx-react';
 
 type Props = {
-  moduleId: number,
+  moduleId: string,
   title: string,
   menuItems: JSX.Element[],
-  onDelete(moduleId: number): void,
+  onDelete(moduleId: string): void,
   onTitleChange(title: string): void
 };
 

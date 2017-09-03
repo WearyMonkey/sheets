@@ -5,16 +5,16 @@ import { Character } from 'data/character';
 import { AppState } from 'data/app_state';
 
 type ModuleProps = {
-  moduleId: number,
+  moduleId: string,
   character: Character,
   state: any,
   appState?: AppState,
-  onDelete(moduleId: number): void
+  onDelete(moduleId: string): void
 }
 
 type Module = {
   Component: ComponentClass<ModuleProps>,
-  addToCharacter: (c: Character, moduleId: number, state: any) => void
+  addToCharacter: (c: Character, moduleId: string, state: any) => void
 }
 
 export const MODULES = new Map<string, Module>()

@@ -114,7 +114,8 @@ function abilityToJson(ability: Ability): any {
     'id': ability.id,
     'tags': ability.tags.map(tagToJson),
     'description': descriptionToJson(ability.description),
-    'actions': ability.actions.map(action => actionToJson(action))
+    'actions': ability.actions.map(actionToJson),
+    'modifiers': ability.modifiers.map(modifierToJson),
   };
 }
 
@@ -123,15 +124,18 @@ function abilityFromJson(json: any): Ability {
     id: json['id'],
     tags: json['tags'] ? json['tags'].map(tagFromJson) : [],
     description: descriptionFromJson(json['description']),
-    actions: json['actions'].map((action: any) => actionFromJson(action))
+    modifiers: json['modifiers'].map(modifierFromJson),
+    actions: json['actions'].map(actionFromJson),
   };
 }
 
 function modifierToJson(modifier: Modifier): any {
   return {
     'id': modifier.id,
-    'moduleId': modifier.moduleId,
-    'description': modifier.description,
+    'statId': modifier.statId,
+    'sourceId': modifier.sourceId,
+    'sourceType': modifier.sourceType,
+    'description': descriptionToJson(modifier.description),
     'value': modifier.value
   };
 }
@@ -139,33 +143,40 @@ function modifierToJson(modifier: Modifier): any {
 function modifierFromJson(json: any): Modifier {
   return {
     id: json['id'],
-    moduleId: json['moduleId'],
-    description: json['description'],
-    value: json['value']
+    statId: json['statId'],
+    sourceId: json['sourceId'],
+    sourceType: json['sourceType'],
+    description: descriptionFromJson(json['description']),
+    value: json['value'],
   };
 }
 
 function statToJson(stat: Stat): any {
   return {
     'id': stat.id,
-    'modifiers': mapToJson(stat.modifiers, modifierToJson)
+    'description': descriptionToJson(stat.description)
   };
 }
 
 function statFromJson(json: any): Stat {
   return {
     id: json['id'],
-    modifiers: mapFromJson(json['modifiers'], modifierFromJson)
+    description: descriptionFromJson(json['description'])
   };
 }
 
 export function characterToJson(character: Character): any {
   return {
     'stats': mapToJson(character.stats, statToJson),
-    'abilities': character.abilities.map(abilityToJson)
+    'abilities': character.abilities.map(abilityToJson),
+    'modifiers': character.modifiers.map(modifierToJson),
   };
 }
 
 export function characterFromJson(json: any): Character {
-  return new Character(mapFromJson(json['stats'], statFromJson), json['abilities'].map(abilityFromJson));
+  return new Character(
+      mapFromJson(json['stats'], statFromJson),
+      json['abilities'].map(abilityFromJson),
+      json['modifiers'].map(modifierFromJson),
+  );
 }

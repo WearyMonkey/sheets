@@ -2,13 +2,14 @@ import * as React from 'react';
 import { Character, evaluateModifier, Modifier } from 'data/character';
 import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
-import { action, observable } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 import { Parser } from 'expr-eval';
 import * as styles from './modifier_card.css';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import ArrayDropDownIcon from 'material-ui/svg-icons/navigation/arrow-drop-down';
+import { DescriptionCard } from "../description_card/description_card";
 
 type Props = {
   character: Character,
@@ -22,7 +23,9 @@ export class ModifierCard extends React.Component<Props> {
   @observable private currentValue = this.props.modifier.value;
 
   componentWillReceiveProps(nextProps: Props) {
-    this.currentValue = nextProps.modifier.value;
+    runInAction(() => {
+      this.currentValue = nextProps.modifier.value;
+    });
   }
 
   render() {
@@ -31,12 +34,7 @@ export class ModifierCard extends React.Component<Props> {
     return (
         <div className={styles.card}>
           <div className={styles.left}>
-            <TextField
-                name={`${modifier.id}_card_description`}
-                hintText="Description"
-                fullWidth={true}
-                value={modifier.description}
-                onChange={this.onDescriptionChange}/>
+            <DescriptionCard description={modifier.description}/>
             <TextField
                 name={`${modifier.id}_card_value`}
                 hintText="Value"
@@ -46,8 +44,7 @@ export class ModifierCard extends React.Component<Props> {
                 onBlur={this.onBlur}/>
           </div>
           <div className={styles.right}>
-            <IconMenu
-                iconButtonElement={<IconButton><ArrayDropDownIcon/></IconButton>}>
+            <IconMenu iconButtonElement={<IconButton><ArrayDropDownIcon/></IconButton>}>
               <MenuItem primaryText="Delete" onClick={onDelete}/>
               <MenuItem primaryText="Enabled"/>
             </IconMenu>
@@ -56,11 +53,6 @@ export class ModifierCard extends React.Component<Props> {
         </div>
     );
   }
-
-  @action
-  private readonly onDescriptionChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.props.modifier.description = e.currentTarget.value;
-  };
 
   @action
   private readonly onBlur = () => {

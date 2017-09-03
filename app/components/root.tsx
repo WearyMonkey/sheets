@@ -7,6 +7,7 @@ import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
 import DevTools from 'mobx-react-devtools';
 import { AppState } from 'data/app_state';
+import { ObservableMap } from "mobx";
 
 export class Root extends React.Component {
 
@@ -21,8 +22,8 @@ export class Root extends React.Component {
       this.character = characterFromJson(JSON.parse(localStorage.character));
       this.sheet = sheetFromJson(JSON.parse(localStorage.sheet));
     } else {
-      this.character = new Character();
-      this.sheet = new Sheet();
+      this.character = new Character(new ObservableMap(), [], []);
+      this.sheet = new Sheet([]);
     }
 
     this.appState = new AppState();

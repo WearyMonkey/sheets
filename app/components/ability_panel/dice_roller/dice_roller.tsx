@@ -17,9 +17,11 @@ export class DiceRoller extends React.PureComponent<Props> {
       const total = results.reduce((s, rolls) => s + rolls.reduce((s, r) => s + r, 0), 0);
       return (
           <div style={{ paddingTop: 30 }}>
-            {results.map(rolls => (<div>
-              {rolls.map(r => <span>{r} </span>)}
-            </div>))}
+            {results.map((rolls, i) => (
+                <div key={i}>
+                  {rolls.map((r, j) => <span key={j}>{r} </span>)}
+                </div>
+            ))}
             <span>total: {total}</span>
           </div>
       );

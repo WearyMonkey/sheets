@@ -13,6 +13,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import { action } from 'mobx';
+import { generateId } from "../../data/guid";
 
 type Props = {
   appState: AppState,
@@ -29,14 +30,13 @@ export class Sheets extends React.Component<Props> {
     return (
         <div className={styles.root}>
           <Drawer width={200} openSecondary={false} open={selectedStatId != null}>
-            {selectedStatId && (
+            {selectedStatId != null && (
                 <StatPanel {...{ statId: selectedStatId, character, onStatIdChange }}/>
             )}
           </Drawer>
           <IconMenu
               iconButtonElement={<RaisedButton label="Add Module"/>}
-              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          >
+              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}>
             <MenuItem primaryText="Grid" onClick={this.onAddGrid}/>
             <MenuItem primaryText="List" onClick={this.onAddList}/>
           </IconMenu>
@@ -84,7 +84,7 @@ export class Sheets extends React.Component<Props> {
   };
 
   @action
-  private readonly onDeleteModule = (moduleId: number) => {
+  private readonly onDeleteModule = (moduleId: string) => {
     const index = this.props.sheet.modules.findIndex(m => m.id === moduleId);
     this.props.sheet.modules.splice(index, 1);
   };
@@ -92,7 +92,7 @@ export class Sheets extends React.Component<Props> {
   @action
   private readonly onAddList = () => {
     this.props.sheet.modules.push({
-      id: this.props.sheet.modules.length,
+      id: generateId(),
       state: { title: '' },
       type: 'ABILITIES_MODULE'
     });
@@ -101,7 +101,7 @@ export class Sheets extends React.Component<Props> {
   @action
   private readonly onAddGrid = () => {
     this.props.sheet.modules.push({
-      id: this.props.sheet.modules.length,
+      id: generateId(),
       state: { title: '', rows: [], columns: [] },
       type: 'GRID_MODULE'
     });

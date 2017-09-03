@@ -1,17 +1,17 @@
 import { observable } from 'mobx';
 
 export type ModuleConfig = {
-  id: number,
+  id: string,
   type: string,
   state: any
 }
 
 export class Sheet {
-  constructor(modules: ModuleConfig[] = []) {
+  @observable readonly modules: ModuleConfig[];
+
+  constructor(modules: ModuleConfig[]) {
     this.modules = modules;
   }
-
-  @observable readonly modules: ModuleConfig[];
 }
 
 export function sheetToJson(sheet: Sheet) {

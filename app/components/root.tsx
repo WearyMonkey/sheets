@@ -5,7 +5,6 @@ import { characterFromJson, characterToJson } from 'data/character_serialization
 import { Sheet, sheetFromJson, sheetToJson } from 'data/sheet';
 import * as styles from './root.css';
 import { Sheets } from './sheet/sheet';
-import DevTools from 'mobx-react-devtools';
 import { AppState } from 'data/app_state';
 import { ObservableMap } from "mobx";
 
@@ -46,7 +45,6 @@ export class Root extends React.Component {
               <Sheets {...{ appState, sheet, character }} />
             </div>
           </div>
-          <DevTools/>
         </div>
     );
   }

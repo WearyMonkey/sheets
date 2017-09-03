@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
-const extractCSS = new ExtractTextPlugin('[name].css');
+const extractCSS = new ExtractTextPlugin('[name].[contenthash].css');
 
 module.exports = {
   resolve: {
@@ -28,9 +28,8 @@ module.exports = {
     ]
   },
   output: {
-    path: path.resolve(__dirname, "build"),
-    publicPath: "/",
-    filename: "bundle.js"
+    path: path.resolve(__dirname, 'target', 'build'),
+    filename: "bundle.[chunkhash].js"
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -39,9 +38,19 @@ module.exports = {
     extractCSS,
     new webpack.DefinePlugin({
       'process.env': {
-        // 'NODE_ENV': '"production"'
+        'NODE_ENV': process.env.NODE_ENV ? '"production"' : undefined
       }
     }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: process.env.NODE_ENV === 'production'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: 'vendor.[chunkhash].js',
+      minChunks(module) {
+        return !!module.resource && !!module.resource.match(/node_modules/)
+      }
+    })
   ],
   devServer: {
     port: 9999,

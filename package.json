@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "build": "rm -r target/build; NODE_ENV=production PLATFORM=web webpack"
   },
   "devDependencies": {
     "@types/classnames": "^0.0.32",

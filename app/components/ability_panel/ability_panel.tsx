@@ -10,8 +10,10 @@ import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { generateId } from 'data/guid';
 import { ModifierCard } from "../modifier_card/modifier_card";
+import { AppState } from "../../data/app_state";
 
 type Props = {
+  appState: AppState,
   character: Character,
   ability: Ability,
   onDelete(ability: Ability): void
@@ -25,15 +27,18 @@ export class AbilityPanel extends React.Component<Props> {
   @observable private addActionType: string = actionTypes[0].type;
 
   render() {
-    const { character, ability } = this.props;
+    const { character, ability, appState } = this.props;
     const modifiers = character.modifiers.filter(m => m.sourceType == 'ABILITY' && m.sourceId == ability.id);
     return (
         <div>
-          <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum}/>
+          <DiceRoller character={character} diceRoll={this.diceRoll} rollNum={this.rollNum}/>
           <DescriptionCard description={ability.description}/>
           <div>
             {ability.actions.map(action =>
-                <ActionCard key={action.id} action={action} abilityPanelUiAction={this.handleAbilityPanelUiAction}/>
+                <ActionCard
+                    {...{ character, action, appState }}
+                    key={action.id}
+                    abilityPanelUiAction={this.handleAbilityPanelUiAction}/>
             )}
           </div>
           <RaisedButton onClick={this.onAddAction}>Add Action</RaisedButton>

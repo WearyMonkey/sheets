@@ -1,5 +1,5 @@
 import { mapFromJson, mapToJson } from './serialization';
-import { Ability, Action, Bonus, Character, Description, DiceRoll, Modifier, Stat, Tag } from './character';
+import { Ability, Action, Character, Description, DiceRoll, Modifier, Stat, Tag } from './character';
 import { TextState } from './text_state';
 
 function tagToJson(tag: Tag) {
@@ -30,35 +30,6 @@ function descriptionFromJson(json: any): Description {
   };
 }
 
-function bonusToJson(bonus: Bonus): any {
-  const obj: any = {
-    'type': bonus.type,
-    'description': descriptionToJson(bonus.description)
-  };
-  if (bonus.type == 'STAT') obj['statId'] = bonus.statId;
-  if (bonus.type == 'VALUE') obj['value'] = bonus.value;
-  return obj;
-}
-
-function bonusFromJson(json: any): Bonus {
-  switch (json['type']) {
-    case 'VALUE':
-      return {
-        type: 'VALUE',
-        description: descriptionFromJson(json.description),
-        value: json['value']
-      };
-    case 'STAT':
-      return {
-        type: 'STAT',
-        description: descriptionFromJson(json.description),
-        statId: json['statId']
-      };
-    default:
-      throw new Error(`Unknown bonus type ${json['type']}`);
-  }
-}
-
 function diceRollToJson(diceRoll: DiceRoll): any {
   return {
     'dice': diceRoll.dice.map(die => (
@@ -66,9 +37,9 @@ function diceRollToJson(diceRoll: DiceRoll): any {
           'id': die.id,
           'sides': die.sides,
           'dice': die.dice,
-          'bonus': die.bonus && bonusFromJson(die.bonus)
         }
-    ))
+    )),
+    'bonusStatId': diceRoll.bonusStatId
   };
 }
 
@@ -79,9 +50,9 @@ function diceRollFromJson(json: any): DiceRoll {
           id: jsonDie['id'],
           sides: jsonDie['sides'],
           dice: jsonDie['dice'],
-          bonus: jsonDie['bonus'] && bonusToJson(jsonDie['bonus'])
         }
-    ))
+    )),
+    bonusStatId: json['bonusStatId']
   };
 }
 

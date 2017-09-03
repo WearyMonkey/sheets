@@ -9,12 +9,9 @@ export type Tag = {
 export type Description =
     { type: 'IMAGE' | 'TEXT', imageUrl?: string, textState?: TextState }
 
-export type Bonus =
-    { type: 'STAT', description: Description, statId: string }
-    | { type: 'VALUE', description: Description, value: number };
-
 export type DiceRoll = {
-  dice: { id: string, sides: number, dice: number, bonus?: Bonus }[]
+  dice: { id: string, sides: number, dice: number }[],
+  bonusStatId?: string
 };
 
 export type Action =

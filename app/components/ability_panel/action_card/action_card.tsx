@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { Action, DiceRoll } from 'data/character';
+import { Action, Character, DiceRoll } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
 import { observer } from 'mobx-react';
 import { DiceRollAction } from './dice_roll_action';
+import { AppState } from "../../../data/app_state";
 
 type Props = {
+  character: Character,
+  appState: AppState,
   action: Action,
   abilityPanelUiAction(action: DiceRoll): void
 };
@@ -21,12 +24,13 @@ export class ActionCard extends React.Component<Props> {
     );
   }
 
-  private renderAction(action: Action) {
-    switch (action.type) {
+  private renderAction({ type, diceRoll }: Action) {
+    const { character, appState, abilityPanelUiAction: onRoll } = this.props;
+    switch (type) {
       case 'ROLL':
-        return <DiceRollAction onRoll={this.props.abilityPanelUiAction} diceRoll={action.diceRoll}/>;
+        return <DiceRollAction {...{ character, appState, diceRoll, onRoll }}/>;
       default:
-        throw new Error(`Unknown action type ${action.type}`);
+        throw new Error(`Unknown action type ${type}`);
     }
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Ability, actionTypes, DiceRoll } from 'data/character';
+import { Ability, actionTypes, Character, DiceRoll } from 'data/character';
 import { DescriptionCard } from 'components/description_card/description_card';
 import { ActionCard } from './action_card/action_card';
 import { observer } from 'mobx-react';
@@ -9,8 +9,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { generateId } from 'data/guid';
+import { ModifierCard } from "../modifier_card/modifier_card";
 
 type Props = {
+  character: Character,
   ability: Ability,
   onDelete(ability: Ability): void
 }
@@ -23,7 +25,8 @@ export class AbilityPanel extends React.Component<Props> {
   @observable private addActionType: string = actionTypes[0].type;
 
   render() {
-    const { ability } = this.props;
+    const { character, ability } = this.props;
+    const modifiers = character.modifiers.filter(m => m.sourceType == 'ABILITY' && m.sourceId == ability.id);
     return (
         <div>
           <DiceRoller diceRoll={this.diceRoll} rollNum={this.rollNum}/>
@@ -39,6 +42,12 @@ export class AbilityPanel extends React.Component<Props> {
                 <MenuItem key={i} value={actionType.type} primaryText={actionType.displayName}/>
             )}
           </DropDownMenu>
+          <div>
+            {modifiers.map(modifier => (
+                <ModifierCard key={modifier.id} {...{ character, modifier, showStatId: true }} />
+            ))}
+          </div>
+          <RaisedButton onClick={this.onAddModifier}>Add Modifier</RaisedButton>
           <RaisedButton onClick={this.onDelete}>Delete</RaisedButton>
         </div>
     );
@@ -52,6 +61,18 @@ export class AbilityPanel extends React.Component<Props> {
   @action
   private readonly onDelete = () => {
     this.props.onDelete(this.props.ability);
+  };
+
+  @action
+  private readonly onAddModifier = () => {
+    this.props.character.modifiers.push({
+      id: generateId(),
+      statId: '',
+      sourceId: this.props.ability.id,
+      sourceType: 'ABILITY',
+      description: { type: 'TEXT' },
+      value: '',
+    });
   };
 
   @action

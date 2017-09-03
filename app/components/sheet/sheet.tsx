@@ -51,7 +51,7 @@ export class Sheets extends React.Component<Props> {
           </Packery>
           <Drawer width={200} openSecondary={true} open={selectedAbility != null}>
             {selectedAbility && (
-                <AbilityPanel ability={selectedAbility} onDelete={this.onDeleteAbility}/>
+                <AbilityPanel character={character} ability={selectedAbility} onDelete={this.onDeleteAbility}/>
             )}
           </Drawer>
         </div>

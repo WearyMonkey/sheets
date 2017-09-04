@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Character, getOrCreateStat, getStatValue } from 'data/character';
+import { Character, getStatValue } from 'data/character';
 import TextField from 'material-ui/TextField';
 import { ModifierCard } from 'components/modifier_card/modifier_card';
 import { action } from 'mobx';
@@ -19,8 +19,7 @@ type Props = {
 export class StatPanel extends React.Component<Props> {
   render() {
     const { statId, character } = this.props;
-    const stat = getOrCreateStat(character, statId);
-    const value = getStatValue(character, stat.id);
+    const value = getStatValue(character, statId);
     const modifiers = character.modifiers.filter(m => m.statId == statId);
 
     return (
@@ -28,7 +27,7 @@ export class StatPanel extends React.Component<Props> {
           <h1>{value}</h1>
           <TextField name={`${statId}_id`}
                      fullWidth={true}
-                     value={stat.id}
+                     value={statId}
                      onChange={this.onStatIdChange}
                      hintText="Stat Id"/>
           <div>

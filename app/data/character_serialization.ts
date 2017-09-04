@@ -1,5 +1,4 @@
-import { mapFromJson, mapToJson } from './serialization';
-import { Ability, Action, Character, Description, DiceRoll, Modifier, Stat, Tag } from './character';
+import { Ability, Action, Character, Description, DiceRoll, Modifier, Tag } from './character';
 import { TextState } from './text_state';
 
 function tagToJson(tag: Tag) {
@@ -122,23 +121,8 @@ function modifierFromJson(json: any): Modifier {
   };
 }
 
-function statToJson(stat: Stat): any {
-  return {
-    'id': stat.id,
-    'description': descriptionToJson(stat.description)
-  };
-}
-
-function statFromJson(json: any): Stat {
-  return {
-    id: json['id'],
-    description: descriptionFromJson(json['description'])
-  };
-}
-
 export function characterToJson(character: Character): any {
   return {
-    'stats': mapToJson(character.stats, statToJson),
     'abilities': character.abilities.map(abilityToJson),
     'modifiers': character.modifiers.map(modifierToJson),
   };
@@ -146,7 +130,6 @@ export function characterToJson(character: Character): any {
 
 export function characterFromJson(json: any): Character {
   return new Character(
-      mapFromJson(json['stats'], statFromJson),
       json['abilities'].map(abilityFromJson),
       json['modifiers'].map(modifierFromJson),
   );

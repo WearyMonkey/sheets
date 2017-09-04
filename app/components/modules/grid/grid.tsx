@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Character, generateStatId, getOrCreateStat } from 'data/character';
+import { Character } from 'data/character';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { StatField } from 'components/stat_field/stat_field';
@@ -131,9 +131,7 @@ export class GridModule extends React.Component<Props> {
           case 'LABEL':
             return '';
           case 'STAT':
-            const statId = generateStatId(this.props.character);
-            getOrCreateStat(character, statId);
-            return statId;
+            return '';
           default:
             throw new Error(`Unknown column type ${column.type}`);
         }
@@ -159,11 +157,9 @@ export class GridModule extends React.Component<Props> {
         });
         break;
       case 'STAT':
-        const statId = generateStatId(this.props.character);
-        getOrCreateStat(character, statId);
         columns.push({ displayName: '', type: 'STAT' });
         rows.forEach(row => {
-          row.values.push(statId);
+          row.values.push('');
         });
         break;
       default:

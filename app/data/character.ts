@@ -1,4 +1,4 @@
-import { observable, ObservableMap } from 'mobx';
+import { observable } from 'mobx';
 import { Parser, Value } from 'expr-eval';
 import { TextState } from './text_state';
 
@@ -41,33 +41,16 @@ export type Modifier = {
   value: string,
 };
 
-export type Stat = {
-  id: string,
-  description: Description,
-}
-
 export class Character {
 
-  @observable readonly stats: ObservableMap<Stat>;
   @observable readonly abilities: Ability[];
   @observable readonly modifiers: Modifier[];
 
-  constructor(stats: ObservableMap<Stat>,
-              abilities: Ability[],
+  constructor(abilities: Ability[],
               modifiers: Modifier[],) {
-    this.stats = stats;
     this.abilities = abilities;
     this.modifiers = modifiers;
   }
-}
-
-export function getOrCreateStat(character: Character, id: string, defaults: Partial<Stat> = {}): Stat {
-  let stat: Stat | undefined = character.stats.get(id);
-  if (!stat) {
-    stat = { id, description: { type: 'TEXT' }, ...defaults };
-    character.stats.set(stat.id, stat);
-  }
-  return stat;
 }
 
 export function getStatValue(character: Character, statId: string): number {
@@ -97,11 +80,4 @@ export function evaluateModifier(character: Character, modifier: Modifier) {
   } catch (e) {
     return 0;
   }
-}
-
-export function generateStatId(character: Character) {
-  const base = 'new_stat_';
-  let i = 1;
-  while (character.stats.has(base + i)) i += 1;
-  return base + i;
 }

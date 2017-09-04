@@ -5,20 +5,54 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './reset.css';
 import { Root } from 'components/root';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
-import { useStrict } from 'mobx';
+import { autorun, useStrict } from 'mobx';
 import DevTools from 'mobx-react-devtools';
+import { Sheet, sheetFromJson, sheetToJson } from "./data/sheet";
+import { Character } from "./data/character";
+import { characterFromJson, characterToJson } from "./data/character_serialization";
+import { AppState } from "./data/app_state";
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
 useStrict(true);
 
+let character: Character;
+let sheet: Sheet;
+
+if (location.hash) {
+  const [charJson, sheetJson] = location.hash.substr(1).split('&');
+  character = characterFromJson(JSON.parse(decodeURIComponent(charJson)));
+  sheet = sheetFromJson(JSON.parse(decodeURIComponent(sheetJson)));
+} else {
+  character = localStorage.character
+      ? characterFromJson(JSON.parse(localStorage.character))
+      : new Character([], []);
+
+  sheet = localStorage.sheet
+      ? sheetFromJson(JSON.parse(localStorage.sheet))
+      : new Sheet([]);
+}
+
+const appState = new AppState();
+
+window.onunload = () => {
+  localStorage.setItem('character', JSON.stringify(characterToJson(character)));
+  localStorage.setItem('sheet', JSON.stringify(sheetToJson(sheet)));
+};
+
+autorun(() => {
+  const charJson = encodeURIComponent(JSON.stringify(characterToJson(character)));
+  const sheetJson = encodeURIComponent(JSON.stringify(sheetToJson(sheet)));
+  location.hash = charJson + '&' + sheetJson;
+});
+
 const root = document.getElementById('root');
 if (root) {
   ReactDom.render((
       <div>
         <MuiThemeProvider>
-          <Root/>
+          <Root {...{ character, sheet, appState }}/>
         </MuiThemeProvider>
         {process.env.NODE_ENV !== 'production' &&  <DevTools/>}
       </div>

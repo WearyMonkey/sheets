@@ -9,3 +9,17 @@
   width: 1024px;
   margin: 1rem auto;
 }
+
+@media print {
+  .containerOuter {
+    top: 0 !important;
+  }
+
+  .appBar {
+    display: none !important;
+  }
+
+  button:global {
+    display: none !important;
+  }
+}

@@ -18,7 +18,7 @@ export class Root extends React.Component<Props> {
     const { appState, sheet, character } = this.props;
     return (
         <div>
-          <AppBar/>
+          <AppBar className={styles.appBar}/>
           <div className={styles.containerOuter}>
             <div className={styles.containerInner}>
               <Sheets {...{ appState, sheet, character }} />

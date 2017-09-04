@@ -9,6 +9,7 @@ import { generateId } from 'data/guid';
 import { ModuleHeader } from 'components/module_header/module_header';
 import TextField from 'material-ui/TextField';
 import { Sheet } from "../../../data/sheet";
+import * as styles from './abilities.css';
 
 type AbilitiesState = {
   title: string,
@@ -46,6 +47,7 @@ export class Abilities extends React.Component<Props> {
               menuItems={[]}
               onTitleChange={this.onTitleChange}/>
           <TextField
+              className={styles.tags}
               name={`${moduleId}_filter`}
               value={filter ? filter : ''}
               onChange={this.onFilterChange}

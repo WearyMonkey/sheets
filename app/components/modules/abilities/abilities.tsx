@@ -8,6 +8,7 @@ import { action } from 'mobx';
 import { generateId } from 'data/guid';
 import { ModuleHeader } from 'components/module_header/module_header';
 import TextField from 'material-ui/TextField';
+import { Sheet } from "../../../data/sheet";
 
 type AbilitiesState = {
   title: string,
@@ -23,6 +24,7 @@ export const MODULE_TYPE: string = 'ABILITIES_MODULE';
 type Props = {
   moduleId: string,
   character: Character,
+  sheet: Sheet,
   state: AbilitiesState,
   appState: AppState,
   onDelete(): void,
@@ -31,7 +33,7 @@ type Props = {
 @observer
 export class Abilities extends React.Component<Props> {
   render() {
-    const { moduleId, character, appState, state, onDelete } = this.props;
+    const { moduleId, character, sheet, appState, state, onDelete } = this.props;
     const { title, filter } = state;
     const abilities = filter
         ? character.abilities.filter(a => a.tags.find(t => t.id == filter))
@@ -40,7 +42,7 @@ export class Abilities extends React.Component<Props> {
     return (
         <div>
           <ModuleHeader
-              {...{ moduleId, title, onDelete }}
+              {...{ moduleId, title, sheet }}
               menuItems={[]}
               onTitleChange={this.onTitleChange}/>
           <TextField

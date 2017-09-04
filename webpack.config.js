@@ -41,9 +41,7 @@ module.exports = {
         'NODE_ENV': process.env.NODE_ENV ? '"production"' : undefined
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: process.env.NODE_ENV === 'production'
-    }),
+    ...process.env.NODE_ENV === 'production' ? [new webpack.optimize.UglifyJsPlugin()] : [],
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       filename: 'vendor.[chunkhash].js',

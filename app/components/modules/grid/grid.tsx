@@ -8,6 +8,7 @@ import { VerticalTable } from '../../vertical_table/vertical_table';
 import TextField from 'material-ui/TextField';
 import { ModuleHeader } from 'components/module_header/module_header';
 import MenuItem from 'material-ui/MenuItem';
+import { Sheet } from "../../../data/sheet";
 
 type Column = {
   type: 'LABEL' | 'STAT',
@@ -33,6 +34,7 @@ export function addToCharacter(character: Character, moduleId: string, state: Gr
 type Props = {
   moduleId: string,
   character: Character,
+  sheet: Sheet,
   appState: AppState,
   state: Grid,
   onDelete(): void
@@ -44,7 +46,7 @@ export class GridModule extends React.Component<Props> {
   @observable private editMode: boolean = false;
 
   render() {
-    const { moduleId, character, appState, state, onDelete } = this.props;
+    const { moduleId, character, appState, state, sheet } = this.props;
     const { title, rows, columns } = state;
     const tableRows = rows.map((row, r) => {
       const elements = row.values.map((value, c) => {
@@ -69,7 +71,7 @@ export class GridModule extends React.Component<Props> {
 
     return (
         <div>
-          <ModuleHeader {...{ moduleId, title, menuItems, onDelete }} onTitleChange={this.onTitleChange}/>
+          <ModuleHeader {...{ moduleId, title, menuItems, sheet }} onTitleChange={this.onTitleChange}/>
           <VerticalTable
               rows={tableRows}
               cols={columns}

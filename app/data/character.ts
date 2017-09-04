@@ -1,5 +1,5 @@
 import { observable, ObservableMap } from 'mobx';
-import { Parser } from 'expr-eval';
+import { Parser, Value } from 'expr-eval';
 import { TextState } from './text_state';
 
 export type Tag = {
@@ -75,16 +75,23 @@ export function getStatValue(character: Character, statId: string): number {
   return modifiers.reduce((total, modifier) => total + evaluateModifier(character, modifier), 0);
 }
 
+const evalFunctions: { [key: string]: Value } = {
+  middle(...args: number[]) {
+    return args.length != 0
+        ? args.sort()[Math.floor(args.length / 2)]
+        : 0;
+  }
+};
+
 export function evaluateModifier(character: Character, modifier: Modifier) {
   try {
     const parser = new Parser();
     const expr = parser.parse(modifier.value);
-    const variableValues: { [variable: string]: number } = {};
+    const variableValues: { [variable: string]: Value } = {...evalFunctions};
     expr.variables().forEach(variable => {
-      const stat = character.stats.get(variable);
-      variableValues[variable] = stat
-          ? getStatValue(character, stat.id)
-          : 0;
+      if (!evalFunctions[variable]) {
+        variableValues[variable] = getStatValue(character, variable);
+      }
     });
     return expr.evaluate(variableValues);
   } catch (e) {

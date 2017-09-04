@@ -3,13 +3,14 @@ import * as Abilities from './abilities/abilities';
 import * as Grid from './grid/grid';
 import { Character } from 'data/character';
 import { AppState } from 'data/app_state';
+import { Sheet } from "../../data/sheet";
 
 type ModuleProps = {
   moduleId: string,
   character: Character,
+  sheet: Sheet,
   state: any,
   appState?: AppState,
-  onDelete(moduleId: string): void
 }
 
 type Module = {

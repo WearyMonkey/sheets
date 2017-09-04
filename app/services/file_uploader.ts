@@ -2,7 +2,7 @@ export class FileUploader {
 
   upload(file: File, progress: (uploaded: number, total: number) => void): Promise<string> {
     const bucketUrl = 'https://s3-ap-southeast-2.amazonaws.com/sheets-uploads';
-    const key = file.name;
+    const key = `${Date.now()}_${file.name}`;
     const imageUrl = `${bucketUrl}/${key}`;
     const oReq = new XMLHttpRequest();
     const formData = new FormData();

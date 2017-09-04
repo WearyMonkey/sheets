@@ -45,7 +45,7 @@ export class Sheets extends React.Component<Props> {
             <div className={styles.gridSizer}/>
             {sheet.modules.map(moduleConfig => (
                 <div className={styles.moduleContainer} key={moduleConfig.id}>
-                  {this.renderModule(moduleConfig, character, appState)}
+                  {this.renderModule(moduleConfig, character, sheet, appState)}
                 </div>
             ))}
           </Packery>
@@ -58,7 +58,7 @@ export class Sheets extends React.Component<Props> {
     );
   }
 
-  private renderModule(moduleConfig: ModuleConfig, character: Character, appState: AppState) {
+  private renderModule(moduleConfig: ModuleConfig, character: Character, sheet: Sheet, appState: AppState) {
     const module = MODULES.get(moduleConfig.type);
     if (module) {
       return (
@@ -66,8 +66,8 @@ export class Sheets extends React.Component<Props> {
               moduleId={moduleConfig.id}
               state={moduleConfig.state}
               character={character}
-              appState={appState}
-              onDelete={this.onDeleteModule}/>
+              sheet={sheet}
+              appState={appState}/>
       );
     } else {
       return <div>Unknown module type {moduleConfig.type}</div>;
@@ -81,12 +81,6 @@ export class Sheets extends React.Component<Props> {
     if (ability === this.props.appState.selectedAbility) {
       this.props.appState.selectedAbility = undefined;
     }
-  };
-
-  @action
-  private readonly onDeleteModule = (moduleId: string) => {
-    const index = this.props.sheet.modules.findIndex(m => m.id === moduleId);
-    this.props.sheet.modules.splice(index, 1);
   };
 
   @action

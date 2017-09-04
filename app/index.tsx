@@ -17,22 +17,14 @@ import { AppState } from "./data/app_state";
 injectTapEventPlugin();
 useStrict(true);
 
-let character: Character;
-let sheet: Sheet;
+const character = localStorage.character
+    ? characterFromJson(JSON.parse(localStorage.character))
+    : new Character([], []);
 
-if (location.hash) {
-  const [charJson, sheetJson] = location.hash.substr(1).split('&');
-  character = characterFromJson(JSON.parse(decodeURIComponent(charJson)));
-  sheet = sheetFromJson(JSON.parse(decodeURIComponent(sheetJson)));
-} else {
-  character = localStorage.character
-      ? characterFromJson(JSON.parse(localStorage.character))
-      : new Character([], []);
+const sheet = localStorage.sheet
+    ? sheetFromJson(JSON.parse(localStorage.sheet))
+    : new Sheet([]);
 
-  sheet = localStorage.sheet
-      ? sheetFromJson(JSON.parse(localStorage.sheet))
-      : new Sheet([]);
-}
 
 const appState = new AppState();
 
@@ -40,12 +32,6 @@ window.onunload = () => {
   localStorage.setItem('character', JSON.stringify(characterToJson(character)));
   localStorage.setItem('sheet', JSON.stringify(sheetToJson(sheet)));
 };
-
-autorun(() => {
-  const charJson = encodeURIComponent(JSON.stringify(characterToJson(character)));
-  const sheetJson = encodeURIComponent(JSON.stringify(sheetToJson(sheet)));
-  location.hash = charJson + '&' + sheetJson;
-});
 
 const root = document.getElementById('root');
 if (root) {

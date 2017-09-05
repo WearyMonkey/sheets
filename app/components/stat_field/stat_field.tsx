@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Character, getStatValue } from 'data/character';
-import { action } from 'mobx';
+import { action, expr } from 'mobx';
 import { observer } from 'mobx-react';
 import { AppState } from 'data/app_state';
 import * as styles from './stat_field.css';
@@ -19,7 +19,7 @@ export class StatField extends React.Component<Props> {
   render() {
     const { character, statId, appState } = this.props;
     const currentValue = getStatValue(character, statId);
-    const active = appState.selectedStatId == statId;
+    const active = expr(() => appState.selectedStatId === statId);
     return (
         <div
             className={classnames(styles.field, { [styles.active]: active })}

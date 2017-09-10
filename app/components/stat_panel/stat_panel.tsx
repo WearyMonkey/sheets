@@ -51,7 +51,7 @@ export class StatPanel extends React.Component<Props> {
       statId,
       sourceId: statId,
       sourceType: 'STAT',
-      description: { type: 'TEXT' },
+      description: { type: 'TEXT', textState: undefined, imageUrl: undefined },
       value: '0',
     })
   };

@@ -75,7 +75,7 @@ export class AbilityPanel extends React.Component<Props> {
       statId: '',
       sourceId: this.props.ability.id,
       sourceType: 'ABILITY',
-      description: { type: 'TEXT' },
+      description: { type: 'TEXT', textState: undefined, imageUrl: undefined },
       value: '',
     });
   };
@@ -86,9 +86,9 @@ export class AbilityPanel extends React.Component<Props> {
       case 'ROLL':
         this.props.ability.actions.push({
           type: 'ROLL',
-          diceRoll: { dice: [] },
+          diceRoll: { dice: [], bonusStatId: undefined },
           id: generateId(),
-          description: { type: 'TEXT' }
+          description: { type: 'TEXT', textState: undefined, imageUrl: undefined },
         });
         break;
       default:

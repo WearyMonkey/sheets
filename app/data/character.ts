@@ -7,11 +7,11 @@ export type Tag = {
 }
 
 export type Description =
-    { type: 'IMAGE' | 'TEXT', imageUrl?: string, textState?: TextState }
+    { type: 'IMAGE' | 'TEXT', imageUrl: string | undefined, textState: TextState | undefined }
 
 export type DiceRoll = {
   dice: { id: string, sides: number, dice: number }[],
-  bonusStatId?: string
+  bonusStatId: string | undefined
 };
 
 export type Action =

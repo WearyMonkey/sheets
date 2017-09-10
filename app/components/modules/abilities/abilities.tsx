@@ -74,7 +74,7 @@ export class Abilities extends React.Component<Props> {
       id: generateId(),
       actions: [],
       modifiers: [],
-      description: { type: 'TEXT' },
+      description: { type: 'TEXT', textState: undefined, imageUrl: undefined },
       tags
     })
   };

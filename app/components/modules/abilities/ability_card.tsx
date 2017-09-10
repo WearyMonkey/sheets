@@ -14,13 +14,15 @@ type Props = {
 export class AbilityCard extends React.Component<Props> {
   render() {
     const { ability } = this.props;
-    return (<div onClick={this.handleClick}>
-      <DescriptionCard description={ability.description}/>
-    </div>);
+    return (
+        <div onClick={this.onClick}>
+          <DescriptionCard description={ability.description}/>
+        </div>
+    );
   }
 
   @action
-  handleClick = () => {
+  private readonly onClick = () => {
     this.props.appState.selectedAbility = this.props.ability;
   }
 }

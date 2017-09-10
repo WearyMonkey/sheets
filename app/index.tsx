@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './reset.css';
 import { Root } from 'components/root';
 import * as injectTapEventPlugin from 'react-tap-event-plugin';
-import { autorun, useStrict } from 'mobx';
+import { useStrict } from 'mobx';
 import DevTools from 'mobx-react-devtools';
 import { Sheet, sheetFromJson, sheetToJson } from "./data/sheet";
 import { Character } from "./data/character";
@@ -40,7 +40,7 @@ if (root) {
         <MuiThemeProvider>
           <Root {...{ character, sheet, appState }}/>
         </MuiThemeProvider>
-        {process.env.NODE_ENV !== 'production' &&  <DevTools/>}
+        {process.env.NODE_ENV !== 'production' && <DevTools/>}
       </div>
   ), root);
 }

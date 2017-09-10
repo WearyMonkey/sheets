@@ -70,7 +70,7 @@ export function evaluateModifier(character: Character, modifier: Modifier) {
   try {
     const parser = new Parser();
     const expr = parser.parse(modifier.value);
-    const variableValues: { [variable: string]: Value } = {...evalFunctions};
+    const variableValues: { [variable: string]: Value } = { ...evalFunctions };
     expr.variables().forEach(variable => {
       if (!evalFunctions[variable]) {
         variableValues[variable] = getStatValue(character, variable);
